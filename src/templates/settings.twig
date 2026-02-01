@@ -1,0 +1,106 @@
+{# Quick Search Settings Template #}
+
+{% import "_includes/forms" as forms %}
+
+<h2>{{ 'Display Settings'|t('quick-search') }}</h2>
+
+{{ forms.lightswitchField({
+    label: 'Compact Mode'|t('quick-search'),
+    instructions: 'Use a more compact display for search results and history lists.'|t('quick-search'),
+    id: 'compactMode',
+    name: 'compactMode',
+    on: settings.compactMode,
+    errors: settings.getErrors('compactMode')
+}) }}
+
+{{ forms.lightswitchField({
+    label: 'Show Section Filter'|t('quick-search'),
+    instructions: 'Show the section filter dropdown in the search UI.'|t('quick-search'),
+    id: 'showSectionFilter',
+    name: 'showSectionFilter',
+    on: settings.showSectionFilter,
+    errors: settings.getErrors('showSectionFilter')
+}) }}
+
+{{ forms.lightswitchField({
+    label: 'Show Related Entries'|t('quick-search'),
+    instructions: 'Display related entries in search results.'|t('quick-search'),
+    id: 'showRelatedEntries',
+    name: 'showRelatedEntries',
+    on: settings.showRelatedEntries,
+    errors: settings.getErrors('showRelatedEntries')
+}) }}
+
+<hr>
+
+<h2>{{ 'Search Settings'|t('quick-search') }}</h2>
+
+{{ forms.checkboxSelectField({
+    label: 'Searchable Sections'|t('quick-search'),
+    instructions: 'Select which sections to include in search. "All" searches all sections.'|t('quick-search'),
+    id: 'enabledSections',
+    name: 'enabledSections',
+    options: sections|map(section => {
+        value: section.handle,
+        label: section.name
+    }),
+    values: settings.enabledSections,
+    showAllOption: true,
+    errors: settings.getErrors('enabledSections')
+}) }}
+
+{{ forms.textField({
+    label: 'Minimum Search Length'|t('quick-search'),
+    instructions: 'Minimum number of characters required before search is triggered.'|t('quick-search'),
+    id: 'minSearchLength',
+    name: 'minSearchLength',
+    value: settings.minSearchLength,
+    type: 'number',
+    min: 1,
+    max: 10,
+    required: true,
+    errors: settings.getErrors('minSearchLength')
+}) }}
+
+{{ forms.textField({
+    label: 'Debounce Delay'|t('quick-search'),
+    instructions: 'Delay in milliseconds before search is triggered after typing stops.'|t('quick-search'),
+    id: 'debounceDelay',
+    name: 'debounceDelay',
+    value: settings.debounceDelay,
+    type: 'number',
+    min: 100,
+    max: 2000,
+    required: true,
+    errors: settings.getErrors('debounceDelay')
+}) }}
+
+<hr>
+
+<h2>{{ 'History Settings'|t('quick-search') }}</h2>
+
+{{ forms.textField({
+    label: 'History Limit'|t('quick-search'),
+    instructions: 'Maximum number of entry visits to keep per user.'|t('quick-search'),
+    id: 'historyLimit',
+    name: 'historyLimit',
+    value: settings.historyLimit,
+    type: 'number',
+    min: 1,
+    max: 200,
+    required: true,
+    errors: settings.getErrors('historyLimit')
+}) }}
+
+{{ forms.textField({
+    label: 'Favorites Limit'|t('quick-search'),
+    instructions: 'Maximum number of favorites per user.'|t('quick-search'),
+    id: 'maxFavorites',
+    name: 'maxFavorites',
+    value: settings.maxFavorites,
+    type: 'number',
+    min: 1,
+    max: 50,
+    required: true,
+    errors: settings.getErrors('maxFavorites')
+}) }}

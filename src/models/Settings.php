@@ -1,0 +1,80 @@
+<?php
+
+declare(strict_types=1);
+
+namespace craftcms\quicksearch\models;
+
+use craft\base\Model;
+
+/**
+ * Quick Search settings model
+ *
+ * @since 1.0.0
+ */
+class Settings extends Model
+{
+    /**
+     * @var int Maximum number of history entries to keep per user
+     */
+    public int $historyLimit = 50;
+
+    /**
+     * @var bool Whether to show the section filter dropdown
+     */
+    public bool $showSectionFilter = true;
+
+    /**
+     * @var array|null Array of section handles to include or exclude based on sectionFilterMode
+     */
+    public ?array $enabledSections = null;
+
+    /**
+     * @var string Section filter mode: 'include' or 'exclude'
+     */
+    public string $sectionFilterMode = 'include';
+
+    /**
+     * @var int Minimum number of characters required before search is triggered
+     */
+    public int $minSearchLength = 2;
+
+    /**
+     * @var int Debounce delay in milliseconds for search input
+     */
+    public int $debounceDelay = 300;
+
+    /**
+     * @var bool Whether to use compact mode for entry lists
+     */
+    public bool $compactMode = false;
+
+    /**
+     * @var bool Whether to show related entries
+     */
+    public bool $showRelatedEntries = false;
+
+    /**
+     * @var int Maximum number of favorites per user
+     */
+    public int $maxFavorites = 20;
+
+    /**
+     * @inheritdoc
+     */
+    public function defineRules(): array
+    {
+        return [
+            [['historyLimit', 'minSearchLength', 'debounceDelay'], 'required'],
+            [['historyLimit', 'minSearchLength', 'debounceDelay'], 'integer', 'min' => 1],
+            ['historyLimit', 'integer', 'max' => 200],
+            ['minSearchLength', 'integer', 'max' => 10],
+            ['debounceDelay', 'integer', 'max' => 2000],
+            ['showSectionFilter', 'boolean'],
+            ['compactMode', 'boolean'],
+            ['showRelatedEntries', 'boolean'],
+            ['enabledSections', 'each', 'rule' => ['string']],
+            ['sectionFilterMode', 'in', 'range' => ['include', 'exclude']],
+            ['maxFavorites', 'integer', 'min' => 1, 'max' => 50],
+        ];
+    }
+}

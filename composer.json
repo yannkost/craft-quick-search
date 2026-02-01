@@ -1,0 +1,31 @@
+{
+    "name": "craftcms/quick-search",
+    "description": "Fast entry search and navigation for the Craft CMS control panel",
+    "type": "craft-plugin",
+    "version": "1.0.0",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Craft CMS",
+            "homepage": "https://craftcms.com"
+        }
+    ],
+    "require": {
+        "php": ">=8.2",
+        "craftcms/cms": "^5.3.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "craftcms\\quicksearch\\": "src/"
+        }
+    },
+    "extra": {
+        "handle": "quick-search",
+        "name": "Quick Search",
+        "class": "craftcms\\quicksearch\\Plugin",
+        "developer": "Craft CMS",
+        "developerUrl": "https://craftcms.com",
+        "documentationUrl": "https://github.com/craftcms/quick-search/blob/main/README.md",
+        "changelogUrl": "https://raw.githubusercontent.com/craftcms/quick-search/main/CHANGELOG.md"
+    }
+}
