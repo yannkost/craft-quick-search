@@ -82,6 +82,31 @@
             this.currentSiteId = this.settings.currentSiteId;
             this.isMultiSite = this.settings.isMultiSite;
             this.selectedSiteId = null; // null = current site, '*' = all sites, or specific id
+            this.searchAbortController = null; // For cancelling in-flight search requests
+            this.fetchTimeout = 10000; // 10 second timeout for all fetch requests
+        }
+
+        /**
+         * Fetch with timeout - prevents UI from appearing frozen if server hangs
+         */
+        async fetchWithTimeout(url, options = {}) {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), this.fetchTimeout);
+
+            try {
+                const response = await fetch(url, {
+                    ...options,
+                    signal: controller.signal
+                });
+                clearTimeout(timeoutId);
+                return response;
+            } catch (error) {
+                clearTimeout(timeoutId);
+                if (error.name === 'AbortError') {
+                    throw new Error('Request timed out');
+                }
+                throw error;
+            }
         }
 
         init() {
@@ -475,7 +500,7 @@
 
         async loadSections() {
             try {
-                const response = await fetch(Craft.getActionUrl('quick-search/search/sections'), {
+                const response = await this.fetchWithTimeout(Craft.getActionUrl('quick-search/search/sections'), {
                     headers: {
                         'Accept': 'application/json',
                         'X-Requested-With': 'XMLHttpRequest'
@@ -636,7 +661,7 @@
             if (!this.isMultiSite) return;
 
             try {
-                const response = await fetch(Craft.getActionUrl('quick-search/search/sites'), {
+                const response = await this.fetchWithTimeout(Craft.getActionUrl('quick-search/search/sites'), {
                     headers: {
                         'Accept': 'application/json',
                         'X-Requested-With': 'XMLHttpRequest'
@@ -777,7 +802,7 @@
         async loadLastVisited() {
             try {
                 const actionUrl = Craft.getActionUrl('quick-search/history/index');
-                const response = await fetch(actionUrl, {
+                const response = await this.fetchWithTimeout(actionUrl, {
                     headers: {
                         'Accept': 'application/json',
                         'X-Requested-With': 'XMLHttpRequest'
@@ -834,15 +859,28 @@
 
             this.showLoading();
 
+            // Cancel any previous search request to prevent race conditions
+            if (this.searchAbortController) {
+                this.searchAbortController.abort();
+            }
+            this.searchAbortController = new AbortController();
+
             try {
                 const actionUrl = Craft.getActionUrl('quick-search/search/index');
                 const separator = actionUrl.includes('?') ? '&' : '?';
+
+                // Set up timeout
+                const timeoutId = setTimeout(() => this.searchAbortController.abort(), this.fetchTimeout);
+
                 const response = await fetch(actionUrl + separator + params, {
                     headers: {
                         'Accept': 'application/json',
                         'X-Requested-With': 'XMLHttpRequest'
-                    }
+                    },
+                    signal: this.searchAbortController.signal
                 });
+
+                clearTimeout(timeoutId);
 
                 if (!response.ok) {
                     throw new Error(`HTTP ${response.status}: ${response.statusText}`);
@@ -858,6 +896,10 @@
                     this.showError(data.error || this.t.searchError || 'Search failed');
                 }
             } catch (error) {
+                // Ignore abort errors (user typed new search)
+                if (error.name === 'AbortError') {
+                    return;
+                }
                 console.error('Quick Search: Search error', error);
                 this.showError(this.t.searchError || 'An error occurred while searching');
             }
@@ -1051,8 +1093,11 @@
             this.hideBackPopup();
             this.clearHistoryButtonHighlights();
 
+            // Show loading state
+            this.showHistoryLoading();
+
             try {
-                const response = await fetch(Craft.getActionUrl('quick-search/favorites/list'), {
+                const response = await this.fetchWithTimeout(Craft.getActionUrl('quick-search/favorites/list'), {
                     headers: {
                         'Accept': 'application/json',
                         'X-Requested-With': 'XMLHttpRequest'
@@ -1078,9 +1123,11 @@
                     }
                 } else {
                     console.error('Quick Search: Error loading favorites', data.error);
+                    this.showHistoryError(this.t.favoritesError || 'Error loading favorites');
                 }
             } catch (error) {
                 console.error('Quick Search: Error loading favorites', error);
+                this.showHistoryError(this.t.favoritesError || 'Error loading favorites');
             }
         }
 
@@ -1146,6 +1193,9 @@
             this.hideBackPopup();
             this.clearHistoryButtonHighlights();
 
+            // Show loading state
+            this.showHistoryLoading();
+
             const limit = showAll ? this.historyFullLimit : this.historyInitialLimit;
             const params = new URLSearchParams();
             if (query) params.append('query', query);
@@ -1153,7 +1203,7 @@
 
             try {
                 const historyUrl = Craft.getActionUrl('quick-search/history/index');
-                const response = await fetch(historyUrl + (historyUrl.includes('?') ? '&' : '?') + params.toString(), {
+                const response = await this.fetchWithTimeout(historyUrl + (historyUrl.includes('?') ? '&' : '?') + params.toString(), {
                     headers: {
                         'Accept': 'application/json',
                         'X-Requested-With': 'XMLHttpRequest'
@@ -1179,9 +1229,11 @@
                     }
                 } else {
                     console.error('Quick Search: Error loading history', data.error);
+                    this.showHistoryError(this.t.historyError || 'Error loading history');
                 }
             } catch (error) {
                 console.error('Quick Search: Error loading history', error);
+                this.showHistoryError(this.t.historyError || 'Error loading history');
             }
         }
 
@@ -1390,7 +1442,7 @@
         async clearHistory() {
             try {
                 const actionUrl = Craft.getActionUrl('quick-search/history/clear');
-                const response = await fetch(actionUrl, {
+                const response = await this.fetchWithTimeout(actionUrl, {
                     method: 'POST',
                     headers: {
                         'Accept': 'application/json',
@@ -1437,7 +1489,7 @@
 
             try {
                 const actionUrl = Craft.getActionUrl(`quick-search/favorites/${action}`);
-                const response = await fetch(actionUrl, {
+                const response = await this.fetchWithTimeout(actionUrl, {
                     method: 'POST',
                     headers: {
                         'Accept': 'application/json',
@@ -1550,6 +1602,20 @@
             this.resultsContainer.appendChild(errorDiv);
             this.showResults();
         }
+
+        showHistoryLoading() {
+            if (!this.historyPopup) return;
+
+            this.historyPopup.innerHTML = `<div class="quick-search-loading">${this.t.searching || 'Loading...'}</div>`;
+            this.historyPopup.classList.add('active');
+        }
+
+        showHistoryError(message) {
+            if (!this.historyPopup) return;
+
+            this.historyPopup.innerHTML = `<div class="quick-search-no-results">${message}</div>`;
+            this.historyPopup.classList.add('active');
+        }
     }
 
     class RelatedEntriesOverlay {
@@ -1561,6 +1627,27 @@
                 translations: {}
             };
             this.t = this.settings.translations || {};
+            this.fetchTimeout = 10000; // 10 second timeout
+        }
+
+        async fetchWithTimeout(url, options = {}) {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), this.fetchTimeout);
+
+            try {
+                const response = await fetch(url, {
+                    ...options,
+                    signal: controller.signal
+                });
+                clearTimeout(timeoutId);
+                return response;
+            } catch (error) {
+                clearTimeout(timeoutId);
+                if (error.name === 'AbortError') {
+                    throw new Error('Request timed out');
+                }
+                throw error;
+            }
         }
 
         init() {
@@ -1631,7 +1718,7 @@
                 const actionUrl = Craft.getActionUrl('quick-search/related-entries/index');
                 const separator = actionUrl.includes('?') ? '&' : '?';
 
-                const response = await fetch(actionUrl + separator + params, {
+                const response = await this.fetchWithTimeout(actionUrl + separator + params, {
                     headers: {
                         'Accept': 'application/json',
                         'X-Requested-With': 'XMLHttpRequest'
