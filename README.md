@@ -44,7 +44,7 @@ Visit Settings → Quick Search to configure:
 
 ## Usage
 
-- Use `Cmd/Ctrl + K` to focus the search input
+- Click the search input in the header to start searching
 - Click the back arrow to return to the last visited entry
 - Click the clock icon to view recent entries
 - Click the star icon to view/manage favorites
@@ -53,7 +53,6 @@ Visit Settings → Quick Search to configure:
 
 ## Keyboard Shortcuts
 
-- `Cmd/Ctrl + K` - Focus search input
 - `Arrow Up/Down` - Navigate results
 - `Enter` - Open selected entry
 - `Cmd/Ctrl + Enter` - Open in new tab
