@@ -47,9 +47,12 @@ class SearchController extends Controller
         $sections = $request->getParam('sections');
         $siteId = $request->getParam('siteId');
 
-        // Validate and clamp limit to reasonable bounds (1-100)
+        // Get settings
+        $settings = Plugin::getInstance()->getSettings();
+
+        // Validate and clamp limit to reasonable bounds (1-100), using settings default
         $rawLimit = $request->getParam('limit');
-        $limit = min(100, max(1, (int)($rawLimit ?? 20)));
+        $limit = min(100, max(1, (int)($rawLimit ?? $settings->searchLimit)));
 
         // Truncate query length to prevent abuse
         if (strlen($query) > 255) {
@@ -57,7 +60,6 @@ class SearchController extends Controller
         }
 
         // Validate query
-        $settings = Plugin::getInstance()->getSettings();
         if (strlen($query) < $settings->minSearchLength) {
             return $this->asJson([
                 'success' => true,

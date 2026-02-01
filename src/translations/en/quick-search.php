@@ -12,12 +12,16 @@ return [
 
     // Settings page - Search Settings
     'Search Settings' => 'Search Settings',
+    'Searchable Sections' => 'Searchable Sections',
+    'Select which sections to include in search. "All" searches all sections.' => 'Select which sections to include in search. "All" searches all sections.',
     'Enabled Sections' => 'Enabled Sections',
     'Select which sections should be searchable. Leave empty to enable all sections.' => 'Select which sections should be searchable. Leave empty to enable all sections.',
     'Minimum Search Length' => 'Minimum Search Length',
     'Minimum number of characters required before search is triggered.' => 'Minimum number of characters required before search is triggered.',
     'Debounce Delay' => 'Debounce Delay',
     'Delay in milliseconds before search is triggered after typing stops.' => 'Delay in milliseconds before search is triggered after typing stops.',
+    'Search Results Limit' => 'Search Results Limit',
+    'Maximum number of search results to display.' => 'Maximum number of search results to display.',
 
     // Settings page - History Settings
     'History Settings' => 'History Settings',

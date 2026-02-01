@@ -75,6 +75,19 @@
     errors: settings.getErrors('debounceDelay')
 }) }}
 
+{{ forms.textField({
+    label: 'Search Results Limit'|t('quick-search'),
+    instructions: 'Maximum number of search results to display.'|t('quick-search'),
+    id: 'searchLimit',
+    name: 'searchLimit',
+    value: settings.searchLimit,
+    type: 'number',
+    min: 5,
+    max: 100,
+    required: true,
+    errors: settings.getErrors('searchLimit')
+}) }}
+
 <hr>
 
 <h2>{{ 'History Settings'|t('quick-search') }}</h2>

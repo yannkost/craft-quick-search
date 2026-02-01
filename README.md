@@ -5,13 +5,13 @@ Fast entry search and navigation for the Craft CMS control panel.
 ## Features
 
 - Quick search entries by title from the CP header
-- Section and site filtering
-- Recent entries history
+- Section and site filtering (multi-site support)
+- Recent entries history with tracking
 - Favorites system
 - Entry outline navigation
 - Related entries view
-- Multi-site support
 - Compact mode option
+- 20 language translations
 
 ## Requirements
 
@@ -20,12 +20,13 @@ Fast entry search and navigation for the Craft CMS control panel.
 
 ## Installation
 
-1. Install via Composer:
-   ```bash
-   composer require craftcms/quick-search
-   ```
+Install via Composer:
 
-2. Install the plugin in the Craft Control Panel under Settings → Plugins
+```bash
+composer require yannkost/craft-quick-search
+```
+
+Then install the plugin in the Craft Control Panel under Settings → Plugins.
 
 ## Configuration
 
@@ -35,6 +36,9 @@ Visit Settings → Quick Search to configure:
 - **Show Section Filter**: Toggle the section filter dropdown
 - **Show Related Entries**: Display related entries button on entry pages
 - **Searchable Sections**: Limit which sections are searchable
+- **Search Results Limit**: Maximum number of search results
+- **Minimum Search Length**: Characters required before search triggers
+- **Debounce Delay**: Delay before search triggers after typing
 - **History Limit**: Maximum history entries per user
 - **Favorites Limit**: Maximum favorites per user
 
@@ -47,6 +51,14 @@ Visit Settings → Quick Search to configure:
 - Use the section dropdown to filter by section
 - Use the site dropdown to filter by site (multi-site only)
 
+## Keyboard Shortcuts
+
+- `Cmd/Ctrl + K` - Focus search input
+- `Arrow Up/Down` - Navigate results
+- `Enter` - Open selected entry
+- `Cmd/Ctrl + Enter` - Open in new tab
+- `Escape` - Close dropdowns
+
 ## License
 
-MIT
+This plugin is licensed under the [Craft License](LICENSE.md).

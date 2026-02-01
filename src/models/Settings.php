@@ -34,6 +34,11 @@ class Settings extends Model
     public string $sectionFilterMode = 'include';
 
     /**
+     * @var int Maximum number of search results to return
+     */
+    public int $searchLimit = 20;
+
+    /**
      * @var int Minimum number of characters required before search is triggered
      */
     public int $minSearchLength = 2;
@@ -64,9 +69,10 @@ class Settings extends Model
     public function defineRules(): array
     {
         return [
-            [['historyLimit', 'minSearchLength', 'debounceDelay'], 'required'],
-            [['historyLimit', 'minSearchLength', 'debounceDelay'], 'integer', 'min' => 1],
+            [['historyLimit', 'minSearchLength', 'debounceDelay', 'searchLimit'], 'required'],
+            [['historyLimit', 'minSearchLength', 'debounceDelay', 'searchLimit'], 'integer', 'min' => 1],
             ['historyLimit', 'integer', 'max' => 200],
+            ['searchLimit', 'integer', 'max' => 100],
             ['minSearchLength', 'integer', 'max' => 10],
             ['debounceDelay', 'integer', 'max' => 2000],
             ['showSectionFilter', 'boolean'],
