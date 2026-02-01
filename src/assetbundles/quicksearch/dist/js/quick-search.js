@@ -1285,8 +1285,22 @@
             header.appendChild(searchInput);
             this.historyPopup.appendChild(header);
 
+            // Filter out current page from history (no point showing it)
+            const currentEntryId = this.getCurrentEntryId();
+            const currentSiteHandle = this.getCurrentSiteHandle();
+            const filteredHistory = (history || []).filter(entry => {
+                if (!entry) return false;
+                // Exclude if same entry ID and same site (or no site context)
+                if (entry.id === currentEntryId) {
+                    if (!currentSiteHandle || entry.site?.handle === currentSiteHandle) {
+                        return false;
+                    }
+                }
+                return true;
+            });
+
             // Store history items for keyboard navigation
-            this.currentHistoryItems = history || [];
+            this.currentHistoryItems = filteredHistory;
             this.historySelectedIndex = -1;
 
             // Create content container for history
@@ -1294,7 +1308,7 @@
             contentContainer.className = 'quick-search-history-content';
 
             // Render history section
-            if (!history || history.length === 0) {
+            if (!filteredHistory || filteredHistory.length === 0) {
                 const noHistory = document.createElement('div');
                 noHistory.className = 'quick-search-no-history';
                 noHistory.textContent = this.t.noRecentEntries || 'No recent entries';
@@ -1305,7 +1319,7 @@
                 list.setAttribute('role', 'listbox');
                 list.setAttribute('aria-label', this.t.recentEntries || 'Recent Entries');
 
-                history.forEach((entry, index) => {
+                filteredHistory.forEach((entry, index) => {
                     try {
                         const item = this.createHistoryItem(entry, index, false);
                         if (item) {
