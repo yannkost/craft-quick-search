@@ -8,7 +8,7 @@ return [
     'Show Section Filter' => 'Pokaż filtr sekcji',
     'Show the section filter dropdown in the search UI.' => 'Pokaż rozwijaną listę filtra sekcji w interfejsie wyszukiwania.',
     'Show Related Entries' => 'Pokaż powiązane wpisy',
-    'Display related entries in search results.' => 'Wyświetl powiązane wpisy w wynikach wyszukiwania.',
+    'Display related entries button on entry pages.' => 'Wyświetl powiązane wpisy w wynikach wyszukiwania.',
 
     // Settings page - Search Settings
     'Search Settings' => 'Ustawienia wyszukiwania',
@@ -97,4 +97,7 @@ return [
     'Current Site' => 'Bieżąca strona',
     'All Sites' => 'Wszystkie strony',
     'An error occurred while fetching sites.' => 'Wystąpił błąd podczas pobierania stron.',
+
+    // Current page (favorites dropdown)
+    'Current page' => 'Bieżąca strona',
 ];

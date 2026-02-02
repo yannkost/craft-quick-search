@@ -8,7 +8,7 @@ return [
     'Show Section Filter' => 'Sectiefilter tonen',
     'Show the section filter dropdown in the search UI.' => 'Toon het sectiefilter dropdown in de zoekinterface.',
     'Show Related Entries' => 'Gerelateerde items tonen',
-    'Display related entries in search results.' => 'Gerelateerde items weergeven in zoekresultaten.',
+    'Display related entries button on entry pages.' => 'Knop voor gerelateerde items weergeven op itempaginas.',
 
     // Settings page - Search Settings
     'Search Settings' => 'Zoekinstellingen',
@@ -97,4 +97,7 @@ return [
     'Current Site' => 'Huidige site',
     'All Sites' => 'Alle sites',
     'An error occurred while fetching sites.' => 'Er is een fout opgetreden bij het ophalen van sites.',
+
+    // Current page (favorites dropdown)
+    'Current page' => 'Huidige pagina',
 ];

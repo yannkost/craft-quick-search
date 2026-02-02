@@ -8,7 +8,7 @@ return [
     'Show Section Filter' => 'Zobrazit filtr sekcí',
     'Show the section filter dropdown in the search UI.' => 'Zobrazit rozbalovací nabídku filtru sekcí v rozhraní vyhledávání.',
     'Show Related Entries' => 'Zobrazit související položky',
-    'Display related entries in search results.' => 'Zobrazit související položky ve výsledcích vyhledávání.',
+    'Display related entries button on entry pages.' => 'Zobrazit související položky ve výsledcích vyhledávání.',
 
     // Settings page - Search Settings
     'Search Settings' => 'Nastavení vyhledávání',
@@ -97,4 +97,7 @@ return [
     'Current Site' => 'Aktuální web',
     'All Sites' => 'Všechny weby',
     'An error occurred while fetching sites.' => 'Při načítání webů došlo k chybě.',
+
+    // Current page (favorites dropdown)
+    'Current page' => 'Aktuální stránka',
 ];

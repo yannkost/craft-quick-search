@@ -8,7 +8,7 @@ return [
     'Show Section Filter' => '섹션 필터 표시',
     'Show the section filter dropdown in the search UI.' => '검색 UI에서 섹션 필터 드롭다운을 표시합니다.',
     'Show Related Entries' => '관련 항목 표시',
-    'Display related entries in search results.' => '검색 결과에 관련 항목을 표시합니다.',
+    'Display related entries button on entry pages.' => '검색 결과에 관련 항목을 표시합니다.',
 
     // Settings page - Search Settings
     'Search Settings' => '검색 설정',
@@ -97,4 +97,7 @@ return [
     'Current Site' => '현재 사이트',
     'All Sites' => '모든 사이트',
     'An error occurred while fetching sites.' => '사이트를 가져오는 중 오류가 발생했습니다.',
+
+    // Current page (favorites dropdown)
+    'Current page' => '현재 페이지',
 ];

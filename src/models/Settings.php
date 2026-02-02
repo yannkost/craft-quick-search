@@ -56,12 +56,12 @@ class Settings extends Model
     /**
      * @var bool Whether to show related entries
      */
-    public bool $showRelatedEntries = false;
+    public bool $showRelatedEntries = true;
 
     /**
      * @var int Maximum number of favorites per user
      */
-    public int $maxFavorites = 20;
+    public int $maxFavorites = 25;
 
     /**
      * @inheritdoc

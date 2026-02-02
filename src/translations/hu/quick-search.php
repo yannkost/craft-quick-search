@@ -8,7 +8,7 @@ return [
     'Show Section Filter' => 'Szekció szűrő megjelenítése',
     'Show the section filter dropdown in the search UI.' => 'A szekció szűrő legördülő menü megjelenítése a keresési felületen.',
     'Show Related Entries' => 'Kapcsolódó bejegyzések megjelenítése',
-    'Display related entries in search results.' => 'Kapcsolódó bejegyzések megjelenítése a keresési eredményekben.',
+    'Display related entries button on entry pages.' => 'Kapcsolódó bejegyzések megjelenítése a keresési eredményekben.',
 
     // Settings page - Search Settings
     'Search Settings' => 'Keresési beállítások',
@@ -97,4 +97,7 @@ return [
     'Current Site' => 'Jelenlegi oldal',
     'All Sites' => 'Összes oldal',
     'An error occurred while fetching sites.' => 'Hiba történt az oldalak lekérésekor.',
+
+    // Current page (favorites dropdown)
+    'Current page' => 'Jelenlegi oldal',
 ];

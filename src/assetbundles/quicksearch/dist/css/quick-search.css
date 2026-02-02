@@ -1524,3 +1524,29 @@
 .quick-search-outline-content::-webkit-scrollbar-thumb:hover {
     background: #b8c6d6;
 }
+
+/* Current Entry in Favorites Dropdown */
+.quick-search-current-entry {
+    border-bottom: 1px solid #e3eaf0;
+    background: #f8f9fb;
+}
+
+.quick-search-current-entry:hover {
+    background: #f3f7fc;
+}
+
+.quick-search-current-label {
+    display: inline-block;
+    font-size: 10px;
+    padding: 1px 6px;
+    background: #e3f0ff;
+    border-radius: 3px;
+    color: #0d78f2;
+    font-weight: 500;
+}
+
+/* Compact mode adjustments for current entry */
+.quick-search-history-popup.compact .quick-search-current-label {
+    font-size: 9px;
+    padding: 0 4px;
+}

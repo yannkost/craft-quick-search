@@ -8,7 +8,7 @@ return [
     'Show Section Filter' => 'Show Section Filter',
     'Show the section filter dropdown in the search UI.' => 'Show the section filter dropdown in the search UI.',
     'Show Related Entries' => 'Show Related Entries',
-    'Display related entries in search results.' => 'Display related entries in search results.',
+    'Display related entries button on entry pages.' => 'Display related entries button on entry pages.',
 
     // Settings page - Search Settings
     'Search Settings' => 'Search Settings',
@@ -101,4 +101,7 @@ return [
     'Current Site' => 'Current Site',
     'All Sites' => 'All Sites',
     'An error occurred while fetching sites.' => 'An error occurred while fetching sites.',
+
+    // Current page (favorites dropdown)
+    'Current page' => 'Current page',
 ];

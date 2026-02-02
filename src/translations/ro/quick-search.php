@@ -8,7 +8,7 @@ return [
     'Show Section Filter' => 'Afișare filtru secțiune',
     'Show the section filter dropdown in the search UI.' => 'Afișați meniul derulant al filtrului de secțiune în interfața de căutare.',
     'Show Related Entries' => 'Afișare intrări asociate',
-    'Display related entries in search results.' => 'Afișați intrările asociate în rezultatele căutării.',
+    'Display related entries button on entry pages.' => 'Afișați intrările asociate în rezultatele căutării.',
 
     // Settings page - Search Settings
     'Search Settings' => 'Setări de căutare',
@@ -97,4 +97,7 @@ return [
     'Current Site' => 'Site-ul curent',
     'All Sites' => 'Toate site-urile',
     'An error occurred while fetching sites.' => 'A apărut o eroare la încărcarea site-urilor.',
+
+    // Current page (favorites dropdown)
+    'Current page' => 'Pagina curentă',
 ];

@@ -8,7 +8,7 @@ return [
     'Show Section Filter' => 'Bölüm Filtresini Göster',
     'Show the section filter dropdown in the search UI.' => 'Arama arayüzünde bölüm filtresi açılır menüsünü gösterin.',
     'Show Related Entries' => 'İlgili Girişleri Göster',
-    'Display related entries in search results.' => 'Arama sonuçlarında ilgili girişleri gösterin.',
+    'Display related entries button on entry pages.' => 'Arama sonuçlarında ilgili girişleri gösterin.',
 
     // Settings page - Search Settings
     'Search Settings' => 'Arama Ayarları',
@@ -97,4 +97,7 @@ return [
     'Current Site' => 'Mevcut Site',
     'All Sites' => 'Tüm Siteler',
     'An error occurred while fetching sites.' => 'Siteler alınırken bir hata oluştu.',
+
+    // Current page (favorites dropdown)
+    'Current page' => 'Mevcut sayfa',
 ];

@@ -8,7 +8,7 @@ return [
     'Show Section Filter' => '显示栏目筛选器',
     'Show the section filter dropdown in the search UI.' => '在搜索界面中显示栏目筛选下拉菜单。',
     'Show Related Entries' => '显示相关条目',
-    'Display related entries in search results.' => '在搜索结果中显示相关条目。',
+    'Display related entries button on entry pages.' => '在搜索结果中显示相关条目。',
 
     // Settings page - Search Settings
     'Search Settings' => '搜索设置',
@@ -97,4 +97,7 @@ return [
     'Current Site' => '当前站点',
     'All Sites' => '所有站点',
     'An error occurred while fetching sites.' => '获取站点时发生错误。',
+
+    // Current page (favorites dropdown)
+    'Current page' => '当前页面',
 ];

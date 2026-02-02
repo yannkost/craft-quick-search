@@ -799,6 +799,51 @@
             }
         }
 
+        /**
+         * Get current entry info from the page DOM (when on an entry edit page)
+         */
+        getCurrentEntryInfo() {
+            try {
+                const entryId = this.getCurrentEntryId();
+                if (!entryId) return null;
+
+                // Get entry title from the title input field or header
+                const titleInput = document.getElementById('title');
+                const title = titleInput?.value || document.querySelector('#header h1')?.textContent?.trim() || 'Untitled';
+
+                // Get section from breadcrumb or URL
+                const sectionMatch = window.location.pathname.match(/\/entries\/([^/]+)\//);
+                const sectionHandle = sectionMatch ? sectionMatch[1] : null;
+
+                // Get section name from breadcrumb
+                const breadcrumb = document.querySelector('#crumbs a[href*="/entries/"]');
+                const sectionName = breadcrumb?.textContent?.trim() || sectionHandle || 'Unknown Section';
+
+                // Get site info
+                const siteHandle = this.getCurrentSiteHandle();
+                const currentSiteId = this.currentSiteId;
+
+                return {
+                    id: entryId,
+                    title: title,
+                    url: window.location.href,
+                    section: {
+                        handle: sectionHandle,
+                        name: sectionName
+                    },
+                    site: siteHandle ? {
+                        handle: siteHandle,
+                        name: siteHandle // We don't have the full name readily available
+                    } : null,
+                    siteId: currentSiteId,
+                    status: 'live' // We don't know the actual status
+                };
+            } catch (e) {
+                console.error('Quick Search: Error getting current entry info', e);
+                return null;
+            }
+        }
+
         async loadLastVisited() {
             try {
                 const actionUrl = Craft.getActionUrl('quick-search/history/index');
@@ -1151,28 +1196,48 @@
             header.appendChild(titleWrapper);
             this.historyPopup.appendChild(header);
 
-            // Store items for keyboard navigation
-            this.currentHistoryItems = favorites || [];
-            this.historySelectedIndex = -1;
-
             // Create content container
             const contentContainer = document.createElement('div');
             contentContainer.className = 'quick-search-history-content';
 
-            if (!favorites || favorites.length === 0) {
-                const noFavorites = document.createElement('div');
-                noFavorites.className = 'quick-search-no-history';
-                noFavorites.textContent = this.t.noFavorites || 'No favorites yet';
-                contentContainer.appendChild(noFavorites);
-            } else {
-                const list = document.createElement('ul');
-                list.className = 'quick-search-history-list';
-                list.setAttribute('role', 'listbox');
-                list.setAttribute('aria-label', this.t.favorites || 'Favorites');
+            // Check if we're on an entry page and show current entry first
+            const currentEntryInfo = this.getCurrentEntryInfo();
+            const isCurrentFavorite = currentEntryInfo && favorites?.some(
+                f => f.id === currentEntryInfo.id && f.siteId === currentEntryInfo.siteId
+            );
 
-                favorites.forEach((entry, index) => {
+            // Filter out current entry from favorites list (we'll show it separately at top)
+            const filteredFavorites = currentEntryInfo
+                ? (favorites || []).filter(f => !(f.id === currentEntryInfo.id && f.siteId === currentEntryInfo.siteId))
+                : (favorites || []);
+
+            // Store items for keyboard navigation (include current entry if on entry page)
+            this.currentHistoryItems = currentEntryInfo ? [currentEntryInfo, ...filteredFavorites] : filteredFavorites;
+            this.historySelectedIndex = -1;
+
+            const list = document.createElement('ul');
+            list.className = 'quick-search-history-list';
+            list.setAttribute('role', 'listbox');
+            list.setAttribute('aria-label', this.t.favorites || 'Favorites');
+
+            // Show current entry at top if on an entry page
+            if (currentEntryInfo) {
+                try {
+                    const currentItem = this.createCurrentEntryItem(currentEntryInfo, isCurrentFavorite);
+                    if (currentItem) {
+                        list.appendChild(currentItem);
+                    }
+                } catch (e) {
+                    console.error('Quick Search: Error rendering current entry item', e);
+                }
+            }
+
+            // Show rest of favorites
+            if (filteredFavorites.length > 0) {
+                filteredFavorites.forEach((entry, index) => {
                     try {
-                        const item = this.createHistoryItem(entry, index, true);
+                        const itemIndex = currentEntryInfo ? index + 1 : index;
+                        const item = this.createHistoryItem(entry, itemIndex, true);
                         if (item) {
                             list.appendChild(item);
                         }
@@ -1180,11 +1245,70 @@
                         console.error('Quick Search: Error rendering favorite item', e);
                     }
                 });
+            }
 
+            if (list.children.length === 0) {
+                const noFavorites = document.createElement('div');
+                noFavorites.className = 'quick-search-no-history';
+                noFavorites.textContent = this.t.noFavorites || 'No favorites yet';
+                contentContainer.appendChild(noFavorites);
+            } else {
                 contentContainer.appendChild(list);
             }
 
             this.historyPopup.appendChild(contentContainer);
+        }
+
+        createCurrentEntryItem(entry, isFavorite) {
+            if (!entry) return null;
+
+            const item = document.createElement('li');
+            item.className = 'quick-search-history-item quick-search-current-entry';
+            item.setAttribute('role', 'option');
+            item.setAttribute('aria-selected', 'false');
+            item.id = 'quick-search-current-entry-item';
+            item.dataset.entryId = entry.id;
+            item.dataset.siteId = entry.siteId || this.currentSiteId;
+
+            const content = document.createElement('div');
+            content.className = 'quick-search-history-item-content';
+
+            const title = document.createElement('div');
+            title.className = 'quick-search-history-title';
+            title.textContent = entry.title || '';
+            title.title = entry.title || '';
+
+            const meta = document.createElement('div');
+            meta.className = 'quick-search-history-meta';
+
+            const currentLabel = document.createElement('span');
+            currentLabel.className = 'quick-search-current-label';
+            currentLabel.textContent = this.t.currentPage || 'Current page';
+            meta.appendChild(currentLabel);
+
+            content.appendChild(title);
+            content.appendChild(meta);
+
+            // Add favorite toggle button
+            const starBtn = document.createElement('button');
+            starBtn.type = 'button';
+            starBtn.className = 'quick-search-star-btn' + (isFavorite ? ' active' : '');
+            starBtn.title = isFavorite
+                ? (this.t.removeFromFavorites || 'Remove from favorites')
+                : (this.t.addToFavorites || 'Add to favorites');
+            starBtn.innerHTML = isFavorite
+                ? '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>'
+                : '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" /></svg>';
+
+            starBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.toggleFavorite(entry.id, entry.siteId, starBtn);
+            });
+
+            item.appendChild(content);
+            item.appendChild(starBtn);
+
+            return item;
         }
 
         async showHistory(query = '', showAll = false) {

@@ -191,6 +191,7 @@ class Plugin extends BasePlugin
                                 'statusExpired' => Craft::t('quick-search', 'Status: Expired'),
                                 'currentSite' => Craft::t('quick-search', 'Current Site'),
                                 'allSites' => Craft::t('quick-search', 'All Sites'),
+                                'currentPage' => Craft::t('quick-search', 'Current page'),
                             ],
                         ]) . ';',
                         View::POS_HEAD

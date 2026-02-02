@@ -2,7 +2,7 @@
     "name": "yannkost/craft-quick-search",
     "description": "Fast entry search and navigation for the Craft CMS control panel",
     "type": "craft-plugin",
-    "version": "1.3.0",
+    "version": "1.4.0",
     "license": "proprietary",
     "keywords": [
         "craft",

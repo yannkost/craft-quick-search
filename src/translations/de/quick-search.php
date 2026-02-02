@@ -8,7 +8,7 @@ return [
     'Show Section Filter' => 'Bereichsfilter anzeigen',
     'Show the section filter dropdown in the search UI.' => 'Bereichsfilter-Dropdown in der Suchoberfläche anzeigen.',
     'Show Related Entries' => 'Verwandte Einträge anzeigen',
-    'Display related entries in search results.' => 'Verwandte Einträge in Suchergebnissen anzeigen.',
+    'Display related entries button on entry pages.' => 'Schaltfläche für verwandte Einträge auf Eintragsseiten anzeigen.',
 
     // Settings page - Search Settings
     'Search Settings' => 'Sucheinstellungen',
@@ -97,4 +97,7 @@ return [
     'Current Site' => 'Aktuelle Website',
     'All Sites' => 'Alle Websites',
     'An error occurred while fetching sites.' => 'Beim Abrufen der Websites ist ein Fehler aufgetreten.',
+
+    // Current page (favorites dropdown)
+    'Current page' => 'Aktuelle Seite',
 ];

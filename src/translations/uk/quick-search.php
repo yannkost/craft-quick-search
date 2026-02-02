@@ -8,7 +8,7 @@ return [
     'Show Section Filter' => 'Показати фільтр розділів',
     'Show the section filter dropdown in the search UI.' => 'Показувати випадаючий список фільтра розділів в інтерфейсі пошуку.',
     'Show Related Entries' => 'Показати пов\'язані записи',
-    'Display related entries in search results.' => 'Відображати пов\'язані записи в результатах пошуку.',
+    'Display related entries button on entry pages.' => 'Відображати пов\'язані записи в результатах пошуку.',
 
     // Settings page - Search Settings
     'Search Settings' => 'Налаштування пошуку',
@@ -97,4 +97,7 @@ return [
     'Current Site' => 'Поточний сайт',
     'All Sites' => 'Усі сайти',
     'An error occurred while fetching sites.' => 'Виникла помилка під час отримання сайтів.',
+
+    // Current page (favorites dropdown)
+    'Current page' => 'Поточна сторінка',
 ];

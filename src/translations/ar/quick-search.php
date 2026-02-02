@@ -8,7 +8,7 @@ return [
     'Show Section Filter' => 'إظهار فلتر الأقسام',
     'Show the section filter dropdown in the search UI.' => 'إظهار القائمة المنسدلة لفلتر الأقسام في واجهة البحث.',
     'Show Related Entries' => 'إظهار المدخلات ذات الصلة',
-    'Display related entries in search results.' => 'عرض المدخلات ذات الصلة في نتائج البحث.',
+    'Display related entries button on entry pages.' => 'عرض المدخلات ذات الصلة في نتائج البحث.',
 
     // Settings page - Search Settings
     'Search Settings' => 'إعدادات البحث',
@@ -97,4 +97,7 @@ return [
     'Current Site' => 'الموقع الحالي',
     'All Sites' => 'جميع المواقع',
     'An error occurred while fetching sites.' => 'حدث خطأ أثناء جلب المواقع.',
+
+    // Current page (favorites dropdown)
+    'Current page' => 'الصفحة الحالية',
 ];

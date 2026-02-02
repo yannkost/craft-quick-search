@@ -8,7 +8,7 @@ return [
     'Show Section Filter' => 'セクションフィルターを表示',
     'Show the section filter dropdown in the search UI.' => '検索UIにセクションフィルターのドロップダウンを表示します。',
     'Show Related Entries' => '関連エントリーを表示',
-    'Display related entries in search results.' => '検索結果に関連エントリーを表示します。',
+    'Display related entries button on entry pages.' => '検索結果に関連エントリーを表示します。',
 
     // Settings page - Search Settings
     'Search Settings' => '検索設定',
@@ -97,4 +97,7 @@ return [
     'Current Site' => '現在のサイト',
     'All Sites' => 'すべてのサイト',
     'An error occurred while fetching sites.' => 'サイトの取得中にエラーが発生しました。',
+
+    // Current page (favorites dropdown)
+    'Current page' => '現在のページ',
 ];
