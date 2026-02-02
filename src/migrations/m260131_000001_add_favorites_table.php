@@ -19,6 +19,14 @@ class m260131_000001_add_favorites_table extends Migration
      */
     public function safeUp(): bool
     {
+        $db = Craft::$app->getDb();
+        $schema = $db->getSchema();
+
+        // Check if table already exists (e.g., fresh install with updated Install.php)
+        if ($schema->getTableSchema('{{%quicksearch_favorites}}') !== null) {
+            return true;
+        }
+
         $this->createTable('{{%quicksearch_favorites}}', [
             'id' => $this->primaryKey(),
             'entryId' => $this->integer()->notNull(),
