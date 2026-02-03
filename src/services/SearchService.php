@@ -54,8 +54,8 @@ class SearchService extends Component
 
         // Use search index for case-insensitive matching with relevance scoring
         $entryQuery = Entry::find()
-            ->search("title:*{$query}*")
-            ->orderBy('score')
+            ->where(['like', 'LOWER([[title]])', mb_strtolower($query)])
+            ->orderBy('title')
             ->status(null)
             ->section($sections !== null && !empty($sections) ? $sections : '*')
             ->limit($limit);
