@@ -218,27 +218,39 @@ class Plugin extends BasePlugin
                     $currentUser = Craft::$app->getUser()->getIdentity();
                     $request = Craft::$app->getRequest();
 
-                    if (!$currentUser || !$request || $request->getSegment(1) !== 'entries') {
+                    if (!$currentUser || !$request) {
                         return;
                     }
 
-                    // URL pattern: /entries/{section}/{entryId}-{slug}?site={siteHandle}
+                    // URL patterns:
+                    // /content/entries/{section}/{entryId}-{slug}?site={siteHandle}
+                    // /content/entries/{section}?source=...  (listing page, no entry)
+                    // Check if 'content' and 'entries' appear anywhere in segments (in that order)
                     $segments = $request->getSegments();
-                    if (count($segments) >= 3) {
-                        $entrySegment = $segments[2] ?? null;
-                        if ($entrySegment && is_string($entrySegment) && preg_match('/^(\d+)/', $entrySegment, $matches)) {
-                            $entryId = (int)$matches[1];
-                            if ($entryId > 0 && $this->history) {
-                                // Get site ID from URL query parameter (Craft CP uses ?site=handle)
-                                $siteHandle = $request->getQueryParam('site');
-                                if ($siteHandle) {
-                                    $site = Craft::$app->getSites()->getSiteByHandle($siteHandle);
-                                    $siteId = $site ? $site->id : Craft::$app->getSites()->getCurrentSite()->id;
-                                } else {
-                                    $siteId = Craft::$app->getSites()->getCurrentSite()->id;
-                                }
-                                $this->history->recordVisit($entryId, $siteId, $currentUser->id);
+
+                    $contentIndex = array_search('content', $segments);
+                    $entriesIndex = array_search('entries', $segments);
+
+                    if ($contentIndex === false || $entriesIndex === false || $entriesIndex <= $contentIndex) {
+                        return;
+                    }
+
+                    // Get the last segment and check if it starts with a number (entry ID)
+                    $lastSegment = end($segments);
+
+                    if ($lastSegment && is_string($lastSegment) && preg_match('/^(\d+)/', $lastSegment, $matches)) {
+                        $entryId = (int)$matches[1];
+
+                        if ($entryId > 0 && $this->history) {
+                            // Get site ID from URL query parameter (Craft CP uses ?site=handle)
+                            $siteHandle = $request->getQueryParam('site');
+                            if ($siteHandle) {
+                                $site = Craft::$app->getSites()->getSiteByHandle($siteHandle);
+                                $siteId = $site ? $site->id : Craft::$app->getSites()->getCurrentSite()->id;
+                            } else {
+                                $siteId = Craft::$app->getSites()->getCurrentSite()->id;
                             }
+                            $this->history->recordVisit($entryId, $siteId, $currentUser->id);
                         }
                     }
                 } catch (\Throwable $e) {
