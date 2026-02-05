@@ -1,0 +1,47 @@
+{# Quick Search Widget Settings Template #}
+
+{% import "_includes/forms" as forms %}
+
+{{ forms.selectField({
+    label: 'Show Sections'|t('quick-search'),
+    instructions: 'Which sections to display in the widget.'|t('quick-search'),
+    id: 'showSections',
+    name: 'showSections',
+    value: widget.showSections,
+    options: [
+        { value: 'both', label: 'History and Favorites'|t('quick-search') },
+        { value: 'history', label: 'History Only'|t('quick-search') },
+        { value: 'favorites', label: 'Favorites Only'|t('quick-search') },
+        { value: 'search', label: 'Search Only'|t('quick-search') }
+    ]
+}) }}
+
+{{ forms.lightswitchField({
+    label: 'Show Search Input'|t('quick-search'),
+    instructions: 'Display a search input at the top of the widget.'|t('quick-search'),
+    id: 'showSearch',
+    name: 'showSearch',
+    on: widget.showSearch
+}) }}
+
+{{ forms.textField({
+    label: 'History Limit'|t('quick-search'),
+    instructions: 'Number of history entries to show (5-20).'|t('quick-search'),
+    id: 'historyLimit',
+    name: 'historyLimit',
+    value: widget.historyLimit,
+    type: 'number',
+    min: 5,
+    max: 20
+}) }}
+
+{{ forms.textField({
+    label: 'Favorites Limit'|t('quick-search'),
+    instructions: 'Number of favorites to show (5-20).'|t('quick-search'),
+    id: 'favoritesLimit',
+    name: 'favoritesLimit',
+    value: widget.favoritesLimit,
+    type: 'number',
+    min: 5,
+    max: 20
+}) }}
