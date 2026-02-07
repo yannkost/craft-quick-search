@@ -20,6 +20,9 @@ use craftcms\quicksearch\services\FavoritesService;
 use craftcms\quicksearch\services\HistoryService;
 use craftcms\quicksearch\services\RelatedEntriesService;
 use craftcms\quicksearch\services\SearchService;
+use craftcms\quicksearch\widgets\QuickSearchWidget;
+use craft\events\RegisterComponentTypesEvent;
+use craft\services\Dashboard;
 use yii\base\Event;
 
 /**
@@ -81,6 +84,9 @@ class Plugin extends BasePlugin
             Craft::$app->controllerMap['quick-search-debug'] = DebugController::class;
         }
 
+        // Register widget
+        $this->registerWidget();
+
         // Only register for CP requests
         $request = Craft::$app->getRequest();
         if ($request->getIsCpRequest() && !$request->getIsConsoleRequest()) {
@@ -90,6 +96,20 @@ class Plugin extends BasePlugin
             $this->registerEntryOutlineButton();
             $this->registerRelatedEntriesButton();
         }
+    }
+
+    /**
+     * Register the Quick Search dashboard widget
+     */
+    private function registerWidget(): void
+    {
+        Event::on(
+            Dashboard::class,
+            Dashboard::EVENT_REGISTER_WIDGET_TYPES,
+            function(RegisterComponentTypesEvent $event) {
+                $event->types[] = QuickSearchWidget::class;
+            }
+        );
     }
 
     /**
@@ -153,6 +173,10 @@ class Plugin extends BasePlugin
                             'showSectionFilter' => $settings->showSectionFilter ?? true,
                             'compactMode' => $settings->compactMode ?? false,
                             'showRelatedEntries' => $settings->showRelatedEntries ?? false,
+                            'quickAccessEnabled' => $settings->quickAccessEnabled ?? true,
+                            'quickAccessShortcut' => $settings->quickAccessShortcut ?? 'ctrl+g',
+                            'quickAccessDefaultPanel' => $settings->quickAccessDefaultPanel ?? 'history',
+                            'quickAccessShowSearch' => $settings->quickAccessShowSearch ?? true,
                             'currentSiteId' => $currentSite->id,
                             'currentSiteName' => $currentSite->name,
                             'isMultiSite' => Craft::$app->getIsMultiSite(),
@@ -192,6 +216,11 @@ class Plugin extends BasePlugin
                                 'currentSite' => Craft::t('quick-search', 'Current Site'),
                                 'allSites' => Craft::t('quick-search', 'All Sites'),
                                 'currentPage' => Craft::t('quick-search', 'Current page'),
+                                'quickAccess' => Craft::t('quick-search', 'Quick Access'),
+                                'searchAllEntries' => Craft::t('quick-search', 'Search all entries...'),
+                                'filterHistoryFavorites' => Craft::t('quick-search', 'Filter...'),
+                                'pressEscToClose' => Craft::t('quick-search', 'Press Esc to close'),
+                                'history' => Craft::t('quick-search', 'History'),
                             ],
                         ]) . ';',
                         View::POS_HEAD

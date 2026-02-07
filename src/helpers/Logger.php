@@ -47,7 +47,7 @@ class Logger
         // Create log file path in Craft's storage/logs directory
         $logPath = Craft::$app->getPath()->getLogPath() . '/quick-search.log';
 
-        // Create stream handler for errors only (ERROR level and above)
+        // Create stream handler for error level and above
         $handler = new StreamHandler($logPath, MonologLogger::ERROR);
 
         // Set a clean format
@@ -95,5 +95,29 @@ class Logger
         ];
 
         self::getLogger()->error($message, $context);
+    }
+
+    /**
+     * Log an info message
+     *
+     * @param string $message The info message
+     * @param array $context Additional context data
+     * @return void
+     */
+    public static function info(string $message, array $context = []): void
+    {
+        self::getLogger()->info($message, $context);
+    }
+
+    /**
+     * Log a warning message
+     *
+     * @param string $message The warning message
+     * @param array $context Additional context data
+     * @return void
+     */
+    public static function warning(string $message, array $context = []): void
+    {
+        self::getLogger()->warning($message, $context);
     }
 }

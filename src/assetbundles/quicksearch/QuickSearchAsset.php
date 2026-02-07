@@ -30,7 +30,17 @@ class QuickSearchAsset extends AssetBundle
         ];
 
         $this->js = [
-            'js/quick-search.js',
+            'js/utils.js',
+            'js/quick-search-ui.js',
+            'js/quick-search-filters.js',
+            'js/quick-search-search.js',
+            'js/quick-search-history.js',
+            'js/quick-search-favorites.js',
+            'js/quick-search-core.js',
+            'js/related-entries-overlay.js',
+            'js/entry-outline-popup.js',
+            'js/quick-access-overlay.js',
+            'js/quick-search-init.js',
         ];
 
         parent::init();

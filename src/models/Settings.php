@@ -64,6 +64,26 @@ class Settings extends Model
     public int $maxFavorites = 25;
 
     /**
+     * @var bool Whether to enable the Quick Access Overlay
+     */
+    public bool $quickAccessEnabled = true;
+
+    /**
+     * @var string Keyboard shortcut for Quick Access Overlay (e.g., 'ctrl+g', 'meta+g')
+     */
+    public string $quickAccessShortcut = 'ctrl+g';
+
+    /**
+     * @var string Default panel to focus when opening Quick Access ('history' or 'favorites')
+     */
+    public string $quickAccessDefaultPanel = 'history';
+
+    /**
+     * @var bool Whether to show the entry search in Quick Access Overlay
+     */
+    public bool $quickAccessShowSearch = true;
+
+    /**
      * @inheritdoc
      */
     public function defineRules(): array
@@ -81,6 +101,11 @@ class Settings extends Model
             ['enabledSections', 'each', 'rule' => ['string']],
             ['sectionFilterMode', 'in', 'range' => ['include', 'exclude']],
             ['maxFavorites', 'integer', 'min' => 1, 'max' => 50],
+            ['quickAccessEnabled', 'boolean'],
+            ['quickAccessShortcut', 'string'],
+            ['quickAccessShortcut', 'match', 'pattern' => '/^(ctrl|meta|alt|shift)(\+(ctrl|meta|alt|shift))*\+[a-z0-9]$/i', 'message' => 'Invalid shortcut format. Use format like "ctrl+g" or "meta+shift+k".'],
+            ['quickAccessDefaultPanel', 'in', 'range' => ['history', 'favorites']],
+            ['quickAccessShowSearch', 'boolean'],
         ];
     }
 }

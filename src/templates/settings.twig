@@ -117,3 +117,48 @@
     required: true,
     errors: settings.getErrors('maxFavorites')
 }) }}
+
+<hr>
+
+<h2>{{ 'Quick Access Overlay'|t('quick-search') }}</h2>
+
+{{ forms.lightswitchField({
+    label: 'Enable Quick Access Overlay'|t('quick-search'),
+    instructions: 'Enable the keyboard-triggered overlay for quick access to history and favorites.'|t('quick-search'),
+    id: 'quickAccessEnabled',
+    name: 'quickAccessEnabled',
+    on: settings.quickAccessEnabled,
+    errors: settings.getErrors('quickAccessEnabled')
+}) }}
+
+{{ forms.textField({
+    label: 'Keyboard Shortcut'|t('quick-search'),
+    instructions: 'Keyboard shortcut to open the Quick Access Overlay. Use format like "ctrl+g" or "meta+g" (meta = Cmd on Mac). On Mac, "ctrl" will automatically be converted to "meta".'|t('quick-search'),
+    id: 'quickAccessShortcut',
+    name: 'quickAccessShortcut',
+    value: settings.quickAccessShortcut,
+    placeholder: 'ctrl+g',
+    errors: settings.getErrors('quickAccessShortcut')
+}) }}
+
+{{ forms.selectField({
+    label: 'Default Panel'|t('quick-search'),
+    instructions: 'Which panel to focus when opening the Quick Access Overlay.'|t('quick-search'),
+    id: 'quickAccessDefaultPanel',
+    name: 'quickAccessDefaultPanel',
+    value: settings.quickAccessDefaultPanel,
+    options: [
+        { value: 'history', label: 'History'|t('quick-search') },
+        { value: 'favorites', label: 'Favorites'|t('quick-search') }
+    ],
+    errors: settings.getErrors('quickAccessDefaultPanel')
+}) }}
+
+{{ forms.lightswitchField({
+    label: 'Show Entry Search'|t('quick-search'),
+    instructions: 'Show the entry search input at the top of the Quick Access Overlay.'|t('quick-search'),
+    id: 'quickAccessShowSearch',
+    name: 'quickAccessShowSearch',
+    on: settings.quickAccessShowSearch,
+    errors: settings.getErrors('quickAccessShowSearch')
+}) }}
