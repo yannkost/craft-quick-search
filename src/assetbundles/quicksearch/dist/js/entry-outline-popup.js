@@ -47,6 +47,15 @@ window.EntryOutlinePopup = (function() {
                         return;
                     }
 
+                    // Check if a tab was clicked - close and refresh outline
+                    const tab = e.target.closest('#content-container .tab, #content-container [data-id]');
+                    if (tab && this.popup && this.popup.classList.contains('active')) {
+                        // Small delay to let the tab switch complete
+                        setTimeout(() => {
+                            this.refreshOutline();
+                        }, 100);
+                    }
+
                     if (this.popup && this.popup.classList.contains('active') && !this.popup.contains(e.target)) {
                         this.hide();
                     }
@@ -60,6 +69,41 @@ window.EntryOutlinePopup = (function() {
                     this.hide();
                 }
             });
+
+            // Listen for Craft's tab change events via MutationObserver
+            this.observeTabChanges();
+        }
+
+        observeTabChanges() {
+            const contentContainer = document.querySelector('#content-container');
+            if (!contentContainer) return;
+
+            const observer = new MutationObserver((mutations) => {
+                // Check if any mutation affects tab visibility
+                for (const mutation of mutations) {
+                    if (mutation.type === 'attributes' && 
+                        (mutation.attributeName === 'class' || mutation.attributeName === 'hidden')) {
+                        // A tab might have changed visibility
+                        if (this.popup && this.popup.classList.contains('active')) {
+                            this.refreshOutline();
+                        }
+                        break;
+                    }
+                }
+            });
+
+            observer.observe(contentContainer, {
+                attributes: true,
+                subtree: true,
+                attributeFilter: ['class', 'hidden']
+            });
+        }
+
+        refreshOutline() {
+            if (this.popup && this.popup.classList.contains('active')) {
+                const hierarchy = this.scanBlocksHierarchy();
+                this.renderOutline(hierarchy);
+            }
         }
 
         togglePopup() {
@@ -95,8 +139,33 @@ window.EntryOutlinePopup = (function() {
             }
         }
 
+        getActiveTabContainer() {
+            // Find the active tab pane in Craft CMS entry editor
+            // Craft uses .flex-fields for the main content area
+            const activeTab = document.querySelector('#content-container .tab.sel, #content-container [data-id].sel');
+            if (activeTab) {
+                const tabId = activeTab.dataset.id || activeTab.getAttribute('href')?.replace('#', '');
+                if (tabId) {
+                    const tabPane = document.getElementById(tabId);
+                    if (tabPane) {
+                        return tabPane;
+                    }
+                }
+            }
+
+            // Fallback: look for visible tab content
+            const visiblePane = document.querySelector('#content-container > .flex-fields:not(.hidden), #content-container > div:not(.hidden) > .flex-fields');
+            if (visiblePane) {
+                return visiblePane;
+            }
+
+            // Final fallback: use the main content container
+            return document.querySelector('#content-container') || document.body;
+        }
+
         scanBlocksHierarchy() {
-            const allBlocks = document.querySelectorAll('.matrixblock[data-type-name]');
+            const container = this.getActiveTabContainer();
+            const allBlocks = container.querySelectorAll('.matrixblock[data-type-name]');
             const topLevelBlocks = [];
             const blockMap = new Map();
 

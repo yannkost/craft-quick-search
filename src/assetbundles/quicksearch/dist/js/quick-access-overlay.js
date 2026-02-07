@@ -37,6 +37,10 @@ window.QuickAccessOverlay = (function() {
 
             this.isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
             this.fetchTimeout = 10000;
+
+            // Drag and drop state
+            this.draggedItem = null;
+            this.draggedIndex = null;
         }
 
         init() {
@@ -126,15 +130,15 @@ window.QuickAccessOverlay = (function() {
             this.searchResultsSection.className = 'quick-access-search-results';
             this.searchResultsSection.style.display = 'none';
 
-            const searchResultsHeader = document.createElement('div');
-            searchResultsHeader.className = 'quick-access-search-results-header';
-            searchResultsHeader.innerHTML = '<span>' + (this.t.searchResults || 'Search Results') + '</span>';
+            this.searchResultsHeader = document.createElement('div');
+            this.searchResultsHeader.className = 'quick-access-search-results-header';
+            this.searchResultsHeader.innerHTML = '<span>' + (this.t.searchResults || 'Search Results') + '</span>';
 
             this.searchResultsList = document.createElement('ul');
             this.searchResultsList.className = 'quick-access-list';
             this.searchResultsList.setAttribute('role', 'listbox');
 
-            this.searchResultsSection.appendChild(searchResultsHeader);
+            this.searchResultsSection.appendChild(this.searchResultsHeader);
             this.searchResultsSection.appendChild(this.searchResultsList);
 
             // Assemble modal
@@ -197,10 +201,16 @@ window.QuickAccessOverlay = (function() {
         }
 
         bindOverlayEvents() {
-            // Close on backdrop click
+            // Close on backdrop click (but not if user has text selected)
             this.overlay.addEventListener('click', (e) => {
                 if (e.target === this.overlay) {
-                    this.hide();
+                    // Check if there's any text selected
+                    const selection = window.getSelection();
+                    const hasSelection = selection && selection.toString().length > 0;
+                    
+                    if (!hasSelection) {
+                        this.hide();
+                    }
                 }
             });
 
@@ -509,9 +519,117 @@ window.QuickAccessOverlay = (function() {
             items.forEach((entry, index) => {
                 const item = this.createEntryItem(entry, index, type);
                 if (item) {
+                    // Add drag & drop for favorites
+                    if (type === 'favorites') {
+                        this.setupDragAndDrop(item, index);
+                    }
                     list.appendChild(item);
                 }
             });
+        }
+
+        setupDragAndDrop(item, index) {
+            // Create drag handle button
+            const dragHandle = document.createElement('button');
+            dragHandle.type = 'button';
+            dragHandle.className = 'quick-access-drag-handle';
+            dragHandle.title = this.t.dragToReorder || 'Drag to reorder';
+            dragHandle.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16" /></svg>';
+            dragHandle.draggable = true;
+
+            // Insert drag handle at the beginning of the item
+            item.insertBefore(dragHandle, item.firstChild);
+            item.classList.add('quick-access-has-drag-handle');
+
+            dragHandle.addEventListener('dragstart', (e) => {
+                e.stopPropagation();
+                this.draggedItem = item;
+                this.draggedIndex = index;
+                item.classList.add('dragging');
+                e.dataTransfer.effectAllowed = 'move';
+                e.dataTransfer.setData('text/plain', index.toString());
+            });
+
+            dragHandle.addEventListener('dragend', () => {
+                item.classList.remove('dragging');
+                this.draggedItem = null;
+                this.draggedIndex = null;
+                // Remove all drag-over classes
+                this.favoritesList.querySelectorAll('.drag-over').forEach(el => {
+                    el.classList.remove('drag-over');
+                });
+            });
+
+            item.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                e.dataTransfer.dropEffect = 'move';
+                if (this.draggedItem && this.draggedItem !== item) {
+                    item.classList.add('drag-over');
+                }
+            });
+
+            item.addEventListener('dragleave', () => {
+                item.classList.remove('drag-over');
+            });
+
+            item.addEventListener('drop', (e) => {
+                e.preventDefault();
+                item.classList.remove('drag-over');
+
+                if (!this.draggedItem || this.draggedItem === item) return;
+
+                const fromIndex = this.draggedIndex;
+                const toIndex = parseInt(item.dataset.index, 10);
+
+                if (fromIndex === toIndex) return;
+
+                // Reorder the items array
+                const movedItem = this.favoritesItems.splice(fromIndex, 1)[0];
+                this.favoritesItems.splice(toIndex, 0, movedItem);
+
+                // Re-render the panel
+                this.renderPanel('favorites', this.favoritesItems);
+
+                // Save the new order to the server
+                this.saveFavoritesOrder();
+            });
+        }
+
+        async saveFavoritesOrder() {
+            try {
+                const entryIds = this.favoritesItems.map(item => ({
+                    entryId: item.id,
+                    siteId: item.siteId || item.site?.id
+                }));
+
+                const actionUrl = Craft.getActionUrl('quick-search/favorites/reorder');
+
+                const response = await utils.fetchWithTimeout(
+                    actionUrl,
+                    {
+                        method: 'POST',
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'X-CSRF-Token': Craft.csrfTokenValue
+                        },
+                        body: JSON.stringify({ entryIds })
+                    },
+                    this.fetchTimeout
+                );
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+
+                const data = await response.json();
+                if (!data.success) {
+                    console.error('Quick Access: Failed to save favorites order');
+                }
+            } catch (error) {
+                console.error('Quick Access: Error saving favorites order', error);
+            }
         }
 
         createEntryItem(entry, index, type) {
@@ -641,6 +759,11 @@ window.QuickAccessOverlay = (function() {
 
         renderSearchResults(results) {
             this.searchResultsList.innerHTML = '';
+
+            // Update header with result count
+            const count = results ? results.length : 0;
+            const headerText = this.t.searchResults || 'Search Results';
+            this.searchResultsHeader.innerHTML = '<span>' + headerText + ' (' + count + ')</span>';
 
             if (!results || results.length === 0) {
                 this.searchResultsList.innerHTML = '<li class="quick-access-empty">' + (this.t.noEntriesFound || 'No entries found') + '</li>';
