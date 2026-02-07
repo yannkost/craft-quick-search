@@ -165,6 +165,66 @@ window.EntryOutlinePopup = (function() {
 
         scanBlocksHierarchy() {
             const container = this.getActiveTabContainer();
+            const outlineItems = [];
+            
+            // First, scan top-level fields (not inside matrix blocks)
+            const topLevelFields = this.scanTopLevelFields(container);
+            outlineItems.push(...topLevelFields);
+            
+            // Then scan matrix blocks with their hierarchy
+            const matrixBlocks = this.scanMatrixBlocks(container);
+            outlineItems.push(...matrixBlocks);
+            
+            // Assign indices to top-level items
+            outlineItems.forEach((item, index) => {
+                item.index = index + 1;
+            });
+            
+            return outlineItems;
+        }
+
+        scanTopLevelFields(container) {
+            const fields = [];
+            const seenFields = new Set();
+            
+            // Find field containers that are direct children (not inside matrix blocks)
+            // Craft uses .field class for field wrappers with data-attribute for the field handle
+            const fieldContainers = container.querySelectorAll('.field[data-attribute]');
+            
+            fieldContainers.forEach(fieldEl => {
+                try {
+                    // Skip if this field is inside a matrix block
+                    if (fieldEl.closest('.matrixblock')) {
+                        return;
+                    }
+                    
+                    // Skip matrix/nested entry fields themselves (we handle their blocks separately)
+                    // But DO include entry relation fields (.elementselect)
+                    const isMatrixField = fieldEl.querySelector('.matrix-field, .nested-element-cards');
+                    if (isMatrixField) {
+                        return;
+                    }
+                    
+                    // Avoid duplicates
+                    const fieldAttr = fieldEl.dataset.attribute;
+                    if (seenFields.has(fieldAttr)) {
+                        return;
+                    }
+                    seenFields.add(fieldAttr);
+                    
+                    const fieldData = this.extractFieldData(fieldEl);
+                    if (fieldData) {
+                        fields.push(fieldData);
+                    }
+                } catch (e) {
+                    console.error('Quick Search: Error extracting field data', e);
+                }
+            });
+            
+            return fields;
+        }
+
+        scanMatrixBlocks(container) {
             const allBlocks = container.querySelectorAll('.matrixblock[data-type-name]');
             const topLevelBlocks = [];
             const blockMap = new Map();
@@ -198,12 +258,97 @@ window.EntryOutlinePopup = (function() {
                     console.error('Quick Search: Error building block hierarchy', e);
                 }
             });
-
-            topLevelBlocks.forEach((block, index) => {
-                block.index = index + 1;
-            });
-
+            
             return topLevelBlocks;
+        }
+
+        extractFieldData(fieldEl) {
+            // Get field label from legend or label element
+            const labelEl = fieldEl.querySelector(':scope > .heading legend, :scope > .heading label, .heading label');
+            const label = labelEl ? labelEl.textContent.trim() : null;
+            
+            if (!label) {
+                return null;
+            }
+            
+            // Get field type from data-type attribute first (most reliable)
+            let fieldType = 'field';
+            const dataType = fieldEl.dataset.type || '';
+            
+            if (dataType.includes('Entries') || dataType.includes('Categories') || dataType.includes('Assets') || dataType.includes('Users')) {
+                fieldType = 'entries';
+            } else if (dataType.includes('CKEditor') || dataType.includes('Redactor')) {
+                fieldType = 'richtext';
+            } else if (dataType.includes('PlainText')) {
+                fieldType = 'text';
+            } else if (dataType.includes('Number')) {
+                fieldType = 'number';
+            } else if (dataType.includes('Date')) {
+                fieldType = 'date';
+            } else if (dataType.includes('Lightswitch')) {
+                fieldType = 'lightswitch';
+            } else if (dataType.includes('Dropdown') || dataType.includes('RadioButtons') || dataType.includes('Checkboxes')) {
+                fieldType = 'dropdown';
+            } else if (dataType.includes('Color')) {
+                fieldType = 'color';
+            } else if (dataType.includes('Email')) {
+                fieldType = 'email';
+            } else if (dataType.includes('Url')) {
+                fieldType = 'url';
+            } else if (dataType.includes('Table')) {
+                fieldType = 'table';
+            } else {
+                // Fallback: detect from DOM elements
+                const fieldInput = fieldEl.querySelector('.input');
+                if (fieldInput) {
+                    if (fieldInput.querySelector('.elementselect, .elements')) {
+                        fieldType = 'entries';
+                    } else if (fieldInput.querySelector('textarea, .ck-editor, .redactor-box')) {
+                        fieldType = 'richtext';
+                    } else if (fieldInput.querySelector('input[type="text"], input[type="url"]')) {
+                        fieldType = 'text';
+                    } else if (fieldInput.querySelector('input[type="number"]')) {
+                        fieldType = 'number';
+                    } else if (fieldInput.querySelector('.datewrapper')) {
+                        fieldType = 'date';
+                    } else if (fieldInput.querySelector('.lightswitch')) {
+                        fieldType = 'lightswitch';
+                    } else if (fieldInput.querySelector('select')) {
+                        fieldType = 'dropdown';
+                    }
+                }
+            }
+            
+            // Get icon based on field type
+            const iconHtml = this.getFieldTypeIcon(fieldType);
+            
+            return {
+                element: fieldEl,
+                typeName: label,
+                fieldType: fieldType,
+                iconHtml: iconHtml,
+                iconColorClass: 'field-icon',
+                isField: true,
+                children: []
+            };
+        }
+
+        getFieldTypeIcon(fieldType) {
+            const icons = {
+                richtext: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" /></svg>',
+                text: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>',
+                number: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14" /></svg>',
+                date: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>',
+                lightswitch: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l4-4 4 4m0 6l-4 4-4-4" /></svg>',
+                dropdown: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>',
+                entries: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" /></svg>',
+                color: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" /></svg>',
+                email: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>',
+                url: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" /></svg>',
+                table: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>',
+                field: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16" /></svg>'
+            };
+            return icons[fieldType] || icons.field;
         }
 
         extractBlockData(block) {

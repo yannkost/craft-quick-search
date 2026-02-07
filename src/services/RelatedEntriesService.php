@@ -152,16 +152,8 @@ class RelatedEntriesService extends Component
                     continue;
                 }
                 
-                Logger::info('Scanning field for outgoing links', [
-                    'entryId' => $searchEntry->id,
-                    'field' => $field->handle,
-                    'contentLength' => strlen($fieldValue),
-                    'contentPreview' => substr($fieldValue, 0, 500),
-                ]);
-                
                 // Find CKEditor hash references (most important!)
                 if (preg_match_all($hashRefPattern, $fieldValue, $matches)) {
-                    Logger::info('Found hash ref matches', ['matches' => $matches[1]]);
                     foreach ($matches[1] as $id) {
                         $foundEntryIds[(int)$id] = true;
                     }
@@ -169,7 +161,6 @@ class RelatedEntriesService extends Component
                 
                 // Find Craft reference tags (curly brace format)
                 if (preg_match_all($refTagPattern, $fieldValue, $matches)) {
-                    Logger::info('Found ref tag matches', ['matches' => $matches[1]]);
                     foreach ($matches[1] as $id) {
                         $foundEntryIds[(int)$id] = true;
                     }
@@ -177,7 +168,6 @@ class RelatedEntriesService extends Component
                 
                 // Find entry IDs in URLs
                 if (preg_match_all($entryIdPattern, $fieldValue, $matches)) {
-                    Logger::info('Found URL matches', ['matches' => $matches[1]]);
                     foreach ($matches[1] as $id) {
                         $foundEntryIds[(int)$id] = true;
                     }
@@ -185,18 +175,12 @@ class RelatedEntriesService extends Component
                 
                 // Find data-entry-id attributes
                 if (preg_match_all($dataEntryIdPattern, $fieldValue, $matches)) {
-                    Logger::info('Found data attr matches', ['matches' => $matches[1]]);
                     foreach ($matches[1] as $id) {
                         $foundEntryIds[(int)$id] = true;
                     }
                 }
             }
         }
-        
-        Logger::info('Found outgoing entry IDs in content', [
-            'sourceEntryId' => $entry->id,
-            'foundIds' => array_keys($foundEntryIds),
-        ]);
 
         // Remove the current entry from results
         unset($foundEntryIds[$entry->id]);
@@ -273,11 +257,6 @@ class RelatedEntriesService extends Component
             '{entry:' . $entry->id . '}',
         ];
         
-        Logger::info('Searching RAW content for patterns', [
-            'entryId' => $entry->id,
-            'patterns' => $rawPatterns,
-        ]);
-        
         // Query the content table directly for raw content
         $db = Craft::$app->getDb();
         
@@ -314,15 +293,11 @@ class RelatedEntriesService extends Component
                     $elementId = (int)($row['canonicalId'] ?? $row['elementId']);
                     if ($elementId !== $entry->id) {
                         $foundEntryIds[$elementId] = true;
-                        Logger::info('RAW content match found', [
-                            'pattern' => $pattern,
-                            'elementId' => $elementId,
-                        ]);
                     }
                 }
             }
         } catch (\Throwable $e) {
-            Logger::warning('Error searching raw content', ['error' => $e->getMessage()]);
+            // Silently fail - raw content search is best-effort
         }
         
         return array_keys($foundEntryIds);
@@ -363,11 +338,6 @@ class RelatedEntriesService extends Component
             $searchPatterns[] = '/entries/' . ($entry->section->handle ?? '') . '/' . $entry->id;
         }
         
-        Logger::info('Searching RENDERED content for patterns', [
-            'entryId' => $entry->id,
-            'patterns' => $searchPatterns,
-        ]);
-
         // Get all text/HTML fields
         $fields = Craft::$app->getFields()->getAllFields();
         $htmlFieldTypes = [
@@ -387,21 +357,12 @@ class RelatedEntriesService extends Component
             return $foundEntryIds;
         }
 
-        Logger::info('HTML fields found for rendered search', [
-            'count' => count($htmlFields),
-            'fields' => array_map(fn($f) => $f->handle, $htmlFields),
-        ]);
-
         // Query all entries and check their content
         // Note: This could be slow for large sites - consider caching or limiting
         $entries = Entry::find()
             ->status(null)
             ->limit(500) // Safety limit
             ->all();
-
-        Logger::info('Entries to scan', [
-            'count' => count($entries),
-        ]);
 
         $foundEntryIds = [];
 
@@ -433,14 +394,6 @@ class RelatedEntriesService extends Component
                 // Ignore errors getting nested entries
             }
 
-            // Log when checking entry 696 specifically
-            if ($checkEntry->id === 696) {
-                Logger::info('Checking entry 696', [
-                    'nestedCount' => count($entriesToCheck) - 1,
-                    'nestedIds' => array_map(fn($e) => $e->id, $entriesToCheck),
-                ]);
-            }
-
             foreach ($entriesToCheck as $entryToCheck) {
                 foreach ($htmlFields as $field) {
                     try {
@@ -459,26 +412,10 @@ class RelatedEntriesService extends Component
                     if (!$fieldValue || !is_string($fieldValue)) {
                         continue;
                     }
-                    
-                    // Log content from entry 696's nested entries
-                    if ($checkEntry->id === 696) {
-                        Logger::info('Entry 696 field content', [
-                            'nestedEntryId' => $entryToCheck->id,
-                            'field' => $field->handle,
-                            'contentLength' => strlen($fieldValue),
-                            'contentPreview' => substr($fieldValue, 0, 300),
-                        ]);
-                    }
-                    
+
                     // Check for any of the search patterns
                     foreach ($searchPatterns as $pattern) {
                         if ($pattern && str_contains($fieldValue, $pattern)) {
-                            Logger::info('MATCH FOUND!', [
-                                'parentEntryId' => $checkEntry->id,
-                                'nestedEntryId' => $entryToCheck->id,
-                                'field' => $field->handle,
-                                'pattern' => $pattern,
-                            ]);
                             $foundEntryIds[$checkEntry->id] = true;
                             break 3; // Found, move to next entry
                         }
@@ -558,7 +495,6 @@ class RelatedEntriesService extends Component
                         break;
                     }
                 } catch (\Throwable $e) {
-                    Logger::warning('Error getting owner for entry', ['entryId' => $current->id, 'error' => $e->getMessage()]);
                     break;
                 }
                 $depth++;
@@ -623,10 +559,6 @@ class RelatedEntriesService extends Component
                     'status' => $entry->status ?? '',
                 ];
             } catch (\Throwable $e) {
-                Logger::warning('Error formatting related entry', [
-                    'entryId' => $entry->id ?? 'unknown',
-                    'error' => $e->getMessage(),
-                ]);
                 continue;
             }
         }

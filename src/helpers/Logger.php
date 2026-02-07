@@ -47,8 +47,8 @@ class Logger
         // Create log file path in Craft's storage/logs directory
         $logPath = Craft::$app->getPath()->getLogPath() . '/quick-search.log';
 
-        // Create stream handler for debug level and above
-        $handler = new StreamHandler($logPath, MonologLogger::DEBUG);
+        // Create stream handler for error level and above
+        $handler = new StreamHandler($logPath, MonologLogger::ERROR);
 
         // Set a clean format
         $formatter = new LineFormatter(
