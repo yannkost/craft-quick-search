@@ -331,8 +331,30 @@
 (function() {
     'use strict';
 
-    const utils = window.QuickSearchUtils;
     const debounceTimers = {};
+
+    /**
+     * Fetch with timeout - inline version for widget independence
+     */
+    async function fetchWithTimeout(url, options = {}, timeout = 10000) {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), timeout);
+
+        try {
+            const response = await fetch(url, {
+                ...options,
+                signal: controller.signal
+            });
+            clearTimeout(timeoutId);
+            return response;
+        } catch (error) {
+            clearTimeout(timeoutId);
+            if (error.name === 'AbortError') {
+                throw new Error('Request timed out');
+            }
+            throw error;
+        }
+    }
 
     function initWidgetSearch() {
         document.querySelectorAll('.quick-search-widget-search-input').forEach(input => {
@@ -377,11 +399,15 @@
         resultsContainer.innerHTML = '<div class="quick-search-widget-results-loading">Searching...</div>';
 
         try {
+            if (typeof Craft === 'undefined' || !Craft.getActionUrl) {
+                throw new Error('Craft not available');
+            }
+
             const searchUrl = Craft.getActionUrl('quick-search/search/index');
             const separator = searchUrl.includes('?') ? '&' : '?';
             const params = new URLSearchParams({ query });
 
-            const response = await utils.fetchWithTimeout(
+            const response = await fetchWithTimeout(
                 searchUrl + separator + params.toString(),
                 {
                     headers: {
