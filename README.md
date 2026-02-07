@@ -4,14 +4,22 @@ Fast entry search and navigation for the Craft CMS control panel.
 
 ## Features
 
-- Quick search entries by title from the CP header
-- Section and site filtering (multi-site support)
-- Recent entries history with tracking
-- Favorites system
-- Entry outline navigation
-- Related entries view
-- Compact mode option
-- 20 language translations
+### Search & Navigation
+- **Instant Search** - Find entries by title directly from the CP header with real-time results
+- **Smart Filtering** - Filter by section and site (full multi-site support)
+- **Quick Access Overlay** - Press `Ctrl/Cmd+G` to instantly access search, history, and favorites from anywhere
+- **Dashboard Widget** - Search, history, and favorites right on your dashboard
+
+### Productivity Tools
+- **Recent History** - Automatic tracking of visited entries with one-click access
+- **Favorites System** - Star important entries and reorder them via drag & drop
+- **Entry Outline** - Navigate complex entries with a hierarchical view of all fields and Matrix blocks
+- **Related Entries** - Discover connections between entries, including links in content fields
+
+### Customization
+- **Compact Mode** - Streamlined interface for power users
+- **Configurable Limits** - Control search results, history size, and favorites count
+- **20+ Languages** - Fully translated interface for international teams
 
 ## Requirements
 
