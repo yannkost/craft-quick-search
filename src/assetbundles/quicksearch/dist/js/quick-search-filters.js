@@ -1,6 +1,6 @@
 /**
  * Quick Search - Filters Module
- * Handles section and site filter functionality
+ * Handles section, site filter functionality, and search type tabs
  */
 
 window.QuickSearchFilters = (function() {
@@ -338,6 +338,143 @@ window.QuickSearchFilters = (function() {
         return instance.isMultiSite && instance.selectedSiteId === '*';
     }
 
+    /**
+     * Load available search types from server
+     * @param {object} instance - QuickSearch instance
+     */
+    async function loadSearchTypes(instance) {
+        try {
+            const response = await utils.fetchWithTimeout(Craft.getActionUrl('quick-search/search/types'), {
+                headers: {
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+
+            const data = await response.json();
+
+            if (data.success && data.types) {
+                instance.searchTypes = data.types;
+                populateTabs(instance);
+            }
+        } catch (error) {
+            console.error('Quick Search: Error loading search types', error);
+            // Fallback to default types
+            instance.searchTypes = [
+                { id: 'entries', label: instance.t.tabEntries || 'Entries', icon: 'document' }
+            ];
+            populateTabs(instance);
+        }
+    }
+
+    /**
+     * Populate tabs in the UI
+     * @param {object} instance - QuickSearch instance
+     */
+    function populateTabs(instance) {
+        if (!instance.tabsContainer) return;
+
+        instance.tabsContainer.innerHTML = '';
+        instance.tabs = [];
+
+        instance.searchTypes.forEach((type, index) => {
+            const tab = document.createElement('button');
+            tab.type = 'button';
+            tab.className = 'quick-search-tab';
+            tab.dataset.type = type.id;
+            if (index === 0) {
+                tab.classList.add('active');
+                instance.currentSearchType = type.id;
+            }
+
+            // Create icon
+            const iconSvg = getIconSvg(type.icon);
+            tab.innerHTML = `<span class="quick-search-tab-icon">${iconSvg}</span><span class="quick-search-tab-label">${type.label}</span>`;
+
+            tab.addEventListener('click', (e) => {
+                e.stopPropagation();
+                switchTab(instance, type.id);
+            });
+
+            instance.tabsContainer.appendChild(tab);
+            instance.tabs.push(tab);
+        });
+
+        updatePlaceholder(instance);
+    }
+
+    /**
+     * Get SVG icon for type
+     * @param {string} icon - Icon name
+     * @returns {string} SVG markup
+     */
+    function getIconSvg(icon) {
+        const icons = {
+            'document': '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>',
+            'tag': '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" /></svg>',
+            'photo': '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>',
+            'user': '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>',
+            'world': '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" /></svg>',
+            'settings': '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>'
+        };
+
+        return icons[icon] || icons.document;
+    }
+
+    /**
+     * Switch to a different search type tab
+     * @param {object} instance - QuickSearch instance
+     * @param {string} type - Search type ID
+     */
+    function switchTab(instance, type, skipSearch = false) {
+        if (instance.currentSearchType === type) return;
+
+        instance.currentSearchType = type;
+
+        // Update tab visual state
+        if (instance.tabsContainer) {
+            instance.tabsContainer.querySelectorAll('.quick-search-tab').forEach(tab => {
+                tab.classList.toggle('active', tab.dataset.type === type);
+            });
+        }
+
+        // Update placeholder text
+        updatePlaceholder(instance);
+
+        // Hide section filter for non-entry types
+        if (instance.sectionFilter) {
+            instance.sectionFilter.style.display = type === 'entries' ? '' : 'none';
+        }
+
+        // Re-search if there's a query (unless skipSearch is true)
+        if (!skipSearch && instance.input && instance.input.value.length >= instance.settings.minSearchLength) {
+            instance.search(instance.input.value);
+        }
+    }
+
+    /**
+     * Update input placeholder based on current search type
+     * @param {object} instance - QuickSearch instance
+     */
+    function updatePlaceholder(instance) {
+        if (!instance.input) return;
+
+        const placeholders = {
+            'entries': instance.t.searchEntriesPlaceholder || instance.t.searchPlaceholder || 'Search entries...',
+            'categories': instance.t.searchCategoriesPlaceholder || 'Search categories...',
+            'assets': instance.t.searchAssetsPlaceholder || 'Search assets...',
+            'users': instance.t.searchUsersPlaceholder || 'Search users...',
+            'globals': instance.t.searchGlobalsPlaceholder || 'Search globals...',
+            'admin': instance.t.searchAdminPlaceholder || 'Search settings...'
+        };
+
+        instance.input.placeholder = placeholders[instance.currentSearchType] || placeholders.entries;
+    }
+
     return {
         loadSections,
         populateSectionFilter,
@@ -347,6 +484,9 @@ window.QuickSearchFilters = (function() {
         populateSiteFilter,
         toggleSiteDropdown,
         hideSiteDropdown,
-        shouldShowSiteBadges
+        shouldShowSiteBadges,
+        loadSearchTypes,
+        populateTabs,
+        switchTab
     };
 })();

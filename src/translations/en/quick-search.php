@@ -104,4 +104,36 @@ return [
 
     // Current page (favorites dropdown)
     'Current page' => 'Current page',
+
+    // Tab labels for universal search
+    'Entries' => 'Entries',
+    'Categories' => 'Categories',
+    'Assets' => 'Assets',
+    'Users' => 'Users',
+    'Globals' => 'Globals',
+    'Admin' => 'Admin',
+
+    // Search placeholders per type
+    'Search categories...' => 'Search categories...',
+    'Search assets...' => 'Search assets...',
+    'Search users...' => 'Search users...',
+    'Search globals...' => 'Search globals...',
+    'Search settings...' => 'Search settings...',
+
+    // Empty states per type
+    'No categories found' => 'No categories found',
+    'No assets found' => 'No assets found',
+    'No users found' => 'No users found',
+    'No global sets found' => 'No global sets found',
+    'No admin results found' => 'No settings found',
+
+    // Type prefix help
+    'Type prefix hint' => 'Tip: Use "entries:", "categories:", "users:", etc. to switch search types',
+
+    // Copy actions
+    'Copy options' => 'Copy options',
+    'Copy URL' => 'Copy URL',
+    'Copy Title' => 'Copy Title',
+    'Copy ID' => 'Copy ID',
+    'Copied!' => 'Copied!',
 ];

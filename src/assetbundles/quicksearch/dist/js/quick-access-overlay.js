@@ -41,6 +41,15 @@ window.QuickAccessOverlay = (function() {
             // Drag and drop state
             this.draggedItem = null;
             this.draggedIndex = null;
+
+            // Search abort controller
+            this.searchAbortController = null;
+
+            // Edit drawer state
+            this.drawerOpen = false;
+            this.drawerEntry = null;
+            this.editDrawer = null;
+            this.searchResultsBody = null;
         }
 
         init() {
@@ -99,6 +108,24 @@ window.QuickAccessOverlay = (function() {
                 searchSection.style.display = 'none';
             }
 
+            // Tabs container
+            this.tabsContainer = document.createElement('div');
+            this.tabsContainer.className = 'quick-access-tabs';
+
+            this.tabButtons = {};
+            this.currentTab = 'entries';
+
+            // Load search types and create tabs
+            this.loadSearchTypes().then(() => {
+                this.renderTabs();
+            });
+
+            searchSection.appendChild(this.tabsContainer);
+
+            // Search input wrapper
+            const inputWrapper = document.createElement('div');
+            inputWrapper.className = 'quick-access-input-wrapper';
+
             this.searchInput = document.createElement('input');
             this.searchInput.type = 'text';
             this.searchInput.className = 'quick-access-search-input';
@@ -109,8 +136,10 @@ window.QuickAccessOverlay = (function() {
             searchHint.className = 'quick-access-search-hint';
             searchHint.textContent = 'Enter ↵';
 
-            searchSection.appendChild(this.searchInput);
-            searchSection.appendChild(searchHint);
+            inputWrapper.appendChild(this.searchInput);
+            inputWrapper.appendChild(searchHint);
+
+            searchSection.appendChild(inputWrapper);
 
             // Panels Container
             const panelsContainer = document.createElement('div');
@@ -139,7 +168,17 @@ window.QuickAccessOverlay = (function() {
             this.searchResultsList.setAttribute('role', 'listbox');
 
             this.searchResultsSection.appendChild(this.searchResultsHeader);
-            this.searchResultsSection.appendChild(this.searchResultsList);
+
+            // Search results body (list + edit drawer side by side)
+            this.searchResultsBody = document.createElement('div');
+            this.searchResultsBody.className = 'quick-access-search-results-body';
+            this.searchResultsBody.appendChild(this.searchResultsList);
+
+            // Edit Drawer
+            this.editDrawer = this.createEditDrawer();
+            this.searchResultsBody.appendChild(this.editDrawer);
+
+            this.searchResultsSection.appendChild(this.searchResultsBody);
 
             // Assemble modal
             this.modal.appendChild(header);
@@ -200,14 +239,222 @@ window.QuickAccessOverlay = (function() {
             return panel;
         }
 
+        createEditDrawer() {
+            const drawer = document.createElement('div');
+            drawer.className = 'quick-access-edit-drawer';
+
+            // Header
+            const drawerHeader = document.createElement('div');
+            drawerHeader.className = 'quick-access-drawer-header';
+
+            const drawerTitle = document.createElement('h3');
+            drawerTitle.className = 'quick-access-drawer-title';
+            drawerTitle.textContent = this.t.editEntry || 'Edit Entry';
+
+            const closeBtn = document.createElement('button');
+            closeBtn.type = 'button';
+            closeBtn.className = 'quick-access-drawer-close';
+            closeBtn.setAttribute('aria-label', 'Close drawer');
+            closeBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>';
+            closeBtn.addEventListener('click', () => this.closeDrawer());
+
+            drawerHeader.appendChild(drawerTitle);
+            drawerHeader.appendChild(closeBtn);
+
+            // Content
+            const drawerContent = document.createElement('div');
+            drawerContent.className = 'quick-access-drawer-content';
+
+            // Title field
+            this.drawerTitleField = this.createDrawerField('title', this.t.title || 'Title', 'text');
+            drawerContent.appendChild(this.drawerTitleField);
+
+            // Slug field
+            this.drawerSlugField = this.createDrawerField('slug', this.t.slug || 'Slug', 'text');
+            drawerContent.appendChild(this.drawerSlugField);
+
+            // Status field (select)
+            this.drawerStatusField = this.createDrawerSelectField('status', this.t.status || 'Status', [
+                { value: 'live', label: this.t.statusLive || 'Live' },
+                { value: 'disabled', label: this.t.statusDisabled || 'Disabled' },
+                { value: 'draft', label: this.t.statusDraft || 'Draft' }
+            ]);
+            drawerContent.appendChild(this.drawerStatusField);
+
+            // Post Date field
+            this.drawerPostDateField = this.createDrawerField('postDate', this.t.postDate || 'Post Date', 'datetime-local');
+            drawerContent.appendChild(this.drawerPostDateField);
+
+            // Expiry Date field
+            this.drawerExpiryDateField = this.createDrawerField('expiryDate', this.t.expiryDate || 'Expiry Date', 'datetime-local');
+            drawerContent.appendChild(this.drawerExpiryDateField);
+
+            // Footer
+            const drawerFooter = document.createElement('div');
+            drawerFooter.className = 'quick-access-drawer-footer';
+
+            const saveBtn = document.createElement('button');
+            saveBtn.type = 'button';
+            saveBtn.className = 'quick-access-drawer-save';
+            saveBtn.textContent = this.t.save || 'Save';
+            saveBtn.addEventListener('click', () => this.saveEntry());
+
+            drawerFooter.appendChild(saveBtn);
+
+            drawer.appendChild(drawerHeader);
+            drawer.appendChild(drawerContent);
+            drawer.appendChild(drawerFooter);
+
+            return drawer;
+        }
+
+        createDrawerField(name, label, type) {
+            const field = document.createElement('div');
+            field.className = 'quick-access-drawer-field';
+
+            const lbl = document.createElement('label');
+            lbl.className = 'quick-access-drawer-label';
+            lbl.textContent = label;
+
+            const input = document.createElement('input');
+            input.type = type;
+            input.className = 'quick-access-drawer-input';
+            input.name = name;
+            input.dataset.field = name;
+
+            field.appendChild(lbl);
+            field.appendChild(input);
+
+            return field;
+        }
+
+        createDrawerSelectField(name, label, options) {
+            const field = document.createElement('div');
+            field.className = 'quick-access-drawer-field';
+
+            const lbl = document.createElement('label');
+            lbl.className = 'quick-access-drawer-label';
+            lbl.textContent = label;
+
+            const select = document.createElement('select');
+            select.className = 'quick-access-drawer-input';
+            select.name = name;
+            select.dataset.field = name;
+
+            options.forEach(opt => {
+                const option = document.createElement('option');
+                option.value = opt.value;
+                option.textContent = opt.label;
+                select.appendChild(option);
+            });
+
+            field.appendChild(lbl);
+            field.appendChild(select);
+
+            return field;
+        }
+
+        isEditableEntry(entry, type) {
+            // Show edit button on entries (not admin, globals, users, assets, categories)
+            // History and favorites are always entries, search results need a type check
+            if (type === 'search') {
+                return entry.type === 'entry' || !entry.type;
+            }
+            // History and favorites items are entries
+            return type === 'history' || type === 'favorites';
+        }
+
+        openDrawer(entry) {
+            if (!entry) return;
+
+            this.drawerEntry = entry;
+            this.drawerOpen = true;
+
+            // Populate fields
+            const titleInput = this.editDrawer.querySelector('[data-field="title"]');
+            const slugInput = this.editDrawer.querySelector('[data-field="slug"]');
+            const statusSelect = this.editDrawer.querySelector('[data-field="status"]');
+            const postDateInput = this.editDrawer.querySelector('[data-field="postDate"]');
+            const expiryDateInput = this.editDrawer.querySelector('[data-field="expiryDate"]');
+
+            if (titleInput) titleInput.value = entry.title || '';
+            if (slugInput) slugInput.value = entry.slug || this.extractSlugFromUrl(entry.url) || '';
+            if (statusSelect) statusSelect.value = entry.status || 'live';
+            if (postDateInput) postDateInput.value = this.formatDateForInput(entry.postDate);
+            if (expiryDateInput) expiryDateInput.value = this.formatDateForInput(entry.expiryDate);
+
+            this.searchResultsBody.classList.add('drawer-open');
+
+            // Focus the title input after transition
+            setTimeout(() => {
+                if (titleInput) titleInput.focus();
+            }, 260);
+        }
+
+        closeDrawer() {
+            this.drawerOpen = false;
+            this.drawerEntry = null;
+            this.searchResultsBody.classList.remove('drawer-open');
+        }
+
+        saveEntry() {
+            // Placeholder - will be wired to backend in next iteration
+            if (!this.drawerEntry) return;
+
+            const titleInput = this.editDrawer.querySelector('[data-field="title"]');
+            const slugInput = this.editDrawer.querySelector('[data-field="slug"]');
+            const statusSelect = this.editDrawer.querySelector('[data-field="status"]');
+            const postDateInput = this.editDrawer.querySelector('[data-field="postDate"]');
+            const expiryDateInput = this.editDrawer.querySelector('[data-field="expiryDate"]');
+
+            const data = {
+                entryId: this.drawerEntry.id,
+                title: titleInput ? titleInput.value : '',
+                slug: slugInput ? slugInput.value : '',
+                status: statusSelect ? statusSelect.value : '',
+                postDate: postDateInput ? postDateInput.value : '',
+                expiryDate: expiryDateInput ? expiryDateInput.value : ''
+            };
+
+            console.log('Quick Access: Save entry (not yet implemented)', data);
+        }
+
+        formatDateForInput(dateStr) {
+            if (!dateStr) return '';
+            try {
+                const d = new Date(dateStr);
+                if (isNaN(d.getTime())) return '';
+                // Format as YYYY-MM-DDTHH:MM for datetime-local input
+                const pad = (n) => String(n).padStart(2, '0');
+                return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+            } catch {
+                return '';
+            }
+        }
+
+        extractSlugFromUrl(url) {
+            if (!url) return '';
+            try {
+                const pathname = new URL(url, window.location.origin).pathname;
+                // Remove trailing slash, then grab last segment
+                const segments = pathname.replace(/\/+$/, '').split('/');
+                return segments.pop() || '';
+            } catch {
+                return '';
+            }
+        }
+
         bindOverlayEvents() {
             // Close on backdrop click (but not if user has text selected)
             this.overlay.addEventListener('click', (e) => {
+                // Close any open copy menus
+                this.closeAllCopyMenus();
+
                 if (e.target === this.overlay) {
                     // Check if there's any text selected
                     const selection = window.getSelection();
                     const hasSelection = selection && selection.toString().length > 0;
-                    
+
                     if (!hasSelection) {
                         this.hide();
                     }
@@ -216,9 +463,20 @@ window.QuickAccessOverlay = (function() {
 
             // Search input - Enter to search
             this.searchInput.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter' && this.searchInput.value.trim().length >= 2) {
-                    e.preventDefault();
-                    this.performSearch(this.searchInput.value.trim());
+                if (e.key === 'Enter') {
+                    const rawValue = this.searchInput.value;
+                    const { type: parsedType, query } = this.parseQueryWithType(rawValue);
+
+                    // If type prefix found, switch tab (keep original input value)
+                    if (parsedType && this.searchTypes.some(t => t.id === parsedType)) {
+                        this.switchTab(parsedType);
+                        // Don't modify the input value - keep user input as-is
+                    }
+
+                    if (query.length >= 2) {
+                        e.preventDefault();
+                        this.performSearch(query);
+                    }
                 }
             });
 
@@ -318,7 +576,11 @@ window.QuickAccessOverlay = (function() {
             switch (e.key) {
                 case 'Escape':
                     e.preventDefault();
-                    this.hide();
+                    if (this.drawerOpen) {
+                        this.closeDrawer();
+                    } else {
+                        this.hide();
+                    }
                     break;
 
                 case 'Tab':
@@ -414,6 +676,11 @@ window.QuickAccessOverlay = (function() {
             this.isOpen = false;
             this.overlay.classList.remove('active');
             document.body.style.overflow = '';
+
+            // Close drawer if open
+            if (this.drawerOpen) {
+                this.closeDrawer();
+            }
         }
 
         setActivePanel(panel) {
@@ -654,22 +921,29 @@ window.QuickAccessOverlay = (function() {
             const meta = document.createElement('div');
             meta.className = 'quick-access-item-meta';
 
-            const section = document.createElement('span');
-            section.className = 'quick-access-item-section';
-            section.textContent = entry.section?.name || '';
+            // Build metadata based on entry type
+            if (type === 'search' && entry.type) {
+                // Search results with type info
+                meta.appendChild(this.createTypeSpecificMeta(entry, entry.type));
+            } else if (type === 'history' || type === 'favorites') {
+                // History/favorites - show section
+                const section = document.createElement('span');
+                section.className = 'quick-access-item-section';
+                section.textContent = entry.section?.name || '';
+                meta.appendChild(section);
 
-            const status = document.createElement('span');
-            status.className = `quick-access-item-status ${entry.status || ''}`;
-            status.textContent = entry.status || '';
+                if (this.settings.isMultiSite && entry.site) {
+                    const site = document.createElement('span');
+                    site.className = 'quick-access-item-site';
+                    site.textContent = entry.site.name || '';
+                    meta.appendChild(site);
+                }
 
-            meta.appendChild(section);
-            if (this.settings.isMultiSite && entry.site) {
-                const site = document.createElement('span');
-                site.className = 'quick-access-item-site';
-                site.textContent = entry.site.name || '';
-                meta.appendChild(site);
+                const status = document.createElement('span');
+                status.className = `quick-access-item-status ${entry.status || ''}`;
+                status.textContent = entry.status || '';
+                meta.appendChild(status);
             }
-            meta.appendChild(status);
 
             content.appendChild(title);
             content.appendChild(meta);
@@ -686,7 +960,88 @@ window.QuickAccessOverlay = (function() {
                 }
             });
 
+            // Copy button
+            const copyBtn = document.createElement('button');
+            copyBtn.type = 'button';
+            copyBtn.className = 'quick-access-copy-btn';
+            copyBtn.title = this.t.copyActions || 'Copy options';
+            copyBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>';
+
+            // Create copy dropdown menu
+            const copyMenu = document.createElement('div');
+            copyMenu.className = 'quick-access-copy-menu';
+            copyMenu.style.display = 'none';
+
+            const copiedMsg = this.t.copied || 'Copied!';
+            const copyFn = window.QuickSearchSearch.copyToClipboard;
+
+            // Copy URL
+            const copyUrlItem = document.createElement('button');
+            copyUrlItem.type = 'button';
+            copyUrlItem.className = 'quick-access-copy-menu-item';
+            copyUrlItem.textContent = this.t.copyUrl || 'Copy URL';
+            copyUrlItem.addEventListener('click', (e) => {
+                e.stopPropagation();
+                copyFn(entry.url, copiedMsg);
+                copyMenu.style.display = 'none';
+            });
+
+            // Copy Title
+            const copyTitleItem = document.createElement('button');
+            copyTitleItem.type = 'button';
+            copyTitleItem.className = 'quick-access-copy-menu-item';
+            copyTitleItem.textContent = this.t.copyTitle || 'Copy Title';
+            copyTitleItem.addEventListener('click', (e) => {
+                e.stopPropagation();
+                copyFn(entry.title, copiedMsg);
+                copyMenu.style.display = 'none';
+            });
+
+            // Copy ID
+            const copyIdItem = document.createElement('button');
+            copyIdItem.type = 'button';
+            copyIdItem.className = 'quick-access-copy-menu-item';
+            copyIdItem.textContent = this.t.copyId || 'Copy ID';
+            copyIdItem.addEventListener('click', (e) => {
+                e.stopPropagation();
+                copyFn(entry.id ? String(entry.id) : '', copiedMsg);
+                copyMenu.style.display = 'none';
+            });
+
+            copyMenu.appendChild(copyUrlItem);
+            copyMenu.appendChild(copyTitleItem);
+            copyMenu.appendChild(copyIdItem);
+
+            copyBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                // Close any other open menus first
+                this.closeAllCopyMenus();
+                copyMenu.style.display = copyMenu.style.display === 'none' ? 'block' : 'none';
+            });
+
+            // Stop propagation on menu click
+            copyMenu.addEventListener('click', (e) => {
+                e.stopPropagation();
+            });
+
+            // Edit button (only for editable entries)
+            let editBtn = null;
+            if (this.isEditableEntry(entry, type)) {
+                editBtn = document.createElement('button');
+                editBtn.type = 'button';
+                editBtn.className = 'quick-access-edit-btn';
+                editBtn.title = this.t.editEntry || 'Edit entry';
+                editBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>';
+                editBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    this.openDrawer(entry);
+                });
+            }
+
             item.appendChild(content);
+            item.appendChild(copyMenu);
+            if (editBtn) item.appendChild(editBtn);
+            item.appendChild(copyBtn);
             item.appendChild(newTabBtn);
 
             item.addEventListener('click', () => {
@@ -696,6 +1051,17 @@ window.QuickAccessOverlay = (function() {
             });
 
             return item;
+        }
+
+        /**
+         * Close all open copy menus within the overlay
+         */
+        closeAllCopyMenus() {
+            if (this.overlay) {
+                this.overlay.querySelectorAll('.quick-access-copy-menu').forEach(menu => {
+                    menu.style.display = 'none';
+                });
+            }
         }
 
         filterPanel(type, query) {
@@ -720,24 +1086,42 @@ window.QuickAccessOverlay = (function() {
         async performSearch(query) {
             if (!query || query.length < 2) return;
 
+            // Abort any in-flight search
+            if (this.searchAbortController) {
+                this.searchAbortController.abort();
+            }
+            this.searchAbortController = new AbortController();
+
             this.searchResultsSection.style.display = 'block';
             this.searchResultsList.innerHTML = '<li class="quick-access-loading">' + (this.t.searching || 'Searching...') + '</li>';
 
             try {
-                const params = new URLSearchParams({ query });
+                // Ensure type is valid before sending
+                const validTypes = ['entries', 'categories', 'assets', 'users', 'globals', 'admin'];
+                const type = (this.currentTab && validTypes.includes(this.currentTab)) ? this.currentTab : 'entries';
+
+                const params = new URLSearchParams({
+                    query: query,
+                    type: type
+                });
+
                 const actionUrl = Craft.getActionUrl('quick-search/search/index');
                 const separator = actionUrl.includes('?') ? '&' : '?';
 
-                const response = await utils.fetchWithTimeout(
-                    actionUrl + separator + params,
+                const timeoutId = setTimeout(() => this.searchAbortController.abort(), this.fetchTimeout);
+
+                const response = await fetch(
+                    actionUrl + separator + params.toString(),
                     {
                         headers: {
                             'Accept': 'application/json',
                             'X-Requested-With': 'XMLHttpRequest'
-                        }
-                    },
-                    this.fetchTimeout
+                        },
+                        signal: this.searchAbortController.signal
+                    }
                 );
+
+                clearTimeout(timeoutId);
 
                 if (!response.ok) {
                     throw new Error(`HTTP ${response.status}`);
@@ -752,6 +1136,9 @@ window.QuickAccessOverlay = (function() {
                     this.searchResultsList.innerHTML = '<li class="quick-access-error">' + (data.error || this.t.searchError || 'Search failed') + '</li>';
                 }
             } catch (error) {
+                if (error.name === 'AbortError') {
+                    return; // Silently ignore aborted requests
+                }
                 console.error('Quick Access: Search error', error);
                 this.searchResultsList.innerHTML = '<li class="quick-access-error">' + (this.t.searchError || 'An error occurred') + '</li>';
             }
@@ -766,7 +1153,7 @@ window.QuickAccessOverlay = (function() {
             this.searchResultsHeader.innerHTML = '<span>' + headerText + ' (' + count + ')</span>';
 
             if (!results || results.length === 0) {
-                this.searchResultsList.innerHTML = '<li class="quick-access-empty">' + (this.t.noEntriesFound || 'No entries found') + '</li>';
+                this.searchResultsList.innerHTML = '<li class="quick-access-empty">' + (this.getNoResultsMessage()) + '</li>';
                 return;
             }
 
@@ -776,6 +1163,151 @@ window.QuickAccessOverlay = (function() {
                     this.searchResultsList.appendChild(item);
                 }
             });
+        }
+
+        getNoResultsMessage() {
+            const messages = {
+                'entries': this.t.noEntriesFound || 'No entries found',
+                'categories': this.t.noCategoriesFound || 'No categories found',
+                'assets': this.t.noAssetsFound || 'No assets found',
+                'users': this.t.noUsersFound || 'No users found',
+                'globals': this.t.noGlobalsFound || 'No global sets found',
+                'admin': this.t.noAdminFound || 'No results found'
+            };
+            return messages[this.currentTab] || this.t.noEntriesFound || 'No results found';
+        }
+
+        parseQueryWithType(input) {
+            const trimmed = input.trim();
+            const lowerInput = trimmed.toLowerCase();
+
+            // Type prefixes for quick switching
+            const prefixes = {
+                'entries:': 'entries',
+                'categories:': 'categories',
+                'cats:': 'categories',
+                'assets:': 'assets',
+                'users:': 'users',
+                'globals:': 'globals',
+                // Admin prefixes
+                'admin:': 'admin',
+                'sections:': 'admin',
+                'fields:': 'admin',
+                'entrytypes:': 'admin',
+                'volumes:': 'admin',
+                'plugins:': 'admin',
+            };
+
+            for (const [prefix, type] of Object.entries(prefixes)) {
+                if (lowerInput.startsWith(prefix)) {
+                    return {
+                        type: type,
+                        query: trimmed.substring(prefix.length).trim()
+                    };
+                }
+            }
+
+            return {
+                type: null,
+                query: trimmed
+            };
+        }
+
+        createTypeSpecificMeta(entry, type) {
+            const container = document.createElement('div');
+            container.style.display = 'contents';
+
+            switch (type) {
+                case 'category':
+                    const group = document.createElement('span');
+                    group.className = 'quick-access-item-section';
+                    group.textContent = entry.group?.name || '';
+                    container.appendChild(group);
+                    break;
+
+                case 'asset':
+                    const volume = document.createElement('span');
+                    volume.className = 'quick-access-item-section';
+                    volume.textContent = entry.volume?.name || '';
+                    container.appendChild(volume);
+
+                    if (entry.filename) {
+                        const filename = document.createElement('span');
+                        filename.className = 'quick-access-item-site';
+                        filename.style.fontFamily = 'monospace';
+                        filename.textContent = entry.filename || '';
+                        container.appendChild(filename);
+                    }
+                    break;
+
+                case 'user':
+                    const email = document.createElement('span');
+                    email.className = 'quick-access-item-section';
+                    email.textContent = entry.email || '';
+                    container.appendChild(email);
+
+                    const userStatus = document.createElement('span');
+                    userStatus.className = `quick-access-item-status ${entry.status || ''}`;
+                    userStatus.textContent = entry.status || '';
+                    container.appendChild(userStatus);
+                    break;
+
+                case 'global':
+                    const handle = document.createElement('span');
+                    handle.className = 'quick-access-item-section';
+                    handle.textContent = entry.handle || '';
+                    container.appendChild(handle);
+                    break;
+
+                case 'admin':
+                case 'section':
+                case 'field':
+                case 'entrytype':
+                case 'categorygroup':
+                case 'volume':
+                case 'globalset':
+                case 'plugin':
+                    const adminType = document.createElement('span');
+                    adminType.className = `quick-access-item-admin-type ${entry.type || type}`;
+                    adminType.textContent = this.formatAdminTypeLabel(entry.type || type);
+                    container.appendChild(adminType);
+                    break;
+
+                case 'entry':
+                default:
+                    const section = document.createElement('span');
+                    section.className = 'quick-access-item-section';
+                    section.textContent = entry.section?.name || '';
+                    container.appendChild(section);
+
+                    if (this.settings.isMultiSite && entry.site) {
+                        const site = document.createElement('span');
+                        site.className = 'quick-access-item-site';
+                        site.textContent = entry.site.name || '';
+                        container.appendChild(site);
+                    }
+
+                    const status = document.createElement('span');
+                    status.className = `quick-access-item-status ${entry.status || ''}`;
+                    status.textContent = entry.status || '';
+                    container.appendChild(status);
+                    break;
+            }
+
+            return container;
+        }
+
+        formatAdminTypeLabel(type) {
+            const labels = {
+                'section': 'Section',
+                'field': 'Field',
+                'entrytype': 'Entry Type',
+                'categorygroup': 'Category Group',
+                'volume': 'Volume',
+                'globalset': 'Global Set',
+                'plugin': 'Plugin'
+            };
+            return labels[type] || type;
         }
 
         selectNext() {
@@ -857,6 +1389,124 @@ window.QuickAccessOverlay = (function() {
                     }
                 }
             }
+        }
+
+        // Tab methods for universal search
+        async loadSearchTypes() {
+            try {
+                const actionUrl = Craft.getActionUrl('quick-search/search/types');
+                const separator = actionUrl.includes('?') ? '&' : '?';
+
+                const response = await utils.fetchWithTimeout(
+                    actionUrl + separator + 'limit=50',
+                    {
+                        headers: {
+                            'Accept': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    },
+                    this.fetchTimeout
+                );
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                if (data.success) {
+                    this.searchTypes = data.types || [];
+                } else {
+                    this.searchTypes = [];
+                }
+            } catch (error) {
+                console.error('Quick Access: Error loading search types', error);
+                // Default to entries only
+                this.searchTypes = [
+                    { id: 'entries', label: this.t.tabEntries || 'Entries', icon: 'document' }
+                ];
+            }
+        }
+
+        renderTabs() {
+            if (!this.tabsContainer) return;
+
+            this.tabsContainer.innerHTML = '';
+            this.tabButtons = {};
+
+            this.searchTypes.forEach((type, index) => {
+                const tab = document.createElement('button');
+                tab.type = 'button';
+                tab.className = 'quick-access-tab';
+                if (index === 0) {
+                    tab.classList.add('active');
+                    this.currentTab = type.id;
+                }
+                tab.dataset.type = type.id;
+
+                // Create icon
+                const iconSvg = this.getTabIcon(type.icon);
+                tab.innerHTML = `<span class="quick-access-tab-icon">${iconSvg}</span><span class="quick-access-tab-label">${type.label}</span>`;
+
+                tab.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    this.switchTab(type.id);
+                });
+
+                this.tabsContainer.appendChild(tab);
+                this.tabButtons[type.id] = tab;
+            });
+
+            this.updateSearchPlaceholder();
+        }
+
+        getTabIcon(icon) {
+            const icons = {
+                'document': '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>',
+                'tag': '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" /></svg>',
+                'photo': '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>',
+                'user': '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>',
+                'world': '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" /></svg>',
+                'settings': '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>'
+            };
+
+            return icons[icon] || icons.document;
+        }
+
+        switchTab(type, skipSearch = false) {
+            if (this.currentTab === type) return;
+
+            this.currentTab = type;
+
+            // Update tab visual state
+            if (this.tabsContainer) {
+                this.tabsContainer.querySelectorAll('.quick-access-tab').forEach(tab => {
+                    tab.classList.toggle('active', tab.dataset.type === type);
+                });
+            }
+
+            // Update placeholder
+            this.updateSearchPlaceholder();
+
+            // Re-search if there's a query (unless skipSearch is true)
+            if (!skipSearch && this.searchInput && this.searchInput.value.trim().length >= 2) {
+                this.performSearch(this.searchInput.value.trim());
+            }
+        }
+
+        updateSearchPlaceholder() {
+            if (!this.searchInput) return;
+
+            const placeholders = {
+                'entries': this.t.searchAllEntries || 'Search entries...',
+                'categories': this.t.searchCategoriesPlaceholder || 'Search categories...',
+                'assets': this.t.searchAssetsPlaceholder || 'Search assets...',
+                'users': this.t.searchUsersPlaceholder || 'Search users...',
+                'globals': this.t.searchGlobalsPlaceholder || 'Search globals...',
+                'admin': this.t.searchAdminPlaceholder || 'Search settings...'
+            };
+
+            this.searchInput.placeholder = placeholders[this.currentTab] || placeholders.entries;
         }
     }
 

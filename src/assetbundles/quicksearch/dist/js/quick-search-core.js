@@ -23,6 +23,8 @@ window.QuickSearchCore = (function() {
             this.sectionFilterDropdown = null;
             this.siteFilterBtn = null;
             this.siteFilterDropdown = null;
+            this.tabsContainer = null;
+            this.tabs = [];
             this.backBtn = null;
             this.backPopup = null;
             this.historyBtn = null;
@@ -57,6 +59,10 @@ window.QuickSearchCore = (function() {
             this.selectedSiteId = null;
             this.searchAbortController = null;
             this.fetchTimeout = 10000;
+            // Tab-related properties
+            this.searchTypes = [];
+            this.currentSearchType = 'entries';
+            this.defaultSearchType = 'entries';
         }
 
         init() {
@@ -69,10 +75,21 @@ window.QuickSearchCore = (function() {
                 if (this.isMultiSite) {
                     Filters.loadSites(this);
                 }
+                // Load available search types
+                Filters.loadSearchTypes(this);
                 History.loadLastVisited(this);
             } catch (error) {
                 console.error('Quick Search: Error during initialization', error);
             }
+        }
+
+        // Delegate to Filters module for tabs
+        switchTab(type) {
+            Filters.switchTab(this, type);
+        }
+
+        getCurrentTab() {
+            return this.currentSearchType;
         }
 
         // Delegate to Search module
