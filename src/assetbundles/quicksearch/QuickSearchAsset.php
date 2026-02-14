@@ -43,6 +43,11 @@ class QuickSearchAsset extends AssetBundle
             'js/quick-search-init.js',
         ];
 
+        // Force cache busting with version
+        $this->publishOptions = [
+            'appendTimestamp' => true,
+        ];
+
         parent::init();
     }
 }

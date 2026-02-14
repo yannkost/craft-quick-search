@@ -48,7 +48,7 @@ window.QuickSearchUI = (function() {
 
             instance.selectedSections = [];
 
-            // Site filter
+            // Site filter (for Quick Access header)
             instance.siteFilter = document.createElement('div');
             instance.siteFilter.className = 'quick-search-site-filter';
 

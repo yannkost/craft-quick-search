@@ -121,6 +121,7 @@ class Plugin extends BasePlugin
             'quick-search/search' => 'quick-search/search/index',
             'quick-search/search/sections' => 'quick-search/search/sections',
             'quick-search/search/sites' => 'quick-search/search/sites',
+            'quick-search/search/types' => 'quick-search/search/types',
             'quick-search/history' => 'quick-search/history/index',
             'quick-search/history/record' => 'quick-search/history/record',
             'quick-search/history/clear' => 'quick-search/history/clear',
@@ -221,6 +222,33 @@ class Plugin extends BasePlugin
                                 'filterHistoryFavorites' => Craft::t('quick-search', 'Filter...'),
                                 'pressEscToClose' => Craft::t('quick-search', 'Press Esc to close'),
                                 'history' => Craft::t('quick-search', 'History'),
+                                // Tab labels
+                                'tabEntries' => Craft::t('quick-search', 'Entries'),
+                                'tabCategories' => Craft::t('quick-search', 'Categories'),
+                                'tabAssets' => Craft::t('quick-search', 'Assets'),
+                                'tabUsers' => Craft::t('quick-search', 'Users'),
+                                'tabGlobals' => Craft::t('quick-search', 'Globals'),
+                                'tabAdmin' => Craft::t('quick-search', 'Admin'),
+                                // Search placeholders per type
+                                'searchEntriesPlaceholder' => Craft::t('quick-search', 'Search entries...'),
+                                'searchCategoriesPlaceholder' => Craft::t('quick-search', 'Search categories...'),
+                                'searchAssetsPlaceholder' => Craft::t('quick-search', 'Search assets...'),
+                                'searchUsersPlaceholder' => Craft::t('quick-search', 'Search users...'),
+                                'searchGlobalsPlaceholder' => Craft::t('quick-search', 'Search globals...'),
+                                'searchAdminPlaceholder' => Craft::t('quick-search', 'Search settings...'),
+                                // Empty states per type
+                                'noCategoriesFound' => Craft::t('quick-search', 'No categories found'),
+                                'noAssetsFound' => Craft::t('quick-search', 'No assets found'),
+                                'noUsersFound' => Craft::t('quick-search', 'No users found'),
+                                'noGlobalsFound' => Craft::t('quick-search', 'No global sets found'),
+                                // Copy actions
+                                'copyActions' => Craft::t('quick-search', 'Copy options'),
+                                'copyUrl' => Craft::t('quick-search', 'Copy URL'),
+                                'copyTitle' => Craft::t('quick-search', 'Copy Title'),
+                                'copyId' => Craft::t('quick-search', 'Copy ID'),
+                                'copied' => Craft::t('quick-search', 'Copied!'),
+                                // Site dropdown
+                                'allSitesLabel' => Craft::t('quick-search', 'All Sites'),
                             ],
                         ]) . ';',
                         View::POS_HEAD
