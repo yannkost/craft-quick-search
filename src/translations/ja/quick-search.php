@@ -102,4 +102,90 @@ return [
 
     // Current page (favorites dropdown)
     'Current page' => '現在のページ',
+
+    // Quick Access overlay
+    'Quick Access' => 'クイックアクセス',
+    'Search Results' => '検索結果',
+    'Filter...' => 'フィルター...',
+    'Enter ↵' => 'Enter ↵',
+    'Close' => '閉じる',
+    'Close drawer' => 'パネルを閉じる',
+    'Drag to reorder' => 'ドラッグして並べ替え',
+    'Error loading history' => '履歴の読み込みエラー',
+    'Error loading favorites' => 'お気に入りの読み込みエラー',
+    'Search failed' => '検索に失敗しました',
+    'No settings found' => '設定が見つかりません',
+    'History' => '履歴',
+
+    // Edit drawer
+    'Edit Entry' => 'エントリーを編集',
+    'Title' => 'タイトル',
+    'Slug' => 'Slug',
+    'Status' => 'ステータス',
+    'Live' => '公開',
+    'Disabled' => '無効',
+    'Draft' => '下書き',
+    'Post Date' => '投稿日',
+    'Expiry Date' => '有効期限',
+    'Save' => '保存',
+
+    // Admin type labels
+    'Section' => 'セクション',
+    'Field' => 'フィールド',
+    'Entry Type' => 'エントリータイプ',
+    'Category Group' => 'カテゴリーグループ',
+    'Volume' => 'ボリューム',
+    'Global Set' => 'グローバルセット',
+    'Plugin' => 'Plugin',
+
+    // Tab labels for universal search
+    'Entries' => 'エントリー',
+    'Categories' => 'カテゴリー',
+    'Assets' => 'アセット',
+    'Users' => 'ユーザー',
+    'Globals' => 'グローバル',
+    'Admin' => '管理',
+
+    // Search placeholders per type
+    'Search categories...' => 'カテゴリーを検索...',
+    'Search assets...' => 'アセットを検索...',
+    'Search users...' => 'ユーザーを検索...',
+    'Search globals...' => 'グローバルを検索...',
+    'Search settings...' => '設定を検索...',
+
+    // Empty states per type
+    'No categories found' => 'カテゴリーが見つかりません',
+    'No assets found' => 'アセットが見つかりません',
+    'No users found' => 'ユーザーが見つかりません',
+    'No global sets found' => 'グローバルセットが見つかりません',
+    'No admin results found' => '設定が見つかりません',
+
+    // Type prefix help
+    'Type prefix hint' => 'ヒント：「entries:」「categories:」「users:」等を使用して検索タイプを切り替えられます',
+
+    // Saved Searches
+    'Saved Searches' => '保存済み検索',
+    'Save Search' => '検索を保存',
+    'Name this search...' => 'この検索に名前を付ける...',
+    'Run' => '実行',
+    'Delete saved search' => '保存済み検索を削除',
+    'Delete this saved search?' => 'この保存済み検索を削除しますか？',
+    'No saved searches yet' => '保存済み検索はまだありません',
+    'Maximum saved searches reached' => '保存済み検索の上限に達しました',
+    'Saved Searches Limit' => '保存済み検索の上限',
+    'Maximum number of saved searches per user.' => 'ユーザーごとの保存済み検索の最大数。',
+    'An error occurred while saving search.' => '検索の保存中にエラーが発生しました。',
+    'An error occurred while fetching saved searches.' => '保存済み検索の取得中にエラーが発生しました。',
+    'An error occurred while deleting saved search.' => '保存済み検索の削除中にエラーが発生しました。',
+    'An error occurred while reordering saved searches.' => '保存済み検索の並べ替え中にエラーが発生しました。',
+
+    // Favorites shortcuts
+    'Navigating to {title}...' => '{title}に移動中...',
+
+    // Copy actions
+    'Copy options' => 'コピーオプション',
+    'Copy URL' => 'URLをコピー',
+    'Copy Title' => 'タイトルをコピー',
+    'Copy ID' => 'IDをコピー',
+    'Copied!' => 'コピーしました！',
 ];

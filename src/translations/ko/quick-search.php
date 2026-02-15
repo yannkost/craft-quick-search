@@ -102,4 +102,90 @@ return [
 
     // Current page (favorites dropdown)
     'Current page' => '현재 페이지',
+
+    // Quick Access overlay
+    'Quick Access' => '빠른 접근',
+    'Search Results' => '검색 결과',
+    'Filter...' => '필터...',
+    'Enter ↵' => 'Enter ↵',
+    'Close' => '닫기',
+    'Close drawer' => '패널 닫기',
+    'Drag to reorder' => '드래그하여 순서 변경',
+    'Error loading history' => '기록 로드 오류',
+    'Error loading favorites' => '즐겨찾기 로드 오류',
+    'Search failed' => '검색 실패',
+    'No settings found' => '설정을 찾을 수 없음',
+    'History' => '기록',
+
+    // Edit drawer
+    'Edit Entry' => '항목 편집',
+    'Title' => '제목',
+    'Slug' => 'Slug',
+    'Status' => '상태',
+    'Live' => '게시됨',
+    'Disabled' => '비활성',
+    'Draft' => '초안',
+    'Post Date' => '게시일',
+    'Expiry Date' => '만료일',
+    'Save' => '저장',
+
+    // Admin type labels
+    'Section' => '섹션',
+    'Field' => '필드',
+    'Entry Type' => '항목 유형',
+    'Category Group' => '카테고리 그룹',
+    'Volume' => '볼륨',
+    'Global Set' => '글로벌 세트',
+    'Plugin' => 'Plugin',
+
+    // Tab labels for universal search
+    'Entries' => '항목',
+    'Categories' => '카테고리',
+    'Assets' => '자산',
+    'Users' => '사용자',
+    'Globals' => '글로벌',
+    'Admin' => '관리',
+
+    // Search placeholders per type
+    'Search categories...' => '카테고리 검색...',
+    'Search assets...' => '자산 검색...',
+    'Search users...' => '사용자 검색...',
+    'Search globals...' => '글로벌 검색...',
+    'Search settings...' => '설정 검색...',
+
+    // Empty states per type
+    'No categories found' => '카테고리를 찾을 수 없습니다',
+    'No assets found' => '자산을 찾을 수 없습니다',
+    'No users found' => '사용자를 찾을 수 없습니다',
+    'No global sets found' => '글로벌 세트를 찾을 수 없습니다',
+    'No admin results found' => '설정을 찾을 수 없습니다',
+
+    // Type prefix help
+    'Type prefix hint' => '팁: "entries:", "categories:", "users:" 등을 사용하여 검색 유형을 전환하세요',
+
+    // Saved Searches
+    'Saved Searches' => '저장된 검색',
+    'Save Search' => '검색 저장',
+    'Name this search...' => '이 검색 이름 지정...',
+    'Run' => '실행',
+    'Delete saved search' => '저장된 검색 삭제',
+    'Delete this saved search?' => '이 저장된 검색을 삭제하시겠습니까?',
+    'No saved searches yet' => '아직 저장된 검색이 없습니다',
+    'Maximum saved searches reached' => '최대 저장 검색 수에 도달했습니다',
+    'Saved Searches Limit' => '저장된 검색 제한',
+    'Maximum number of saved searches per user.' => '사용자당 최대 저장 검색 수.',
+    'An error occurred while saving search.' => '검색 저장 중 오류가 발생했습니다.',
+    'An error occurred while fetching saved searches.' => '저장된 검색을 가져오는 중 오류가 발생했습니다.',
+    'An error occurred while deleting saved search.' => '저장된 검색 삭제 중 오류가 발생했습니다.',
+    'An error occurred while reordering saved searches.' => '저장된 검색 재정렬 중 오류가 발생했습니다.',
+
+    // Favorites shortcuts
+    'Navigating to {title}...' => '{title}(으)로 이동 중...',
+
+    // Copy actions
+    'Copy options' => '복사 옵션',
+    'Copy URL' => 'URL 복사',
+    'Copy Title' => '제목 복사',
+    'Copy ID' => 'ID 복사',
+    'Copied!' => '복사됨!',
 ];

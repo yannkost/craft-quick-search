@@ -102,4 +102,90 @@ return [
 
     // Current page (favorites dropdown)
     'Current page' => 'Mevcut sayfa',
+
+    // Quick Access overlay
+    'Quick Access' => 'Hızlı Erişim',
+    'Search Results' => 'Arama Sonuçları',
+    'Filter...' => 'Filtrele...',
+    'Enter ↵' => 'Enter ↵',
+    'Close' => 'Kapat',
+    'Close drawer' => 'Paneli kapat',
+    'Drag to reorder' => 'Sıralamak için sürükleyin',
+    'Error loading history' => 'Geçmiş yüklenirken hata oluştu',
+    'Error loading favorites' => 'Favoriler yüklenirken hata oluştu',
+    'Search failed' => 'Arama başarısız',
+    'No settings found' => 'Ayar bulunamadı',
+    'History' => 'Geçmiş',
+
+    // Edit drawer
+    'Edit Entry' => 'Girişi düzenle',
+    'Title' => 'Başlık',
+    'Slug' => 'Slug',
+    'Status' => 'Durum',
+    'Live' => 'Yayında',
+    'Disabled' => 'Devre dışı',
+    'Draft' => 'Taslak',
+    'Post Date' => 'Yayın tarihi',
+    'Expiry Date' => 'Bitiş tarihi',
+    'Save' => 'Kaydet',
+
+    // Admin type labels
+    'Section' => 'Bölüm',
+    'Field' => 'Alan',
+    'Entry Type' => 'Giriş türü',
+    'Category Group' => 'Kategori grubu',
+    'Volume' => 'Birim',
+    'Global Set' => 'Global küme',
+    'Plugin' => 'Plugin',
+
+    // Tab labels for universal search
+    'Entries' => 'Girdiler',
+    'Categories' => 'Kategoriler',
+    'Assets' => 'Dosyalar',
+    'Users' => 'Kullanıcılar',
+    'Globals' => 'Globaller',
+    'Admin' => 'Yönetim',
+
+    // Search placeholders per type
+    'Search categories...' => 'Kategorileri ara...',
+    'Search assets...' => 'Dosyaları ara...',
+    'Search users...' => 'Kullanıcıları ara...',
+    'Search globals...' => 'Globalleri ara...',
+    'Search settings...' => 'Ayarları ara...',
+
+    // Empty states per type
+    'No categories found' => 'Kategori bulunamadı',
+    'No assets found' => 'Dosya bulunamadı',
+    'No users found' => 'Kullanıcı bulunamadı',
+    'No global sets found' => 'Global set bulunamadı',
+    'No admin results found' => 'Ayar bulunamadı',
+
+    // Type prefix help
+    'Type prefix hint' => 'İpucu: Arama türünü değiştirmek için "entries:", "categories:", "users:" vb. kullanın',
+
+    // Saved Searches
+    'Saved Searches' => 'Kayıtlı aramalar',
+    'Save Search' => 'Aramayı kaydet',
+    'Name this search...' => 'Bu aramayı adlandırın...',
+    'Run' => 'Çalıştır',
+    'Delete saved search' => 'Kayıtlı aramayı sil',
+    'Delete this saved search?' => 'Bu kayıtlı aramayı silmek istiyor musunuz?',
+    'No saved searches yet' => 'Henüz kayıtlı arama yok',
+    'Maximum saved searches reached' => 'Maksimum kayıtlı arama sayısına ulaşıldı',
+    'Saved Searches Limit' => 'Kayıtlı arama limiti',
+    'Maximum number of saved searches per user.' => 'Kullanıcı başına maksimum kayıtlı arama sayısı.',
+    'An error occurred while saving search.' => 'Arama kaydedilirken bir hata oluştu.',
+    'An error occurred while fetching saved searches.' => 'Kayıtlı aramalar yüklenirken bir hata oluştu.',
+    'An error occurred while deleting saved search.' => 'Kayıtlı arama silinirken bir hata oluştu.',
+    'An error occurred while reordering saved searches.' => 'Kayıtlı aramalar yeniden sıralanırken bir hata oluştu.',
+
+    // Favorites shortcuts
+    'Navigating to {title}...' => '{title} sayfasına gidiliyor...',
+
+    // Copy actions
+    'Copy options' => 'Kopyalama seçenekleri',
+    'Copy URL' => 'URL kopyala',
+    'Copy Title' => 'Başlığı kopyala',
+    'Copy ID' => 'ID kopyala',
+    'Copied!' => 'Kopyalandı!',
 ];

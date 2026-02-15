@@ -102,4 +102,90 @@ return [
 
     // Current page (favorites dropdown)
     'Current page' => 'Aktuální stránka',
+
+    // Quick Access overlay
+    'Quick Access' => 'Rychlý přístup',
+    'Search Results' => 'Výsledky hledání',
+    'Filter...' => 'Filtrovat...',
+    'Enter ↵' => 'Enter ↵',
+    'Close' => 'Zavřít',
+    'Close drawer' => 'Zavřít panel',
+    'Drag to reorder' => 'Přetáhněte pro změnu pořadí',
+    'Error loading history' => 'Chyba při načítání historie',
+    'Error loading favorites' => 'Chyba při načítání oblíbených',
+    'Search failed' => 'Hledání selhalo',
+    'No settings found' => 'Žádná nastavení nenalezena',
+    'History' => 'Historie',
+
+    // Edit drawer
+    'Edit Entry' => 'Upravit záznam',
+    'Title' => 'Název',
+    'Slug' => 'Slug',
+    'Status' => 'Stav',
+    'Live' => 'Publikováno',
+    'Disabled' => 'Zakázáno',
+    'Draft' => 'Koncept',
+    'Post Date' => 'Datum publikace',
+    'Expiry Date' => 'Datum expirace',
+    'Save' => 'Uložit',
+
+    // Admin type labels
+    'Section' => 'Sekce',
+    'Field' => 'Pole',
+    'Entry Type' => 'Typ záznamu',
+    'Category Group' => 'Skupina kategorií',
+    'Volume' => 'Svazek',
+    'Global Set' => 'Globální sada',
+    'Plugin' => 'Plugin',
+
+    // Tab labels for universal search
+    'Entries' => 'Položky',
+    'Categories' => 'Kategorie',
+    'Assets' => 'Soubory',
+    'Users' => 'Uživatelé',
+    'Globals' => 'Globální',
+    'Admin' => 'Admin',
+
+    // Search placeholders per type
+    'Search categories...' => 'Hledat kategorie...',
+    'Search assets...' => 'Hledat soubory...',
+    'Search users...' => 'Hledat uživatele...',
+    'Search globals...' => 'Hledat globální...',
+    'Search settings...' => 'Hledat nastavení...',
+
+    // Empty states per type
+    'No categories found' => 'Žádné kategorie nenalezeny',
+    'No assets found' => 'Žádné soubory nenalezeny',
+    'No users found' => 'Žádní uživatelé nenalezeni',
+    'No global sets found' => 'Žádné globální sady nenalezeny',
+    'No admin results found' => 'Žádná nastavení nenalezena',
+
+    // Type prefix help
+    'Type prefix hint' => 'Tip: Použijte „entries:", „categories:", „users:" atd. pro přepnutí typu vyhledávání',
+
+    // Saved Searches
+    'Saved Searches' => 'Uložená vyhledávání',
+    'Save Search' => 'Uložit vyhledávání',
+    'Name this search...' => 'Pojmenovat toto vyhledávání...',
+    'Run' => 'Spustit',
+    'Delete saved search' => 'Smazat uložené vyhledávání',
+    'Delete this saved search?' => 'Smazat toto uložené vyhledávání?',
+    'No saved searches yet' => 'Zatím žádná uložená vyhledávání',
+    'Maximum saved searches reached' => 'Dosažen maximální počet uložených vyhledávání',
+    'Saved Searches Limit' => 'Limit uložených vyhledávání',
+    'Maximum number of saved searches per user.' => 'Maximální počet uložených vyhledávání na uživatele.',
+    'An error occurred while saving search.' => 'Při ukládání vyhledávání došlo k chybě.',
+    'An error occurred while fetching saved searches.' => 'Při načítání uložených vyhledávání došlo k chybě.',
+    'An error occurred while deleting saved search.' => 'Při mazání uloženého vyhledávání došlo k chybě.',
+    'An error occurred while reordering saved searches.' => 'Při změně pořadí uložených vyhledávání došlo k chybě.',
+
+    // Favorites shortcuts
+    'Navigating to {title}...' => 'Přechod na {title}...',
+
+    // Copy actions
+    'Copy options' => 'Možnosti kopírování',
+    'Copy URL' => 'Kopírovat URL',
+    'Copy Title' => 'Kopírovat název',
+    'Copy ID' => 'Kopírovat ID',
+    'Copied!' => 'Zkopírováno!',
 ];

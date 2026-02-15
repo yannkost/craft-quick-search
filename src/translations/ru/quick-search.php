@@ -102,4 +102,90 @@ return [
 
     // Current page (favorites dropdown)
     'Current page' => 'Текущая страница',
+
+    // Quick Access overlay
+    'Quick Access' => 'Быстрый доступ',
+    'Search Results' => 'Результаты поиска',
+    'Filter...' => 'Фильтр...',
+    'Enter ↵' => 'Ввод ↵',
+    'Close' => 'Закрыть',
+    'Close drawer' => 'Закрыть панель',
+    'Drag to reorder' => 'Перетащите для изменения порядка',
+    'Error loading history' => 'Ошибка загрузки истории',
+    'Error loading favorites' => 'Ошибка загрузки избранного',
+    'Search failed' => 'Поиск не удался',
+    'No settings found' => 'Настройки не найдены',
+    'History' => 'История',
+
+    // Edit drawer
+    'Edit Entry' => 'Редактировать запись',
+    'Title' => 'Заголовок',
+    'Slug' => 'Slug',
+    'Status' => 'Статус',
+    'Live' => 'Опубликовано',
+    'Disabled' => 'Отключено',
+    'Draft' => 'Черновик',
+    'Post Date' => 'Дата публикации',
+    'Expiry Date' => 'Дата истечения',
+    'Save' => 'Сохранить',
+
+    // Admin type labels
+    'Section' => 'Раздел',
+    'Field' => 'Поле',
+    'Entry Type' => 'Тип записи',
+    'Category Group' => 'Группа категорий',
+    'Volume' => 'Том',
+    'Global Set' => 'Глобальный набор',
+    'Plugin' => 'Plugin',
+
+    // Tab labels for universal search
+    'Entries' => 'Записи',
+    'Categories' => 'Категории',
+    'Assets' => 'Файлы',
+    'Users' => 'Пользователи',
+    'Globals' => 'Глобальные',
+    'Admin' => 'Админ',
+
+    // Search placeholders per type
+    'Search categories...' => 'Поиск категорий...',
+    'Search assets...' => 'Поиск файлов...',
+    'Search users...' => 'Поиск пользователей...',
+    'Search globals...' => 'Поиск глобальных...',
+    'Search settings...' => 'Поиск настроек...',
+
+    // Empty states per type
+    'No categories found' => 'Категории не найдены',
+    'No assets found' => 'Файлы не найдены',
+    'No users found' => 'Пользователи не найдены',
+    'No global sets found' => 'Глобальные наборы не найдены',
+    'No admin results found' => 'Настройки не найдены',
+
+    // Type prefix help
+    'Type prefix hint' => 'Совет: Используйте «entries:», «categories:», «users:» и т.д. для переключения типа поиска',
+
+    // Saved Searches
+    'Saved Searches' => 'Сохранённые поиски',
+    'Save Search' => 'Сохранить поиск',
+    'Name this search...' => 'Назовите этот поиск...',
+    'Run' => 'Выполнить',
+    'Delete saved search' => 'Удалить сохранённый поиск',
+    'Delete this saved search?' => 'Удалить этот сохранённый поиск?',
+    'No saved searches yet' => 'Пока нет сохранённых поисков',
+    'Maximum saved searches reached' => 'Достигнут максимум сохранённых поисков',
+    'Saved Searches Limit' => 'Лимит сохранённых поисков',
+    'Maximum number of saved searches per user.' => 'Максимальное количество сохранённых поисков на пользователя.',
+    'An error occurred while saving search.' => 'Произошла ошибка при сохранении поиска.',
+    'An error occurred while fetching saved searches.' => 'Произошла ошибка при загрузке сохранённых поисков.',
+    'An error occurred while deleting saved search.' => 'Произошла ошибка при удалении сохранённого поиска.',
+    'An error occurred while reordering saved searches.' => 'Произошла ошибка при изменении порядка сохранённых поисков.',
+
+    // Favorites shortcuts
+    'Navigating to {title}...' => 'Переход к {title}...',
+
+    // Copy actions
+    'Copy options' => 'Параметры копирования',
+    'Copy URL' => 'Копировать URL',
+    'Copy Title' => 'Копировать заголовок',
+    'Copy ID' => 'Копировать ID',
+    'Copied!' => 'Скопировано!',
 ];

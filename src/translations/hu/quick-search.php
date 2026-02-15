@@ -102,4 +102,90 @@ return [
 
     // Current page (favorites dropdown)
     'Current page' => 'Jelenlegi oldal',
+
+    // Quick Access overlay
+    'Quick Access' => 'Gyors hozzáférés',
+    'Search Results' => 'Keresési eredmények',
+    'Filter...' => 'Szűrés...',
+    'Enter ↵' => 'Enter ↵',
+    'Close' => 'Bezárás',
+    'Close drawer' => 'Panel bezárása',
+    'Drag to reorder' => 'Húzza az átrendezéshez',
+    'Error loading history' => 'Hiba az előzmények betöltésekor',
+    'Error loading favorites' => 'Hiba a kedvencek betöltésekor',
+    'Search failed' => 'A keresés sikertelen',
+    'No settings found' => 'Nem található beállítás',
+    'History' => 'Előzmények',
+
+    // Edit drawer
+    'Edit Entry' => 'Bejegyzés szerkesztése',
+    'Title' => 'Cím',
+    'Slug' => 'Slug',
+    'Status' => 'Állapot',
+    'Live' => 'Élő',
+    'Disabled' => 'Letiltva',
+    'Draft' => 'Vázlat',
+    'Post Date' => 'Közzététel dátuma',
+    'Expiry Date' => 'Lejárati dátum',
+    'Save' => 'Mentés',
+
+    // Admin type labels
+    'Section' => 'Szekció',
+    'Field' => 'Mező',
+    'Entry Type' => 'Bejegyzés típus',
+    'Category Group' => 'Kategóriacsoport',
+    'Volume' => 'Kötet',
+    'Global Set' => 'Globális készlet',
+    'Plugin' => 'Plugin',
+
+    // Tab labels for universal search
+    'Entries' => 'Bejegyzések',
+    'Categories' => 'Kategóriák',
+    'Assets' => 'Fájlok',
+    'Users' => 'Felhasználók',
+    'Globals' => 'Globálisok',
+    'Admin' => 'Admin',
+
+    // Search placeholders per type
+    'Search categories...' => 'Kategóriák keresése...',
+    'Search assets...' => 'Fájlok keresése...',
+    'Search users...' => 'Felhasználók keresése...',
+    'Search globals...' => 'Globálisok keresése...',
+    'Search settings...' => 'Beállítások keresése...',
+
+    // Empty states per type
+    'No categories found' => 'Nem található kategória',
+    'No assets found' => 'Nem található fájl',
+    'No users found' => 'Nem található felhasználó',
+    'No global sets found' => 'Nem található globális készlet',
+    'No admin results found' => 'Nem található beállítás',
+
+    // Type prefix help
+    'Type prefix hint' => 'Tipp: Használja az „entries:", „categories:", „users:" stb. előtagokat a keresési típus váltásához',
+
+    // Saved Searches
+    'Saved Searches' => 'Mentett keresések',
+    'Save Search' => 'Keresés mentése',
+    'Name this search...' => 'Keresés elnevezése...',
+    'Run' => 'Futtatás',
+    'Delete saved search' => 'Mentett keresés törlése',
+    'Delete this saved search?' => 'Törli ezt a mentett keresést?',
+    'No saved searches yet' => 'Még nincsenek mentett keresések',
+    'Maximum saved searches reached' => 'Elérte a mentett keresések maximumát',
+    'Saved Searches Limit' => 'Mentett keresések korlátja',
+    'Maximum number of saved searches per user.' => 'Felhasználónkénti mentett keresések maximális száma.',
+    'An error occurred while saving search.' => 'Hiba történt a keresés mentése közben.',
+    'An error occurred while fetching saved searches.' => 'Hiba történt a mentett keresések betöltése közben.',
+    'An error occurred while deleting saved search.' => 'Hiba történt a mentett keresés törlése közben.',
+    'An error occurred while reordering saved searches.' => 'Hiba történt a mentett keresések átrendezése közben.',
+
+    // Favorites shortcuts
+    'Navigating to {title}...' => 'Navigálás ide: {title}...',
+
+    // Copy actions
+    'Copy options' => 'Másolási lehetőségek',
+    'Copy URL' => 'URL másolása',
+    'Copy Title' => 'Cím másolása',
+    'Copy ID' => 'ID másolása',
+    'Copied!' => 'Másolva!',
 ];

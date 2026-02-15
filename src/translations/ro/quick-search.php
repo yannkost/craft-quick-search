@@ -102,4 +102,90 @@ return [
 
     // Current page (favorites dropdown)
     'Current page' => 'Pagina curentă',
+
+    // Quick Access overlay
+    'Quick Access' => 'Acces rapid',
+    'Search Results' => 'Rezultatele căutării',
+    'Filter...' => 'Filtrare...',
+    'Enter ↵' => 'Enter ↵',
+    'Close' => 'Închide',
+    'Close drawer' => 'Închide panoul',
+    'Drag to reorder' => 'Trageți pentru reordonare',
+    'Error loading history' => 'Eroare la încărcarea istoricului',
+    'Error loading favorites' => 'Eroare la încărcarea favoritelor',
+    'Search failed' => 'Căutarea a eșuat',
+    'No settings found' => 'Nicio setare găsită',
+    'History' => 'Istoric',
+
+    // Edit drawer
+    'Edit Entry' => 'Editare intrare',
+    'Title' => 'Titlu',
+    'Slug' => 'Slug',
+    'Status' => 'Stare',
+    'Live' => 'Publicat',
+    'Disabled' => 'Dezactivat',
+    'Draft' => 'Ciornă',
+    'Post Date' => 'Data publicării',
+    'Expiry Date' => 'Data expirării',
+    'Save' => 'Salvare',
+
+    // Admin type labels
+    'Section' => 'Secțiune',
+    'Field' => 'Câmp',
+    'Entry Type' => 'Tip intrare',
+    'Category Group' => 'Grup de categorii',
+    'Volume' => 'Volum',
+    'Global Set' => 'Set global',
+    'Plugin' => 'Plugin',
+
+    // Tab labels for universal search
+    'Entries' => 'Intrări',
+    'Categories' => 'Categorii',
+    'Assets' => 'Fișiere',
+    'Users' => 'Utilizatori',
+    'Globals' => 'Globale',
+    'Admin' => 'Admin',
+
+    // Search placeholders per type
+    'Search categories...' => 'Caută categorii...',
+    'Search assets...' => 'Caută fișiere...',
+    'Search users...' => 'Caută utilizatori...',
+    'Search globals...' => 'Caută globale...',
+    'Search settings...' => 'Caută setări...',
+
+    // Empty states per type
+    'No categories found' => 'Nicio categorie găsită',
+    'No assets found' => 'Niciun fișier găsit',
+    'No users found' => 'Niciun utilizator găsit',
+    'No global sets found' => 'Niciun set global găsit',
+    'No admin results found' => 'Nicio setare găsită',
+
+    // Type prefix help
+    'Type prefix hint' => 'Sfat: Folosiți „entries:", „categories:", „users:" etc. pentru a schimba tipul de căutare',
+
+    // Saved Searches
+    'Saved Searches' => 'Căutări salvate',
+    'Save Search' => 'Salvează căutarea',
+    'Name this search...' => 'Denumiți această căutare...',
+    'Run' => 'Execută',
+    'Delete saved search' => 'Șterge căutarea salvată',
+    'Delete this saved search?' => 'Ștergeți această căutare salvată?',
+    'No saved searches yet' => 'Nicio căutare salvată încă',
+    'Maximum saved searches reached' => 'Numărul maxim de căutări salvate atins',
+    'Saved Searches Limit' => 'Limită căutări salvate',
+    'Maximum number of saved searches per user.' => 'Numărul maxim de căutări salvate per utilizator.',
+    'An error occurred while saving search.' => 'A apărut o eroare la salvarea căutării.',
+    'An error occurred while fetching saved searches.' => 'A apărut o eroare la obținerea căutărilor salvate.',
+    'An error occurred while deleting saved search.' => 'A apărut o eroare la ștergerea căutării salvate.',
+    'An error occurred while reordering saved searches.' => 'A apărut o eroare la reordonarea căutărilor salvate.',
+
+    // Favorites shortcuts
+    'Navigating to {title}...' => 'Navigare către {title}...',
+
+    // Copy actions
+    'Copy options' => 'Opțiuni de copiere',
+    'Copy URL' => 'Copiază URL',
+    'Copy Title' => 'Copiază titlul',
+    'Copy ID' => 'Copiază ID',
+    'Copied!' => 'Copiat!',
 ];

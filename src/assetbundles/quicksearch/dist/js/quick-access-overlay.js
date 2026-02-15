@@ -98,7 +98,7 @@ window.QuickAccessOverlay = (function() {
             const closeBtn = document.createElement('button');
             closeBtn.type = 'button';
             closeBtn.className = 'quick-access-close';
-            closeBtn.setAttribute('aria-label', 'Close');
+            closeBtn.setAttribute('aria-label', this.t.close || 'Close');
             closeBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>';
             closeBtn.addEventListener('click', () => this.hide());
 
@@ -139,7 +139,7 @@ window.QuickAccessOverlay = (function() {
 
             const searchHint = document.createElement('span');
             searchHint.className = 'quick-access-search-hint';
-            searchHint.textContent = 'Enter ↵';
+            searchHint.textContent = this.t.enterToSearch || 'Enter ↵';
 
             // Save search button
             this.saveSearchBtn = document.createElement('button');
@@ -288,7 +288,7 @@ window.QuickAccessOverlay = (function() {
             const closeBtn = document.createElement('button');
             closeBtn.type = 'button';
             closeBtn.className = 'quick-access-drawer-close';
-            closeBtn.setAttribute('aria-label', 'Close drawer');
+            closeBtn.setAttribute('aria-label', this.t.closeDrawer || 'Close drawer');
             closeBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>';
             closeBtn.addEventListener('click', () => this.closeDrawer());
 
@@ -309,9 +309,9 @@ window.QuickAccessOverlay = (function() {
 
             // Status field (select)
             this.drawerStatusField = this.createDrawerSelectField('status', this.t.status || 'Status', [
-                { value: 'live', label: this.t.statusLive || 'Live' },
-                { value: 'disabled', label: this.t.statusDisabled || 'Disabled' },
-                { value: 'draft', label: this.t.statusDraft || 'Draft' }
+                { value: 'live', label: this.t.live || 'Live' },
+                { value: 'disabled', label: this.t.disabled || 'Disabled' },
+                { value: 'draft', label: this.t.draft || 'Draft' }
             ]);
             drawerContent.appendChild(this.drawerStatusField);
 
@@ -1462,13 +1462,13 @@ window.QuickAccessOverlay = (function() {
 
         formatAdminTypeLabel(type) {
             const labels = {
-                'section': 'Section',
-                'field': 'Field',
-                'entrytype': 'Entry Type',
-                'categorygroup': 'Category Group',
-                'volume': 'Volume',
-                'globalset': 'Global Set',
-                'plugin': 'Plugin'
+                'section': this.t.adminSection || 'Section',
+                'field': this.t.adminField || 'Field',
+                'entrytype': this.t.adminEntryType || 'Entry Type',
+                'categorygroup': this.t.adminCategoryGroup || 'Category Group',
+                'volume': this.t.adminVolume || 'Volume',
+                'globalset': this.t.adminGlobalSet || 'Global Set',
+                'plugin': this.t.adminPlugin || 'Plugin'
             };
             return labels[type] || type;
         }

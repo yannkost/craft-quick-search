@@ -102,4 +102,90 @@ return [
 
     // Current page (favorites dropdown)
     'Current page' => 'Página atual',
+
+    // Quick Access overlay
+    'Quick Access' => 'Acesso rápido',
+    'Search Results' => 'Resultados da pesquisa',
+    'Filter...' => 'Filtrar...',
+    'Enter ↵' => 'Enter ↵',
+    'Close' => 'Fechar',
+    'Close drawer' => 'Fechar painel',
+    'Drag to reorder' => 'Arrastar para reordenar',
+    'Error loading history' => 'Erro ao carregar histórico',
+    'Error loading favorites' => 'Erro ao carregar favoritos',
+    'Search failed' => 'A pesquisa falhou',
+    'No settings found' => 'Nenhuma configuração encontrada',
+    'History' => 'Histórico',
+
+    // Edit drawer
+    'Edit Entry' => 'Editar entrada',
+    'Title' => 'Título',
+    'Slug' => 'Slug',
+    'Status' => 'Estado',
+    'Live' => 'Publicado',
+    'Disabled' => 'Desativado',
+    'Draft' => 'Rascunho',
+    'Post Date' => 'Data de publicação',
+    'Expiry Date' => 'Data de expiração',
+    'Save' => 'Salvar',
+
+    // Admin type labels
+    'Section' => 'Seção',
+    'Field' => 'Campo',
+    'Entry Type' => 'Tipo de entrada',
+    'Category Group' => 'Grupo de categorias',
+    'Volume' => 'Volume',
+    'Global Set' => 'Conjunto global',
+    'Plugin' => 'Plugin',
+
+    // Tab labels for universal search
+    'Entries' => 'Entradas',
+    'Categories' => 'Categorias',
+    'Assets' => 'Recursos',
+    'Users' => 'Utilizadores',
+    'Globals' => 'Globais',
+    'Admin' => 'Admin',
+
+    // Search placeholders per type
+    'Search categories...' => 'Pesquisar categorias...',
+    'Search assets...' => 'Pesquisar recursos...',
+    'Search users...' => 'Pesquisar utilizadores...',
+    'Search globals...' => 'Pesquisar globais...',
+    'Search settings...' => 'Pesquisar definições...',
+
+    // Empty states per type
+    'No categories found' => 'Nenhuma categoria encontrada',
+    'No assets found' => 'Nenhum recurso encontrado',
+    'No users found' => 'Nenhum utilizador encontrado',
+    'No global sets found' => 'Nenhum conjunto global encontrado',
+    'No admin results found' => 'Nenhuma definição encontrada',
+
+    // Type prefix help
+    'Type prefix hint' => 'Dica: Use «entries:», «categories:», «users:», etc. para mudar o tipo de pesquisa',
+
+    // Saved Searches
+    'Saved Searches' => 'Pesquisas guardadas',
+    'Save Search' => 'Guardar pesquisa',
+    'Name this search...' => 'Nomear esta pesquisa...',
+    'Run' => 'Executar',
+    'Delete saved search' => 'Eliminar pesquisa guardada',
+    'Delete this saved search?' => 'Eliminar esta pesquisa guardada?',
+    'No saved searches yet' => 'Ainda sem pesquisas guardadas',
+    'Maximum saved searches reached' => 'Máximo de pesquisas guardadas atingido',
+    'Saved Searches Limit' => 'Limite de pesquisas guardadas',
+    'Maximum number of saved searches per user.' => 'Número máximo de pesquisas guardadas por utilizador.',
+    'An error occurred while saving search.' => 'Ocorreu um erro ao guardar a pesquisa.',
+    'An error occurred while fetching saved searches.' => 'Ocorreu um erro ao obter as pesquisas guardadas.',
+    'An error occurred while deleting saved search.' => 'Ocorreu um erro ao eliminar a pesquisa guardada.',
+    'An error occurred while reordering saved searches.' => 'Ocorreu um erro ao reordenar as pesquisas guardadas.',
+
+    // Favorites shortcuts
+    'Navigating to {title}...' => 'A navegar para {title}...',
+
+    // Copy actions
+    'Copy options' => 'Opções de cópia',
+    'Copy URL' => 'Copiar URL',
+    'Copy Title' => 'Copiar título',
+    'Copy ID' => 'Copiar ID',
+    'Copied!' => 'Copiado!',
 ];
