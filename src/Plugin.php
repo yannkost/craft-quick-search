@@ -248,6 +248,8 @@ class Plugin extends BasePlugin
                                 'noAssetsFound' => Craft::t('quick-search', 'No assets found'),
                                 'noUsersFound' => Craft::t('quick-search', 'No users found'),
                                 'noGlobalsFound' => Craft::t('quick-search', 'No global sets found'),
+                                // Favorites shortcuts
+                                'navigatingTo' => Craft::t('quick-search', 'Navigating to {title}...'),
                                 // Copy actions
                                 'copyActions' => Craft::t('quick-search', 'Copy options'),
                                 'copyUrl' => Craft::t('quick-search', 'Copy URL'),

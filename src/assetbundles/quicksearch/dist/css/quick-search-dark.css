@@ -787,6 +787,19 @@
         background: #606870;
     }
 
+    /* --- Quick Access: shortcut badge --- */
+    .quick-access-shortcut-badge {
+        background: #434648;
+        color: #8a98a6;
+    }
+
+    /* --- Quick Access: navigation toast --- */
+    .quick-access-nav-toast {
+        background: #e8eaed;
+        color: #1c2e36;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+    }
+
     /* --- Dark mode: highlight animation --- */
     @keyframes quick-search-highlight-dark {
         0% { box-shadow: 0 0 0 3px rgba(77, 166, 255, 0.5); }
