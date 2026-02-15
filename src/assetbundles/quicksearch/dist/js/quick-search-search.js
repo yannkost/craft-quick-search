@@ -11,7 +11,7 @@ window.QuickSearchSearch = (function() {
     // Valid search types
     const VALID_TYPES = ['entries', 'categories', 'assets', 'users', 'globals', 'admin'];
 
-    // Type prefixes for quick switching
+    // Type prefixes for quick switching (long prefixes first to avoid short prefix conflicts)
     const TYPE_PREFIXES = {
         'entries:': 'entries',
         'categories:': 'categories',
@@ -26,6 +26,13 @@ window.QuickSearchSearch = (function() {
         'entrytypes:': 'admin',
         'volumes:': 'admin',
         'plugins:': 'admin',
+        // Short prefixes
+        'e:': 'entries',
+        'c:': 'categories',
+        'a:': 'assets',
+        'u:': 'users',
+        'g:': 'globals',
+        '@:': 'admin',
     };
 
     /**

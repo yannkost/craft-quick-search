@@ -1201,7 +1201,7 @@ window.QuickAccessOverlay = (function() {
             const trimmed = input.trim();
             const lowerInput = trimmed.toLowerCase();
 
-            // Type prefixes for quick switching
+            // Type prefixes for quick switching (long prefixes first to avoid short prefix conflicts)
             const prefixes = {
                 'entries:': 'entries',
                 'categories:': 'categories',
@@ -1216,6 +1216,13 @@ window.QuickAccessOverlay = (function() {
                 'entrytypes:': 'admin',
                 'volumes:': 'admin',
                 'plugins:': 'admin',
+                // Short prefixes
+                'e:': 'entries',
+                'c:': 'categories',
+                'a:': 'assets',
+                'u:': 'users',
+                'g:': 'globals',
+                '@:': 'admin',
             };
 
             for (const [prefix, type] of Object.entries(prefixes)) {
