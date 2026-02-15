@@ -102,4 +102,90 @@ return [
 
     // Current page (favorites dropdown)
     'Current page' => 'Aktuelle Seite',
+
+    // Quick Access overlay
+    'Quick Access' => 'Schnellzugriff',
+    'Search Results' => 'Suchergebnisse',
+    'Filter...' => 'Filtern...',
+    'Enter ↵' => 'Eingabe ↵',
+    'Close' => 'Schließen',
+    'Close drawer' => 'Seitenleiste schließen',
+    'Drag to reorder' => 'Ziehen zum Sortieren',
+    'Error loading history' => 'Fehler beim Laden des Verlaufs',
+    'Error loading favorites' => 'Fehler beim Laden der Favoriten',
+    'Search failed' => 'Suche fehlgeschlagen',
+    'No settings found' => 'Keine Einstellungen gefunden',
+    'History' => 'Verlauf',
+
+    // Edit drawer
+    'Edit Entry' => 'Eintrag bearbeiten',
+    'Title' => 'Titel',
+    'Slug' => 'Slug',
+    'Status' => 'Status',
+    'Live' => 'Live',
+    'Disabled' => 'Deaktiviert',
+    'Draft' => 'Entwurf',
+    'Post Date' => 'Veröffentlichungsdatum',
+    'Expiry Date' => 'Ablaufdatum',
+    'Save' => 'Speichern',
+
+    // Admin type labels
+    'Section' => 'Bereich',
+    'Field' => 'Feld',
+    'Entry Type' => 'Eintragstyp',
+    'Category Group' => 'Kategoriegruppe',
+    'Volume' => 'Volume',
+    'Global Set' => 'Globales Set',
+    'Plugin' => 'Plugin',
+
+    // Tab labels for universal search
+    'Entries' => 'Einträge',
+    'Categories' => 'Kategorien',
+    'Assets' => 'Dateien',
+    'Users' => 'Benutzer',
+    'Globals' => 'Globale',
+    'Admin' => 'Admin',
+
+    // Search placeholders per type
+    'Search categories...' => 'Kategorien suchen...',
+    'Search assets...' => 'Dateien suchen...',
+    'Search users...' => 'Benutzer suchen...',
+    'Search globals...' => 'Globale suchen...',
+    'Search settings...' => 'Einstellungen suchen...',
+
+    // Empty states per type
+    'No categories found' => 'Keine Kategorien gefunden',
+    'No assets found' => 'Keine Dateien gefunden',
+    'No users found' => 'Keine Benutzer gefunden',
+    'No global sets found' => 'Keine globalen Sets gefunden',
+    'No admin results found' => 'Keine Einstellungen gefunden',
+
+    // Type prefix help
+    'Type prefix hint' => 'Tipp: Verwenden Sie „entries:", „categories:", „users:" usw., um den Suchtyp zu wechseln',
+
+    // Saved Searches
+    'Saved Searches' => 'Gespeicherte Suchen',
+    'Save Search' => 'Suche speichern',
+    'Name this search...' => 'Diese Suche benennen...',
+    'Run' => 'Ausführen',
+    'Delete saved search' => 'Gespeicherte Suche löschen',
+    'Delete this saved search?' => 'Diese gespeicherte Suche löschen?',
+    'No saved searches yet' => 'Noch keine gespeicherten Suchen',
+    'Maximum saved searches reached' => 'Maximale Anzahl gespeicherter Suchen erreicht',
+    'Saved Searches Limit' => 'Limit für gespeicherte Suchen',
+    'Maximum number of saved searches per user.' => 'Maximale Anzahl gespeicherter Suchen pro Benutzer.',
+    'An error occurred while saving search.' => 'Beim Speichern der Suche ist ein Fehler aufgetreten.',
+    'An error occurred while fetching saved searches.' => 'Beim Abrufen der gespeicherten Suchen ist ein Fehler aufgetreten.',
+    'An error occurred while deleting saved search.' => 'Beim Löschen der gespeicherten Suche ist ein Fehler aufgetreten.',
+    'An error occurred while reordering saved searches.' => 'Beim Neuordnen der gespeicherten Suchen ist ein Fehler aufgetreten.',
+
+    // Favorites shortcuts
+    'Navigating to {title}...' => 'Navigation zu {title}...',
+
+    // Copy actions
+    'Copy options' => 'Kopieroptionen',
+    'Copy URL' => 'URL kopieren',
+    'Copy Title' => 'Titel kopieren',
+    'Copy ID' => 'ID kopieren',
+    'Copied!' => 'Kopiert!',
 ];

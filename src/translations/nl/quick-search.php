@@ -102,4 +102,90 @@ return [
 
     // Current page (favorites dropdown)
     'Current page' => 'Huidige pagina',
+
+    // Quick Access overlay
+    'Quick Access' => 'Snelle toegang',
+    'Search Results' => 'Zoekresultaten',
+    'Filter...' => 'Filteren...',
+    'Enter ↵' => 'Enter ↵',
+    'Close' => 'Sluiten',
+    'Close drawer' => 'Paneel sluiten',
+    'Drag to reorder' => 'Sleep om te herordenen',
+    'Error loading history' => 'Fout bij laden van geschiedenis',
+    'Error loading favorites' => 'Fout bij laden van favorieten',
+    'Search failed' => 'Zoeken mislukt',
+    'No settings found' => 'Geen instellingen gevonden',
+    'History' => 'Geschiedenis',
+
+    // Edit drawer
+    'Edit Entry' => 'Invoer bewerken',
+    'Title' => 'Titel',
+    'Slug' => 'Slug',
+    'Status' => 'Status',
+    'Live' => 'Live',
+    'Disabled' => 'Uitgeschakeld',
+    'Draft' => 'Concept',
+    'Post Date' => 'Publicatiedatum',
+    'Expiry Date' => 'Vervaldatum',
+    'Save' => 'Opslaan',
+
+    // Admin type labels
+    'Section' => 'Sectie',
+    'Field' => 'Veld',
+    'Entry Type' => 'Invoertype',
+    'Category Group' => 'Categoriegroep',
+    'Volume' => 'Volume',
+    'Global Set' => 'Globale set',
+    'Plugin' => 'Plugin',
+
+    // Tab labels for universal search
+    'Entries' => 'Items',
+    'Categories' => 'Categorieën',
+    'Assets' => 'Bestanden',
+    'Users' => 'Gebruikers',
+    'Globals' => 'Globalen',
+    'Admin' => 'Admin',
+
+    // Search placeholders per type
+    'Search categories...' => 'Categorieën zoeken...',
+    'Search assets...' => 'Bestanden zoeken...',
+    'Search users...' => 'Gebruikers zoeken...',
+    'Search globals...' => 'Globalen zoeken...',
+    'Search settings...' => 'Instellingen zoeken...',
+
+    // Empty states per type
+    'No categories found' => 'Geen categorieën gevonden',
+    'No assets found' => 'Geen bestanden gevonden',
+    'No users found' => 'Geen gebruikers gevonden',
+    'No global sets found' => 'Geen globale sets gevonden',
+    'No admin results found' => 'Geen instellingen gevonden',
+
+    // Type prefix help
+    'Type prefix hint' => 'Tip: Gebruik "entries:", "categories:", "users:", enz. om het zoektype te wijzigen',
+
+    // Saved Searches
+    'Saved Searches' => 'Opgeslagen zoekopdrachten',
+    'Save Search' => 'Zoekopdracht opslaan',
+    'Name this search...' => 'Naam voor deze zoekopdracht...',
+    'Run' => 'Uitvoeren',
+    'Delete saved search' => 'Opgeslagen zoekopdracht verwijderen',
+    'Delete this saved search?' => 'Deze opgeslagen zoekopdracht verwijderen?',
+    'No saved searches yet' => 'Nog geen opgeslagen zoekopdrachten',
+    'Maximum saved searches reached' => 'Maximum opgeslagen zoekopdrachten bereikt',
+    'Saved Searches Limit' => 'Limiet opgeslagen zoekopdrachten',
+    'Maximum number of saved searches per user.' => 'Maximum aantal opgeslagen zoekopdrachten per gebruiker.',
+    'An error occurred while saving search.' => 'Er is een fout opgetreden bij het opslaan van de zoekopdracht.',
+    'An error occurred while fetching saved searches.' => 'Er is een fout opgetreden bij het ophalen van de opgeslagen zoekopdrachten.',
+    'An error occurred while deleting saved search.' => 'Er is een fout opgetreden bij het verwijderen van de opgeslagen zoekopdracht.',
+    'An error occurred while reordering saved searches.' => 'Er is een fout opgetreden bij het herordenen van de opgeslagen zoekopdrachten.',
+
+    // Favorites shortcuts
+    'Navigating to {title}...' => 'Navigeren naar {title}...',
+
+    // Copy actions
+    'Copy options' => 'Kopieeropties',
+    'Copy URL' => 'URL kopiëren',
+    'Copy Title' => 'Titel kopiëren',
+    'Copy ID' => 'ID kopiëren',
+    'Copied!' => 'Gekopieerd!',
 ];

@@ -102,4 +102,90 @@ return [
 
     // Current page (favorites dropdown)
     'Current page' => 'الصفحة الحالية',
+
+    // Quick Access overlay
+    'Quick Access' => 'الوصول السريع',
+    'Search Results' => 'نتائج البحث',
+    'Filter...' => 'تصفية...',
+    'Enter ↵' => 'إدخال ↵',
+    'Close' => 'إغلاق',
+    'Close drawer' => 'إغلاق اللوحة',
+    'Drag to reorder' => 'اسحب لإعادة الترتيب',
+    'Error loading history' => 'خطأ في تحميل السجل',
+    'Error loading favorites' => 'خطأ في تحميل المفضلة',
+    'Search failed' => 'فشل البحث',
+    'No settings found' => 'لم يتم العثور على إعدادات',
+    'History' => 'السجل',
+
+    // Edit drawer
+    'Edit Entry' => 'تعديل المدخل',
+    'Title' => 'العنوان',
+    'Slug' => 'Slug',
+    'Status' => 'الحالة',
+    'Live' => 'منشور',
+    'Disabled' => 'معطل',
+    'Draft' => 'مسودة',
+    'Post Date' => 'تاريخ النشر',
+    'Expiry Date' => 'تاريخ الانتهاء',
+    'Save' => 'حفظ',
+
+    // Admin type labels
+    'Section' => 'قسم',
+    'Field' => 'حقل',
+    'Entry Type' => 'نوع المدخل',
+    'Category Group' => 'مجموعة التصنيفات',
+    'Volume' => 'مجلد',
+    'Global Set' => 'مجموعة عامة',
+    'Plugin' => 'Plugin',
+
+    // Tab labels for universal search
+    'Entries' => 'مدخلات',
+    'Categories' => 'تصنيفات',
+    'Assets' => 'ملفات',
+    'Users' => 'مستخدمون',
+    'Globals' => 'عامة',
+    'Admin' => 'إدارة',
+
+    // Search placeholders per type
+    'Search categories...' => 'بحث في التصنيفات...',
+    'Search assets...' => 'بحث في الملفات...',
+    'Search users...' => 'بحث في المستخدمين...',
+    'Search globals...' => 'بحث في العامة...',
+    'Search settings...' => 'بحث في الإعدادات...',
+
+    // Empty states per type
+    'No categories found' => 'لم يتم العثور على تصنيفات',
+    'No assets found' => 'لم يتم العثور على ملفات',
+    'No users found' => 'لم يتم العثور على مستخدمين',
+    'No global sets found' => 'لم يتم العثور على مجموعات عامة',
+    'No admin results found' => 'لم يتم العثور على إعدادات',
+
+    // Type prefix help
+    'Type prefix hint' => 'تلميح: استخدم "entries:" أو "categories:" أو "users:" إلخ لتغيير نوع البحث',
+
+    // Saved Searches
+    'Saved Searches' => 'عمليات البحث المحفوظة',
+    'Save Search' => 'حفظ البحث',
+    'Name this search...' => 'تسمية هذا البحث...',
+    'Run' => 'تشغيل',
+    'Delete saved search' => 'حذف البحث المحفوظ',
+    'Delete this saved search?' => 'هل تريد حذف هذا البحث المحفوظ؟',
+    'No saved searches yet' => 'لا توجد عمليات بحث محفوظة بعد',
+    'Maximum saved searches reached' => 'تم الوصول للحد الأقصى من عمليات البحث المحفوظة',
+    'Saved Searches Limit' => 'حد عمليات البحث المحفوظة',
+    'Maximum number of saved searches per user.' => 'الحد الأقصى لعمليات البحث المحفوظة لكل مستخدم.',
+    'An error occurred while saving search.' => 'حدث خطأ أثناء حفظ البحث.',
+    'An error occurred while fetching saved searches.' => 'حدث خطأ أثناء جلب عمليات البحث المحفوظة.',
+    'An error occurred while deleting saved search.' => 'حدث خطأ أثناء حذف البحث المحفوظ.',
+    'An error occurred while reordering saved searches.' => 'حدث خطأ أثناء إعادة ترتيب عمليات البحث المحفوظة.',
+
+    // Favorites shortcuts
+    'Navigating to {title}...' => 'الانتقال إلى {title}...',
+
+    // Copy actions
+    'Copy options' => 'خيارات النسخ',
+    'Copy URL' => 'نسخ الرابط',
+    'Copy Title' => 'نسخ العنوان',
+    'Copy ID' => 'نسخ المعرف',
+    'Copied!' => 'تم النسخ!',
 ];

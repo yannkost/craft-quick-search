@@ -102,4 +102,90 @@ return [
 
     // Current page (favorites dropdown)
     'Current page' => 'Текуща страница',
+
+    // Quick Access overlay
+    'Quick Access' => 'Бърз достъп',
+    'Search Results' => 'Резултати от търсенето',
+    'Filter...' => 'Филтриране...',
+    'Enter ↵' => 'Enter ↵',
+    'Close' => 'Затвори',
+    'Close drawer' => 'Затвори панела',
+    'Drag to reorder' => 'Плъзнете за пренареждане',
+    'Error loading history' => 'Грешка при зареждане на историята',
+    'Error loading favorites' => 'Грешка при зареждане на любимите',
+    'Search failed' => 'Търсенето е неуспешно',
+    'No settings found' => 'Няма намерени настройки',
+    'History' => 'История',
+
+    // Edit drawer
+    'Edit Entry' => 'Редактиране на запис',
+    'Title' => 'Заглавие',
+    'Slug' => 'Slug',
+    'Status' => 'Състояние',
+    'Live' => 'Публикуван',
+    'Disabled' => 'Деактивиран',
+    'Draft' => 'Чернова',
+    'Post Date' => 'Дата на публикуване',
+    'Expiry Date' => 'Дата на изтичане',
+    'Save' => 'Запази',
+
+    // Admin type labels
+    'Section' => 'Раздел',
+    'Field' => 'Поле',
+    'Entry Type' => 'Тип запис',
+    'Category Group' => 'Група категории',
+    'Volume' => 'Том',
+    'Global Set' => 'Глобален набор',
+    'Plugin' => 'Plugin',
+
+    // Tab labels for universal search
+    'Entries' => 'Записи',
+    'Categories' => 'Категории',
+    'Assets' => 'Файлове',
+    'Users' => 'Потребители',
+    'Globals' => 'Глобални',
+    'Admin' => 'Админ',
+
+    // Search placeholders per type
+    'Search categories...' => 'Търсене на категории...',
+    'Search assets...' => 'Търсене на файлове...',
+    'Search users...' => 'Търсене на потребители...',
+    'Search globals...' => 'Търсене на глобални...',
+    'Search settings...' => 'Търсене на настройки...',
+
+    // Empty states per type
+    'No categories found' => 'Няма намерени категории',
+    'No assets found' => 'Няма намерени файлове',
+    'No users found' => 'Няма намерени потребители',
+    'No global sets found' => 'Няма намерени глобални набори',
+    'No admin results found' => 'Няма намерени настройки',
+
+    // Type prefix help
+    'Type prefix hint' => 'Съвет: Използвайте „entries:", „categories:", „users:" и др. за превключване на типа търсене',
+
+    // Saved Searches
+    'Saved Searches' => 'Запазени търсения',
+    'Save Search' => 'Запази търсенето',
+    'Name this search...' => 'Именувайте това търсене...',
+    'Run' => 'Изпълни',
+    'Delete saved search' => 'Изтрий запазеното търсене',
+    'Delete this saved search?' => 'Изтриване на това запазено търсене?',
+    'No saved searches yet' => 'Все още няма запазени търсения',
+    'Maximum saved searches reached' => 'Достигнат е максималният брой запазени търсения',
+    'Saved Searches Limit' => 'Лимит на запазени търсения',
+    'Maximum number of saved searches per user.' => 'Максимален брой запазени търсения на потребител.',
+    'An error occurred while saving search.' => 'Възникна грешка при запазване на търсенето.',
+    'An error occurred while fetching saved searches.' => 'Възникна грешка при зареждане на запазените търсения.',
+    'An error occurred while deleting saved search.' => 'Възникна грешка при изтриване на запазеното търсене.',
+    'An error occurred while reordering saved searches.' => 'Възникна грешка при пренареждане на запазените търсения.',
+
+    // Favorites shortcuts
+    'Navigating to {title}...' => 'Навигиране към {title}...',
+
+    // Copy actions
+    'Copy options' => 'Опции за копиране',
+    'Copy URL' => 'Копирай URL',
+    'Copy Title' => 'Копирай заглавие',
+    'Copy ID' => 'Копирай ID',
+    'Copied!' => 'Копирано!',
 ];

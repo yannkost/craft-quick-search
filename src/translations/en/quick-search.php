@@ -148,6 +148,41 @@ return [
     'An error occurred while deleting saved search.' => 'An error occurred while deleting saved search.',
     'An error occurred while reordering saved searches.' => 'An error occurred while reordering saved searches.',
 
+    // Quick Access overlay
+    'Quick Access' => 'Quick Access',
+    'Search Results' => 'Search Results',
+    'Filter...' => 'Filter...',
+    'Enter ↵' => 'Enter ↵',
+    'Close' => 'Close',
+    'Close drawer' => 'Close drawer',
+    'Drag to reorder' => 'Drag to reorder',
+    'Error loading history' => 'Error loading history',
+    'Error loading favorites' => 'Error loading favorites',
+    'Search failed' => 'Search failed',
+    'No settings found' => 'No settings found',
+    'History' => 'History',
+
+    // Edit drawer
+    'Edit Entry' => 'Edit Entry',
+    'Title' => 'Title',
+    'Slug' => 'Slug',
+    'Status' => 'Status',
+    'Live' => 'Live',
+    'Disabled' => 'Disabled',
+    'Draft' => 'Draft',
+    'Post Date' => 'Post Date',
+    'Expiry Date' => 'Expiry Date',
+    'Save' => 'Save',
+
+    // Admin type labels
+    'Section' => 'Section',
+    'Field' => 'Field',
+    'Entry Type' => 'Entry Type',
+    'Category Group' => 'Category Group',
+    'Volume' => 'Volume',
+    'Global Set' => 'Global Set',
+    'Plugin' => 'Plugin',
+
     // Favorites shortcuts
     'Navigating to {title}...' => 'Navigating to {title}...',
 

@@ -102,4 +102,90 @@ return [
 
     // Current page (favorites dropdown)
     'Current page' => 'Поточна сторінка',
+
+    // Quick Access overlay
+    'Quick Access' => 'Швидкий доступ',
+    'Search Results' => 'Результати пошуку',
+    'Filter...' => 'Фільтр...',
+    'Enter ↵' => 'Введення ↵',
+    'Close' => 'Закрити',
+    'Close drawer' => 'Закрити панель',
+    'Drag to reorder' => 'Перетягніть для зміни порядку',
+    'Error loading history' => 'Помилка завантаження історії',
+    'Error loading favorites' => 'Помилка завантаження обраного',
+    'Search failed' => 'Пошук не вдався',
+    'No settings found' => 'Налаштування не знайдено',
+    'History' => 'Історія',
+
+    // Edit drawer
+    'Edit Entry' => 'Редагувати запис',
+    'Title' => 'Заголовок',
+    'Slug' => 'Slug',
+    'Status' => 'Статус',
+    'Live' => 'Опубліковано',
+    'Disabled' => 'Вимкнено',
+    'Draft' => 'Чернетка',
+    'Post Date' => 'Дата публікації',
+    'Expiry Date' => 'Дата закінчення',
+    'Save' => 'Зберегти',
+
+    // Admin type labels
+    'Section' => 'Розділ',
+    'Field' => 'Поле',
+    'Entry Type' => 'Тип запису',
+    'Category Group' => 'Група категорій',
+    'Volume' => 'Том',
+    'Global Set' => 'Глобальний набір',
+    'Plugin' => 'Plugin',
+
+    // Tab labels for universal search
+    'Entries' => 'Записи',
+    'Categories' => 'Категорії',
+    'Assets' => 'Файли',
+    'Users' => 'Користувачі',
+    'Globals' => 'Глобальні',
+    'Admin' => 'Адмін',
+
+    // Search placeholders per type
+    'Search categories...' => 'Пошук категорій...',
+    'Search assets...' => 'Пошук файлів...',
+    'Search users...' => 'Пошук користувачів...',
+    'Search globals...' => 'Пошук глобальних...',
+    'Search settings...' => 'Пошук налаштувань...',
+
+    // Empty states per type
+    'No categories found' => 'Категорії не знайдено',
+    'No assets found' => 'Файли не знайдено',
+    'No users found' => 'Користувачів не знайдено',
+    'No global sets found' => 'Глобальні набори не знайдено',
+    'No admin results found' => 'Налаштувань не знайдено',
+
+    // Type prefix help
+    'Type prefix hint' => 'Підказка: Використовуйте «entries:», «categories:», «users:» тощо для перемикання типу пошуку',
+
+    // Saved Searches
+    'Saved Searches' => 'Збережені пошуки',
+    'Save Search' => 'Зберегти пошук',
+    'Name this search...' => 'Назвіть цей пошук...',
+    'Run' => 'Виконати',
+    'Delete saved search' => 'Видалити збережений пошук',
+    'Delete this saved search?' => 'Видалити цей збережений пошук?',
+    'No saved searches yet' => 'Ще немає збережених пошуків',
+    'Maximum saved searches reached' => 'Досягнуто максимум збережених пошуків',
+    'Saved Searches Limit' => 'Ліміт збережених пошуків',
+    'Maximum number of saved searches per user.' => 'Максимальна кількість збережених пошуків на користувача.',
+    'An error occurred while saving search.' => 'Сталася помилка під час збереження пошуку.',
+    'An error occurred while fetching saved searches.' => 'Сталася помилка під час завантаження збережених пошуків.',
+    'An error occurred while deleting saved search.' => 'Сталася помилка під час видалення збереженого пошуку.',
+    'An error occurred while reordering saved searches.' => 'Сталася помилка під час зміни порядку збережених пошуків.',
+
+    // Favorites shortcuts
+    'Navigating to {title}...' => 'Перехід до {title}...',
+
+    // Copy actions
+    'Copy options' => 'Параметри копіювання',
+    'Copy URL' => 'Копіювати URL',
+    'Copy Title' => 'Копіювати заголовок',
+    'Copy ID' => 'Копіювати ID',
+    'Copied!' => 'Скопійовано!',
 ];

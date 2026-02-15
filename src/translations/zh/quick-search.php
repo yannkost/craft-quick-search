@@ -102,4 +102,90 @@ return [
 
     // Current page (favorites dropdown)
     'Current page' => '当前页面',
+
+    // Quick Access overlay
+    'Quick Access' => '快速访问',
+    'Search Results' => '搜索结果',
+    'Filter...' => '筛选...',
+    'Enter ↵' => '回车 ↵',
+    'Close' => '关闭',
+    'Close drawer' => '关闭面板',
+    'Drag to reorder' => '拖动排序',
+    'Error loading history' => '加载历史记录出错',
+    'Error loading favorites' => '加载收藏夹出错',
+    'Search failed' => '搜索失败',
+    'No settings found' => '未找到设置',
+    'History' => '历史记录',
+
+    // Edit drawer
+    'Edit Entry' => '编辑条目',
+    'Title' => '标题',
+    'Slug' => 'Slug',
+    'Status' => '状态',
+    'Live' => '已发布',
+    'Disabled' => '已禁用',
+    'Draft' => '草稿',
+    'Post Date' => '发布日期',
+    'Expiry Date' => '到期日期',
+    'Save' => '保存',
+
+    // Admin type labels
+    'Section' => '区块',
+    'Field' => '字段',
+    'Entry Type' => '条目类型',
+    'Category Group' => '分类组',
+    'Volume' => '卷',
+    'Global Set' => '全局集',
+    'Plugin' => 'Plugin',
+
+    // Tab labels for universal search
+    'Entries' => '条目',
+    'Categories' => '分类',
+    'Assets' => '资源',
+    'Users' => '用户',
+    'Globals' => '全局',
+    'Admin' => '管理',
+
+    // Search placeholders per type
+    'Search categories...' => '搜索分类...',
+    'Search assets...' => '搜索资源...',
+    'Search users...' => '搜索用户...',
+    'Search globals...' => '搜索全局...',
+    'Search settings...' => '搜索设置...',
+
+    // Empty states per type
+    'No categories found' => '未找到分类',
+    'No assets found' => '未找到资源',
+    'No users found' => '未找到用户',
+    'No global sets found' => '未找到全局集',
+    'No admin results found' => '未找到设置',
+
+    // Type prefix help
+    'Type prefix hint' => '提示：使用「entries:」「categories:」「users:」等前缀切换搜索类型',
+
+    // Saved Searches
+    'Saved Searches' => '已保存的搜索',
+    'Save Search' => '保存搜索',
+    'Name this search...' => '为此搜索命名...',
+    'Run' => '运行',
+    'Delete saved search' => '删除已保存的搜索',
+    'Delete this saved search?' => '删除此已保存的搜索？',
+    'No saved searches yet' => '暂无已保存的搜索',
+    'Maximum saved searches reached' => '已达到最大保存搜索数',
+    'Saved Searches Limit' => '保存搜索上限',
+    'Maximum number of saved searches per user.' => '每个用户的最大保存搜索数。',
+    'An error occurred while saving search.' => '保存搜索时发生错误。',
+    'An error occurred while fetching saved searches.' => '获取已保存搜索时发生错误。',
+    'An error occurred while deleting saved search.' => '删除已保存搜索时发生错误。',
+    'An error occurred while reordering saved searches.' => '重新排序已保存搜索时发生错误。',
+
+    // Favorites shortcuts
+    'Navigating to {title}...' => '正在导航到 {title}...',
+
+    // Copy actions
+    'Copy options' => '复制选项',
+    'Copy URL' => '复制链接',
+    'Copy Title' => '复制标题',
+    'Copy ID' => '复制ID',
+    'Copied!' => '已复制！',
 ];
