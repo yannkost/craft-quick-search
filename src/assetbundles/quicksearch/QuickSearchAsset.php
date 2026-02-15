@@ -27,6 +27,10 @@ class QuickSearchAsset extends AssetBundle
 
         $this->css = [
             'css/quick-search.css',
+            'css/quick-search-related.css',
+            'css/quick-search-outline.css',
+            'css/quick-access.css',
+            'css/quick-search-dark.css',
         ];
 
         $this->js = [

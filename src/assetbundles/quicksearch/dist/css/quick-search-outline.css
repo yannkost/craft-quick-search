@@ -1,0 +1,373 @@
+/**
+ * Entry Outline Popup + Current Entry Styles
+ * Popup for navigating entry field structure and current entry indicator
+ */
+
+/* Entry Outline Button */
+.quick-search-outline-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 8px;
+    order: -2;
+}
+
+.quick-search-outline-btn svg {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+}
+
+/* Entry Outline Popup */
+.quick-search-outline-popup {
+    display: none;
+    position: fixed;
+    width: 280px;
+    max-height: 400px;
+    background: #fff;
+    border: 1px solid #cdd8e4;
+    border-radius: 6px;
+    z-index: 10003;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.quick-search-outline-popup.active {
+    display: flex;
+}
+
+.quick-search-outline-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    border-bottom: 1px solid #e3eaf0;
+    background: #f8f9fb;
+    flex-shrink: 0;
+}
+
+.quick-search-outline-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: #3f4d5a;
+}
+
+.quick-search-outline-header-btns {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.quick-search-outline-expand-btn,
+.quick-search-outline-collapse-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    padding: 0;
+    background: #fff;
+    border: 1px solid #cdd8e4;
+    border-radius: 3px;
+    color: #8496ab;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.quick-search-outline-expand-btn:hover,
+.quick-search-outline-collapse-btn:hover {
+    background: #f3f7fc;
+    border-color: #0d78f2;
+    color: #0d78f2;
+}
+
+.quick-search-outline-expand-btn svg,
+.quick-search-outline-collapse-btn svg {
+    width: 14px;
+    height: 14px;
+}
+
+.quick-search-outline-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    background: transparent;
+    border: none;
+    border-radius: 3px;
+    color: #8496ab;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.quick-search-outline-close:hover {
+    background: #e3eaf0;
+    color: #3f4d5a;
+}
+
+.quick-search-outline-close svg {
+    width: 12px;
+    height: 12px;
+}
+
+.quick-search-outline-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 6px;
+}
+
+.quick-search-outline-empty {
+    padding: 16px 12px;
+    text-align: center;
+    color: #8496ab;
+    font-size: 12px;
+}
+
+.quick-search-outline-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.quick-search-outline-item {
+    margin: 0;
+}
+
+.quick-search-outline-item-row {
+    display: flex;
+    align-items: center;
+}
+
+.quick-search-outline-chevron {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    padding: 0;
+    background: transparent;
+    border: none;
+    border-radius: 3px;
+    color: #8496ab;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: all 0.15s ease;
+}
+
+.quick-search-outline-chevron:hover {
+    background: #e3eaf0;
+    color: #3f4d5a;
+}
+
+.quick-search-outline-chevron svg {
+    width: 10px;
+    height: 10px;
+    transition: transform 0.15s ease;
+}
+
+.quick-search-outline-item.expanded > .quick-search-outline-item-row > .quick-search-outline-chevron svg {
+    transform: rotate(90deg);
+}
+
+.quick-search-outline-chevron-spacer {
+    width: 18px;
+    flex-shrink: 0;
+}
+
+.quick-search-outline-children {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    padding-left: 18px;
+    display: none;
+}
+
+.quick-search-outline-item.expanded > .quick-search-outline-children {
+    display: block;
+}
+
+.quick-search-outline-item-nested {
+    padding-left: 4px;
+}
+
+.quick-search-outline-item-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    min-width: 0;
+    padding: 6px 8px;
+    background: transparent;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: left;
+    transition: background-color 0.15s ease;
+}
+
+.quick-search-outline-item-btn:hover {
+    background: #f3f7fc;
+}
+
+.quick-search-outline-item-index {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    font-size: 10px;
+    font-weight: 500;
+    color: #8496ab;
+    background: #f3f7fc;
+    border-radius: 3px;
+    flex-shrink: 0;
+}
+
+.quick-search-outline-item-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+}
+
+.quick-search-outline-item-icon svg {
+    width: 14px;
+    height: 14px;
+}
+
+/* Icon colors matching Craft's color scheme */
+.quick-search-outline-item-icon.green { color: var(--green-600, #0e844d); }
+.quick-search-outline-item-icon.blue { color: var(--blue-600, #0d78f2); }
+.quick-search-outline-item-icon.red { color: var(--red-600, #dc2626); }
+.quick-search-outline-item-icon.orange { color: var(--orange-600, #ea580c); }
+.quick-search-outline-item-icon.yellow { color: var(--yellow-600, #ca8a04); }
+.quick-search-outline-item-icon.pink { color: var(--pink-600, #db2777); }
+.quick-search-outline-item-icon.purple { color: var(--purple-600, #9333ea); }
+.quick-search-outline-item-icon.teal { color: var(--teal-600, #0d9488); }
+
+.quick-search-outline-item-name {
+    font-size: 12px;
+    color: #3f4d5a;
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Block highlight animation */
+.quick-search-outline-highlight {
+    animation: quick-search-highlight 1.5s ease-out;
+}
+
+@keyframes quick-search-highlight {
+    0% {
+        box-shadow: 0 0 0 3px rgba(13, 120, 242, 0.5);
+    }
+    100% {
+        box-shadow: 0 0 0 3px rgba(13, 120, 242, 0);
+    }
+}
+
+/* Outline Popup Compact Mode */
+.quick-search-outline-popup.compact .quick-search-outline-item-btn {
+    padding: 4px 6px;
+    gap: 6px;
+}
+
+.quick-search-outline-popup.compact .quick-search-outline-item-index {
+    width: 16px;
+    height: 16px;
+    font-size: 9px;
+}
+
+.quick-search-outline-popup.compact .quick-search-outline-item-icon {
+    width: 14px;
+    height: 14px;
+}
+
+.quick-search-outline-popup.compact .quick-search-outline-item-icon svg {
+    width: 12px;
+    height: 12px;
+}
+
+.quick-search-outline-popup.compact .quick-search-outline-item-name {
+    font-size: 11px;
+}
+
+.quick-search-outline-popup.compact .quick-search-outline-chevron {
+    width: 14px;
+    height: 14px;
+}
+
+.quick-search-outline-popup.compact .quick-search-outline-chevron svg {
+    width: 8px;
+    height: 8px;
+}
+
+.quick-search-outline-popup.compact .quick-search-outline-chevron-spacer {
+    width: 14px;
+}
+
+.quick-search-outline-popup.compact .quick-search-outline-children {
+    padding-left: 14px;
+}
+
+.quick-search-outline-popup.compact .quick-search-outline-expand-btn,
+.quick-search-outline-popup.compact .quick-search-outline-collapse-btn {
+    width: 18px;
+    height: 18px;
+}
+
+.quick-search-outline-popup.compact .quick-search-outline-expand-btn svg,
+.quick-search-outline-popup.compact .quick-search-outline-collapse-btn svg {
+    width: 12px;
+    height: 12px;
+}
+
+/* Scrollbar styling for outline */
+.quick-search-outline-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.quick-search-outline-content::-webkit-scrollbar-track {
+    background: #f3f7fc;
+}
+
+.quick-search-outline-content::-webkit-scrollbar-thumb {
+    background: #cdd8e4;
+    border-radius: 4px;
+}
+
+.quick-search-outline-content::-webkit-scrollbar-thumb:hover {
+    background: #b8c6d6;
+}
+
+/* Current Entry in Favorites Dropdown */
+.quick-search-current-entry {
+    border-bottom: 1px solid #e3eaf0;
+    background: #f8f9fb;
+}
+
+.quick-search-current-entry:hover {
+    background: #f3f7fc;
+}
+
+.quick-search-current-label {
+    display: inline-block;
+    font-size: 10px;
+    padding: 1px 6px;
+    background: #e3f0ff;
+    border-radius: 3px;
+    color: #0d78f2;
+    font-weight: 500;
+}
+
+/* Compact mode adjustments for current entry */
+.quick-search-history-popup.compact .quick-search-current-label {
+    font-size: 9px;
+    padding: 0 4px;
+}
