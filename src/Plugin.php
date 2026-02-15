@@ -364,6 +364,12 @@ class Plugin extends BasePlugin
      */
     private function registerEntryOutlineButton(): void
     {
+        $settings = $this->getSettings();
+
+        if (!$settings || !$settings->showEntryOutline) {
+            return;
+        }
+
         Event::on(
             Entry::class,
             Entry::EVENT_DEFINE_ADDITIONAL_BUTTONS,

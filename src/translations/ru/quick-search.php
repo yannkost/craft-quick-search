@@ -7,6 +7,8 @@ return [
     'Use a more compact display for search results and history lists.' => 'Использовать более компактное отображение для результатов поиска и списков истории.',
     'Show Section Filter' => 'Показать фильтр разделов',
     'Show the section filter dropdown in the search UI.' => 'Показывать выпадающий список фильтра разделов в интерфейсе поиска.',
+    'Show Entry Outline' => 'Показать структуру записи',
+    'Display the entry outline button on entry pages.' => 'Отображать кнопку структуры записи на страницах записей.',
     'Show Related Entries' => 'Показать связанные записи',
     'Display related entries button on entry pages.' => 'Отображать связанные записи в результатах поиска.',
 

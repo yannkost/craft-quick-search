@@ -7,6 +7,8 @@ return [
     'Use a more compact display for search results and history lists.' => 'Kompaktabb megjelenítés használata a keresési eredményekhez és előzménylistákhoz.',
     'Show Section Filter' => 'Szekció szűrő megjelenítése',
     'Show the section filter dropdown in the search UI.' => 'A szekció szűrő legördülő menü megjelenítése a keresési felületen.',
+    'Show Entry Outline' => 'Bejegyzés vázlat megjelenítése',
+    'Display the entry outline button on entry pages.' => 'A bejegyzés vázlat gomb megjelenítése a bejegyzés oldalakon.',
     'Show Related Entries' => 'Kapcsolódó bejegyzések megjelenítése',
     'Display related entries button on entry pages.' => 'Kapcsolódó bejegyzések megjelenítése a keresési eredményekben.',
 

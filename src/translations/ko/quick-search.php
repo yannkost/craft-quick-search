@@ -7,6 +7,8 @@ return [
     'Use a more compact display for search results and history lists.' => '검색 결과 및 기록 목록에 더 컴팩트한 표시를 사용합니다.',
     'Show Section Filter' => '섹션 필터 표시',
     'Show the section filter dropdown in the search UI.' => '검색 UI에서 섹션 필터 드롭다운을 표시합니다.',
+    'Show Entry Outline' => '항목 개요 표시',
+    'Display the entry outline button on entry pages.' => '항목 페이지에 항목 개요 버튼을 표시합니다.',
     'Show Related Entries' => '관련 항목 표시',
     'Display related entries button on entry pages.' => '검색 결과에 관련 항목을 표시합니다.',
 

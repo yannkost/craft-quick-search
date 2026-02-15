@@ -7,6 +7,8 @@ return [
     'Use a more compact display for search results and history lists.' => 'Use a more compact display for search results and history lists.',
     'Show Section Filter' => 'Show Section Filter',
     'Show the section filter dropdown in the search UI.' => 'Show the section filter dropdown in the search UI.',
+    'Show Entry Outline' => 'Show Entry Outline',
+    'Display the entry outline button on entry pages.' => 'Display the entry outline button on entry pages.',
     'Show Related Entries' => 'Show Related Entries',
     'Display related entries button on entry pages.' => 'Display related entries button on entry pages.',
 

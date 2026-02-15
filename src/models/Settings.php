@@ -54,6 +54,11 @@ class Settings extends Model
     public bool $compactMode = false;
 
     /**
+     * @var bool Whether to show the entry outline button on entry pages
+     */
+    public bool $showEntryOutline = true;
+
+    /**
      * @var bool Whether to show related entries
      */
     public bool $showRelatedEntries = true;
@@ -102,6 +107,7 @@ class Settings extends Model
             ['debounceDelay', 'integer', 'max' => 2000],
             ['showSectionFilter', 'boolean'],
             ['compactMode', 'boolean'],
+            ['showEntryOutline', 'boolean'],
             ['showRelatedEntries', 'boolean'],
             ['enabledSections', 'each', 'rule' => ['string']],
             ['sectionFilterMode', 'in', 'range' => ['include', 'exclude']],

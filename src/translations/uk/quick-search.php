@@ -7,6 +7,8 @@ return [
     'Use a more compact display for search results and history lists.' => 'Використовувати компактніше відображення для результатів пошуку та списків історії.',
     'Show Section Filter' => 'Показати фільтр розділів',
     'Show the section filter dropdown in the search UI.' => 'Показувати випадаючий список фільтра розділів в інтерфейсі пошуку.',
+    'Show Entry Outline' => 'Показати структуру запису',
+    'Display the entry outline button on entry pages.' => 'Відображати кнопку структури запису на сторінках записів.',
     'Show Related Entries' => 'Показати пов\'язані записи',
     'Display related entries button on entry pages.' => 'Відображати пов\'язані записи в результатах пошуку.',
 

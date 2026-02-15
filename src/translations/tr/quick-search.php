@@ -7,6 +7,8 @@ return [
     'Use a more compact display for search results and history lists.' => 'Arama sonuçları ve geçmiş listeleri için daha kompakt bir görünüm kullanın.',
     'Show Section Filter' => 'Bölüm Filtresini Göster',
     'Show the section filter dropdown in the search UI.' => 'Arama arayüzünde bölüm filtresi açılır menüsünü gösterin.',
+    'Show Entry Outline' => 'Giriş taslağını göster',
+    'Display the entry outline button on entry pages.' => 'Giriş sayfalarında giriş taslağı düğmesini göster.',
     'Show Related Entries' => 'İlgili Girişleri Göster',
     'Display related entries button on entry pages.' => 'Arama sonuçlarında ilgili girişleri gösterin.',
 

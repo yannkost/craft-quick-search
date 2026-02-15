@@ -7,6 +7,8 @@ return [
     'Use a more compact display for search results and history lists.' => '为搜索结果和历史记录列表使用更紧凑的显示。',
     'Show Section Filter' => '显示栏目筛选器',
     'Show the section filter dropdown in the search UI.' => '在搜索界面中显示栏目筛选下拉菜单。',
+    'Show Entry Outline' => '显示条目大纲',
+    'Display the entry outline button on entry pages.' => '在条目页面上显示条目大纲按钮。',
     'Show Related Entries' => '显示相关条目',
     'Display related entries button on entry pages.' => '在搜索结果中显示相关条目。',
 
