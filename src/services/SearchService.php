@@ -7,6 +7,7 @@ namespace craftcms\quicksearch\services;
 use Craft;
 use craft\base\Component;
 use craft\elements\Category;
+use craft\helpers\UrlHelper;
 use craft\elements\Entry;
 use craft\elements\User;
 use craft\models\Section;
@@ -385,7 +386,7 @@ class SearchService extends Component
                 'id' => $globalSet->id,
                 'title' => $globalSet->name,
                 'handle' => $globalSet->handle,
-                'url' => "globals/{$globalSet->handle}",
+                'url' => UrlHelper::cpUrl("globals/{$globalSet->handle}"),
             ];
 
             if (count($results) >= $limit) {
@@ -443,7 +444,7 @@ class SearchService extends Component
                     'id' => $section->id,
                     'title' => $section->name,
                     'subtitle' => $section->handle,
-                    'url' => "settings/sections/{$section->id}",
+                    'url' => \craft\helpers\UrlHelper::cpUrl("settings/sections/{$section->id}"),
                 ];
                 if (count($results) >= $limit) {
                     break;
@@ -467,7 +468,7 @@ class SearchService extends Component
                             'id' => $entryType->id,
                             'title' => $entryType->name,
                             'subtitle' => $section->name,
-                            'url' => "settings/entry-types/{$entryType->id}",
+                            'url' => \craft\helpers\UrlHelper::cpUrl("settings/entry-types/{$entryType->id}"),
                         ];
                     }
                 }
@@ -487,7 +488,7 @@ class SearchService extends Component
                         'id' => $field->id,
                         'title' => $field->name,
                         'subtitle' => $field->handle,
-                        'url' => "settings/fields/edit/{$field->id}",
+                        'url' => \craft\helpers\UrlHelper::cpUrl("settings/fields/edit/{$field->id}"),
                     ];
                 }
             }
@@ -506,7 +507,7 @@ class SearchService extends Component
                         'id' => $group->id,
                         'title' => $group->name,
                         'subtitle' => $group->handle,
-                        'url' => "settings/categories/{$group->id}",
+                        'url' => \craft\helpers\UrlHelper::cpUrl("settings/categories/{$group->id}"),
                     ];
                 }
             }
@@ -525,7 +526,7 @@ class SearchService extends Component
                         'id' => $volume->id,
                         'title' => $volume->name,
                         'subtitle' => $volume->handle,
-                        'url' => "settings/assets/volumes/{$volume->id}",
+                        'url' => \craft\helpers\UrlHelper::cpUrl("settings/assets/volumes/{$volume->id}"),
                     ];
                 }
             }
@@ -544,7 +545,7 @@ class SearchService extends Component
                         'id' => $globalSet->id,
                         'title' => $globalSet->name,
                         'subtitle' => $globalSet->handle,
-                        'url' => "settings/global-sets/{$globalSet->id}",
+                        'url' => UrlHelper::cpUrl("settings/global-sets/{$globalSet->id}"),
                     ];
                 }
             }
@@ -569,7 +570,7 @@ class SearchService extends Component
                         'id' => $plugin->getId(),
                         'title' => $name,
                         'subtitle' => $plugin->getVersion(),
-                        'url' => "settings/plugins/{$plugin->getId()}",
+                        'url' => UrlHelper::cpUrl("settings/plugins/{$plugin->getId()}"),
                     ];
                 }
             }

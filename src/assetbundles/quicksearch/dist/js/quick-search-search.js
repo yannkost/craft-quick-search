@@ -325,7 +325,24 @@ window.QuickSearchSearch = (function() {
             e.stopPropagation();
             // Close any other open menus first
             closeAllCopyMenus();
-            copyMenu.style.display = copyMenu.style.display === 'none' ? 'block' : 'none';
+            const isHidden = copyMenu.style.display === 'none';
+            if (isHidden) {
+                // Position menu relative to button, attached to body
+                const rect = copyBtn.getBoundingClientRect();
+                copyMenu.style.position = 'fixed';
+                copyMenu.style.right = (window.innerWidth - rect.right) + 'px';
+                // Show above if near bottom of viewport
+                copyMenu.style.display = 'block';
+                const menuHeight = copyMenu.offsetHeight;
+                if (rect.bottom + menuHeight + 8 > window.innerHeight) {
+                    copyMenu.style.top = (rect.top - menuHeight - 4) + 'px';
+                } else {
+                    copyMenu.style.top = (rect.bottom + 4) + 'px';
+                }
+                copyMenu.style.left = '';
+            } else {
+                copyMenu.style.display = 'none';
+            }
         });
 
         // Stop propagation on menu click
@@ -334,7 +351,7 @@ window.QuickSearchSearch = (function() {
         });
 
         itemEl.appendChild(copyBtn);
-        itemEl.appendChild(copyMenu);
+        document.body.appendChild(copyMenu);
 
         // New tab button
         const newTabBtn = document.createElement('button');
@@ -658,9 +675,15 @@ window.QuickSearchSearch = (function() {
     }
 
     // Single global listener to close copy menus on outside click
-    document.addEventListener('click', () => {
-        closeAllCopyMenus();
-    });
+    // When a menu is open, the first outside click only closes it
+    document.addEventListener('click', (e) => {
+        const openMenu = document.querySelector('.quick-search-copy-menu[style*="display: block"]');
+        if (openMenu && !openMenu.contains(e.target) && !e.target.closest('.quick-search-copy-btn')) {
+            e.preventDefault();
+            e.stopPropagation();
+            closeAllCopyMenus();
+        }
+    }, true);
 
     return {
         handleSearchInput,

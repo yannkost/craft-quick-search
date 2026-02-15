@@ -445,11 +445,18 @@ window.QuickAccessOverlay = (function() {
         }
 
         bindOverlayEvents() {
+            // When a copy menu is open, first outside click only closes it
+            document.addEventListener('click', (e) => {
+                const openMenu = document.querySelector('.quick-access-copy-menu[style*="display: block"]');
+                if (openMenu && !openMenu.contains(e.target) && !e.target.closest('.quick-access-copy-btn')) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    this.closeAllCopyMenus();
+                }
+            }, true);
+
             // Close on backdrop click (but not if user has text selected)
             this.overlay.addEventListener('click', (e) => {
-                // Close any open copy menus
-                this.closeAllCopyMenus();
-
                 if (e.target === this.overlay) {
                     // Check if there's any text selected
                     const selection = window.getSelection();
@@ -1016,7 +1023,22 @@ window.QuickAccessOverlay = (function() {
                 e.stopPropagation();
                 // Close any other open menus first
                 this.closeAllCopyMenus();
-                copyMenu.style.display = copyMenu.style.display === 'none' ? 'block' : 'none';
+                const isHidden = copyMenu.style.display === 'none';
+                if (isHidden) {
+                    const rect = copyBtn.getBoundingClientRect();
+                    copyMenu.style.position = 'fixed';
+                    copyMenu.style.right = (window.innerWidth - rect.right) + 'px';
+                    copyMenu.style.display = 'block';
+                    const menuHeight = copyMenu.offsetHeight;
+                    if (rect.bottom + menuHeight + 8 > window.innerHeight) {
+                        copyMenu.style.top = (rect.top - menuHeight - 4) + 'px';
+                    } else {
+                        copyMenu.style.top = (rect.bottom + 4) + 'px';
+                    }
+                    copyMenu.style.left = '';
+                } else {
+                    copyMenu.style.display = 'none';
+                }
             });
 
             // Stop propagation on menu click
@@ -1039,10 +1061,10 @@ window.QuickAccessOverlay = (function() {
             }
 
             item.appendChild(content);
-            item.appendChild(copyMenu);
             if (editBtn) item.appendChild(editBtn);
             item.appendChild(copyBtn);
             item.appendChild(newTabBtn);
+            document.body.appendChild(copyMenu);
 
             item.addEventListener('click', () => {
                 if (entry.url) {
@@ -1057,11 +1079,9 @@ window.QuickAccessOverlay = (function() {
          * Close all open copy menus within the overlay
          */
         closeAllCopyMenus() {
-            if (this.overlay) {
-                this.overlay.querySelectorAll('.quick-access-copy-menu').forEach(menu => {
-                    menu.style.display = 'none';
-                });
-            }
+            document.querySelectorAll('.quick-access-copy-menu').forEach(menu => {
+                menu.style.display = 'none';
+            });
         }
 
         filterPanel(type, query) {

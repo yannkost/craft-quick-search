@@ -507,16 +507,16 @@
         border-bottom-color: #0d78f2;
     }
     .quick-access-search-input {
-        background: #fff;
-        border-color: #b8c6d6;
-        color: #1c2e36;
+        background: #272b2f;
+        border-color: #525a62;
+        color: #e8eaed;
     }
     .quick-access-search-input:focus {
-        border-color: #0d78f2;
-        box-shadow: 0 0 0 3px rgba(13, 120, 242, 0.15);
+        border-color: #4da6ff;
+        box-shadow: 0 0 0 3px rgba(77, 166, 255, 0.2);
     }
     .quick-access-search-input::placeholder {
-        color: #8496ab;
+        color: #6e7c8a;
     }
     .quick-access-search-hint {
         color: #5c6a78;
