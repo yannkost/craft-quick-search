@@ -389,13 +389,8 @@ window.QuickAccessOverlay = (function() {
         }
 
         isEditableEntry(entry, type) {
-            // Show edit button on entries (not admin, globals, users, assets, categories)
-            // History and favorites are always entries, search results need a type check
-            if (type === 'search') {
-                return entry.type === 'entry' || !entry.type;
-            }
-            // History and favorites items are entries
-            return type === 'history' || type === 'favorites';
+            // Edit drawer disabled for now — not ready for release
+            return false;
         }
 
         openDrawer(entry) {
