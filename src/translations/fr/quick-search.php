@@ -8,7 +8,7 @@ return [
     'Show Section Filter' => 'Afficher le filtre de section',
     'Show the section filter dropdown in the search UI.' => 'Afficher le menu déroulant de filtre de section dans l\'interface de recherche.',
     'Show Related Entries' => 'Afficher les entrées liées',
-    'Display related entries button on entry pages.' => 'Afficher le bouton des entrées liées sur les pages d'entrée.',
+    'Display related entries button on entry pages.' => 'Afficher le bouton des entrées liées sur les pages d\'entrée.',
 
     // Settings page - Search Settings
     'Search Settings' => 'Paramètres de recherche',
