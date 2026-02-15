@@ -7,6 +7,8 @@ return [
     'Use a more compact display for search results and history lists.' => 'Použiť kompaktnejšie zobrazenie pre výsledky vyhľadávania a zoznamy histórie.',
     'Show Section Filter' => 'Zobraziť filter sekcií',
     'Show the section filter dropdown in the search UI.' => 'Zobraziť rozbaľovaciu ponuku filtra sekcií v rozhraní vyhľadávania.',
+    'Show Entry Outline' => 'Zobraziť osnovu záznamu',
+    'Display the entry outline button on entry pages.' => 'Zobraziť tlačidlo osnovy záznamu na stránkach záznamov.',
     'Show Related Entries' => 'Zobraziť súvisiace položky',
     'Display related entries button on entry pages.' => 'Zobraziť súvisiace položky vo výsledkoch vyhľadávania.',
 

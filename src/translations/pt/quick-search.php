@@ -7,6 +7,8 @@ return [
     'Use a more compact display for search results and history lists.' => 'Usar uma exibição mais compacta para resultados de pesquisa e listas de histórico.',
     'Show Section Filter' => 'Mostrar filtro de seção',
     'Show the section filter dropdown in the search UI.' => 'Mostrar o menu suspenso de filtro de seção na interface de pesquisa.',
+    'Show Entry Outline' => 'Mostrar estrutura da entrada',
+    'Display the entry outline button on entry pages.' => 'Exibir o botão de estrutura da entrada nas páginas de entrada.',
     'Show Related Entries' => 'Mostrar entradas relacionadas',
     'Display related entries button on entry pages.' => 'Exibir botão de entradas relacionadas nas páginas de entrada.',
 

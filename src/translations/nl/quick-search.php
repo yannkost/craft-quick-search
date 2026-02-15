@@ -7,6 +7,8 @@ return [
     'Use a more compact display for search results and history lists.' => 'Gebruik een compactere weergave voor zoekresultaten en geschiedenislijsten.',
     'Show Section Filter' => 'Sectiefilter tonen',
     'Show the section filter dropdown in the search UI.' => 'Toon het sectiefilter dropdown in de zoekinterface.',
+    'Show Entry Outline' => 'Invoerstructuur tonen',
+    'Display the entry outline button on entry pages.' => 'Toon de knop voor invoerstructuur op invoerpagina\'s.',
     'Show Related Entries' => 'Gerelateerde items tonen',
     'Display related entries button on entry pages.' => 'Knop voor gerelateerde items weergeven op itempaginas.',
 

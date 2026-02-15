@@ -23,6 +23,15 @@
 }) }}
 
 {{ forms.lightswitchField({
+    label: 'Show Entry Outline'|t('quick-search'),
+    instructions: 'Display the entry outline button on entry pages.'|t('quick-search'),
+    id: 'showEntryOutline',
+    name: 'showEntryOutline',
+    on: settings.showEntryOutline,
+    errors: settings.getErrors('showEntryOutline')
+}) }}
+
+{{ forms.lightswitchField({
     label: 'Show Related Entries'|t('quick-search'),
     instructions: 'Display related entries button on entry pages.'|t('quick-search'),
     id: 'showRelatedEntries',

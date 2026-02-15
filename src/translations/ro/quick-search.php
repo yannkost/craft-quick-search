@@ -7,6 +7,8 @@ return [
     'Use a more compact display for search results and history lists.' => 'Utilizați o afișare mai compactă pentru rezultatele căutării și listele de istoric.',
     'Show Section Filter' => 'Afișare filtru secțiune',
     'Show the section filter dropdown in the search UI.' => 'Afișați meniul derulant al filtrului de secțiune în interfața de căutare.',
+    'Show Entry Outline' => 'Afișare schiță intrare',
+    'Display the entry outline button on entry pages.' => 'Afișare butonul de schiță pe paginile de intrare.',
     'Show Related Entries' => 'Afișare intrări asociate',
     'Display related entries button on entry pages.' => 'Afișați intrările asociate în rezultatele căutării.',
 

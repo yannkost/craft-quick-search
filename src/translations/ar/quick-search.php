@@ -7,6 +7,8 @@ return [
     'Use a more compact display for search results and history lists.' => 'استخدم عرضًا أكثر إحكامًا لنتائج البحث وقوائم السجل.',
     'Show Section Filter' => 'إظهار فلتر الأقسام',
     'Show the section filter dropdown in the search UI.' => 'إظهار القائمة المنسدلة لفلتر الأقسام في واجهة البحث.',
+    'Show Entry Outline' => 'إظهار مخطط المدخل',
+    'Display the entry outline button on entry pages.' => 'عرض زر مخطط المدخل في صفحات المدخلات.',
     'Show Related Entries' => 'إظهار المدخلات ذات الصلة',
     'Display related entries button on entry pages.' => 'عرض المدخلات ذات الصلة في نتائج البحث.',
 
