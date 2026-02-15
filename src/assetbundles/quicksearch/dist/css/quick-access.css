@@ -789,9 +789,9 @@
     font-size: 12px;
 }
 
-/* Edit button */
+/* Edit button — disabled for now */
 .quick-access-edit-btn {
-    display: flex;
+    display: none;
     align-items: center;
     justify-content: center;
     width: 28px;
@@ -827,14 +827,9 @@
     min-width: 0;
 }
 
-/* Edit Drawer */
+/* Edit Drawer — disabled for now */
 .quick-access-edit-drawer {
-    width: 0;
-    overflow: hidden;
-    transition: width 0.25s ease;
-    background: #fff;
-    border-left: 1px solid #e3eaf0;
-    display: flex;
+    display: none;
     flex-direction: column;
     flex-shrink: 0;
 }

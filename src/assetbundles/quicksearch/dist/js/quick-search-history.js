@@ -74,12 +74,61 @@ window.QuickSearchHistory = (function() {
         instance.hideBackPopup();
         instance.clearHistoryButtonHighlights();
 
-        instance.showHistoryLoading();
+        // First open: fetch from server and build the full popup structure
+        if (!instance._cachedHistory) {
+            instance.showHistoryLoading();
 
-        const limit = showAll ? instance.historyFullLimit : instance.historyInitialLimit;
+            const limit = showAll ? instance.historyFullLimit : instance.historyInitialLimit;
+            const params = new URLSearchParams();
+            params.append('limit', limit.toString());
+
+            try {
+                const historyUrl = Craft.getActionUrl('quick-search/history/index');
+                const response = await utils.fetchWithTimeout(historyUrl + (historyUrl.includes('?') ? '&' : '?') + params.toString(), {
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+
+                const data = await response.json();
+
+                if (data.success) {
+                    const history = data.history || [];
+                    instance._cachedHistory = history;
+                    instance.historyExpanded = showAll;
+                    renderHistory(instance, history, showAll);
+                } else {
+                    console.error('Quick Search: Error loading history', data.error);
+                    instance.showHistoryError(instance.t.historyError || 'Error loading history');
+                    return;
+                }
+            } catch (error) {
+                console.error('Quick Search: Error loading history', error);
+                instance.showHistoryError(instance.t.historyError || 'Error loading history');
+                return;
+            }
+        }
+
+        if (instance.historyPopup) {
+            instance.historyPopup.classList.add('active');
+            instance.currentPopupView = 'history';
+        }
+        if (instance.historyBtn) {
+            instance.historyBtn.classList.add('active');
+        }
+    }
+
+    /**
+     * Expand history to show all items (fetches with higher limit)
+     */
+    async function expandHistory(instance) {
         const params = new URLSearchParams();
-        if (query) params.append('query', query);
-        params.append('limit', limit.toString());
+        params.append('limit', instance.historyFullLimit.toString());
 
         try {
             const historyUrl = Craft.getActionUrl('quick-search/history/index');
@@ -97,37 +146,41 @@ window.QuickSearchHistory = (function() {
             const data = await response.json();
 
             if (data.success) {
-                instance.historyExpanded = showAll;
-                renderHistory(instance, data.history || [], showAll, query);
-                if (instance.historyPopup) {
-                    instance.historyPopup.classList.add('active');
-                    instance.currentPopupView = 'history';
-                }
-                if (instance.historyBtn) {
-                    instance.historyBtn.classList.add('active');
-                }
-            } else {
-                console.error('Quick Search: Error loading history', data.error);
-                instance.showHistoryError(instance.t.historyError || 'Error loading history');
+                instance._cachedHistory = data.history || [];
+                instance.historyExpanded = true;
+                // Re-render list with current filter value
+                const filterValue = instance._historyFilterInput ? instance._historyFilterInput.value : '';
+                renderHistoryList(instance, filterValue);
             }
         } catch (error) {
-            console.error('Quick Search: Error loading history', error);
-            instance.showHistoryError(instance.t.historyError || 'Error loading history');
+            console.error('Quick Search: Error expanding history', error);
         }
     }
 
     /**
-     * Render history popup content
-     * @param {object} instance - QuickSearch instance
-     * @param {Array} history - History entries
-     * @param {boolean} isExpanded - Whether showing all history
-     * @param {string} currentQuery - Current filter query
+     * Filter history items client-side by title or section name
      */
-    function renderHistory(instance, history, isExpanded = false, currentQuery = '') {
+    function filterHistoryItems(items, query) {
+        const q = query.toLowerCase().trim();
+        if (!q) return items;
+        return items.filter(entry => {
+            if (!entry) return false;
+            const title = (entry.title || '').toLowerCase();
+            const section = (entry.section?.name || '').toLowerCase();
+            return title.includes(q) || section.includes(q);
+        });
+    }
+
+    /**
+     * Build the full popup structure (header + filter + content container).
+     * Called once on first open, then only the list content is updated.
+     */
+    function renderHistory(instance, history, isExpanded = false) {
         if (!instance.historyPopup) return;
 
         instance.historyPopup.innerHTML = '';
 
+        // Header
         const header = document.createElement('div');
         header.className = 'quick-search-history-header';
 
@@ -151,26 +204,46 @@ window.QuickSearchHistory = (function() {
         titleWrapper.appendChild(titleText);
         titleWrapper.appendChild(clearBtn);
 
+        // Filter input — persistent, never destroyed
         const searchInput = document.createElement('input');
         searchInput.type = 'text';
         searchInput.className = 'quick-search-history-search';
         searchInput.placeholder = instance.t.filterHistory || 'Filter history...';
+        instance._historyFilterInput = searchInput;
 
-        let searchTimer;
-        searchInput.addEventListener('input', (e) => {
-            clearTimeout(searchTimer);
-            searchTimer = setTimeout(() => {
-                showHistory(instance, e.target.value);
-            }, 300);
+        searchInput.addEventListener('input', () => {
+            renderHistoryList(instance, searchInput.value);
         });
 
         header.appendChild(titleWrapper);
         header.appendChild(searchInput);
         instance.historyPopup.appendChild(header);
 
+        // Content container — only this part gets replaced on filter/expand
+        const contentContainer = document.createElement('div');
+        contentContainer.className = 'quick-search-history-content';
+        instance._historyContentContainer = contentContainer;
+        instance.historyPopup.appendChild(contentContainer);
+
+        // Render the initial list
+        renderHistoryList(instance, '');
+    }
+
+    /**
+     * Re-render only the list content inside the existing popup structure.
+     * The header and filter input are preserved.
+     */
+    function renderHistoryList(instance, query) {
+        const container = instance._historyContentContainer;
+        if (!container) return;
+
+        container.innerHTML = '';
+
         const currentEntryId = utils.getCurrentEntryId();
         const currentSiteHandle = utils.getCurrentSiteHandle();
-        const filteredHistory = (history || []).filter(entry => {
+
+        // Filter out current entry, then apply text filter
+        let items = (instance._cachedHistory || []).filter(entry => {
             if (!entry) return false;
             if (entry.id === currentEntryId) {
                 if (!currentSiteHandle || entry.site?.handle === currentSiteHandle) {
@@ -180,24 +253,23 @@ window.QuickSearchHistory = (function() {
             return true;
         });
 
-        instance.currentHistoryItems = filteredHistory;
+        items = filterHistoryItems(items, query);
+
+        instance.currentHistoryItems = items;
         instance.historySelectedIndex = -1;
 
-        const contentContainer = document.createElement('div');
-        contentContainer.className = 'quick-search-history-content';
-
-        if (!filteredHistory || filteredHistory.length === 0) {
+        if (items.length === 0) {
             const noHistory = document.createElement('div');
             noHistory.className = 'quick-search-no-history';
             noHistory.textContent = instance.t.noRecentEntries || 'No recent entries';
-            contentContainer.appendChild(noHistory);
+            container.appendChild(noHistory);
         } else {
             const list = document.createElement('ul');
             list.className = 'quick-search-history-list';
             list.setAttribute('role', 'listbox');
             list.setAttribute('aria-label', instance.t.recentEntries || 'Recent Entries');
 
-            filteredHistory.forEach((entry, index) => {
+            items.forEach((entry, index) => {
                 try {
                     const item = createHistoryItem(instance, entry, index, false);
                     if (item) {
@@ -208,19 +280,22 @@ window.QuickSearchHistory = (function() {
                 }
             });
 
-            contentContainer.appendChild(list);
+            container.appendChild(list);
         }
 
-        instance.historyPopup.appendChild(contentContainer);
+        // Show "Show more" button if not expanded, not filtering, and we hit the limit
+        const existingShowMore = instance.historyPopup.querySelector('.quick-search-show-more-btn');
+        if (existingShowMore) existingShowMore.remove();
 
-        if (!isExpanded && history.length >= instance.historyInitialLimit && !currentQuery) {
+        if (!instance.historyExpanded && !query &&
+            instance._cachedHistory && instance._cachedHistory.length >= instance.historyInitialLimit) {
             const showMoreBtn = document.createElement('button');
             showMoreBtn.type = 'button';
             showMoreBtn.className = 'quick-search-show-more-btn';
             showMoreBtn.textContent = instance.t.showMore || 'Show more...';
             showMoreBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
-                showHistory(instance, '', true);
+                expandHistory(instance);
             });
             instance.historyPopup.appendChild(showMoreBtn);
         }
@@ -352,7 +427,11 @@ window.QuickSearchHistory = (function() {
 
             if (data.success) {
                 instance.currentHistoryItems = [];
-                renderHistory(instance, [], false, '');
+                instance._cachedHistory = [];
+                if (instance._historyFilterInput) {
+                    instance._historyFilterInput.value = '';
+                }
+                renderHistoryList(instance, '');
                 if (instance.backBtn) {
                     instance.backBtn.disabled = true;
                     instance.backBtn.title = instance.t.goToLastVisited || 'Go to last visited entry';

@@ -257,6 +257,9 @@ window.QuickSearchUI = (function() {
             instance.historyPopup.classList.remove('active');
         }
         instance.currentPopupView = null;
+        instance._cachedHistory = null;
+        instance._historyFilterInput = null;
+        instance._historyContentContainer = null;
         clearHistoryButtonHighlights(instance);
     }
 
