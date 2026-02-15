@@ -1,25 +1,60 @@
 # Quick Search for Craft CMS
 
-Fast entry search and navigation for the Craft CMS control panel.
+Fast, keyboard-first search and navigation for the Craft CMS control panel.
 
 ## Features
 
-### Search & Navigation
-- **Instant Search** - Find entries by title directly from the CP header with real-time results
-- **Smart Filtering** - Filter by section and site (full multi-site support)
-- **Quick Access Overlay** - Press `Ctrl/Cmd+G` to instantly access search, history, and favorites from anywhere
-- **Dashboard Widget** - Search, history, and favorites right on your dashboard
+### Quick Access Overlay (`Ctrl+G`)
+A full-screen overlay for instant access to everything in your CP:
+- **Universal Search** — search across entries, categories, assets, users, globals, and admin settings from a single input
+- **Tabbed Results** — switch between content types with tabs or type prefixes
+- **History Panel** — browse recently visited entries with client-side filtering
+- **Favorites Panel** — star important entries, reorder via drag-and-drop
+- **Saved Searches** — save frequently used searches for one-click access, reorder via drag-and-drop
+- **Copy Actions** — quickly copy an entry's URL, title, or ID from the results
 
-### Productivity Tools
-- **Recent History** - Automatic tracking of visited entries with one-click access
-- **Favorites System** - Star important entries and reorder them via drag & drop
-- **Entry Outline** - Navigate complex entries with a hierarchical view of all fields and Matrix blocks
-- **Related Entries** - Discover connections between entries, including links in content fields
+### Header Bar Search
+- **Instant Search** — find entries by title directly from the CP header with real-time results
+- **Section Filter** — filter results by section (include or exclude mode)
+- **Site Filter** — filter by site (multi-site installations)
+- **Recent History** — browse and filter recent entries from the clock icon
+- **Favorites** — access starred entries from the star icon
+- **Back Button** — one-click return to the last visited entry
+
+### Entry Tools
+- **Entry Outline** — navigate complex entries with a hierarchical view of all fields and Matrix blocks
+- **Related Entries** — discover connections between entries (links to / linked from)
+
+### Keyboard Shortcuts
+
+| Shortcut | Action |
+|---|---|
+| `Ctrl+G` (or `Cmd+G`) | Open Quick Access overlay |
+| `Alt+1` through `Alt+9` | Jump directly to favorites 1–9 (works from anywhere) |
+| `Arrow Up/Down` | Navigate results |
+| `Enter` | Open selected entry |
+| `Ctrl/Cmd+Enter` | Open in new tab |
+| `Escape` | Close overlay / dropdowns |
+
+### Search Prefixes
+
+Type a prefix in the Quick Access search to switch content type:
+
+| Prefix | Type |
+|---|---|
+| `e:` or `entries:` | Entries |
+| `c:` or `categories:` or `cats:` | Categories |
+| `a:` or `assets:` | Assets |
+| `u:` or `users:` | Users |
+| `g:` or `globals:` | Globals |
+| `@:` or `admin:` | Admin settings |
+| `sections:`, `fields:`, `entrytypes:`, `volumes:`, `plugins:` | Admin (specific) |
 
 ### Customization
-- **Compact Mode** - Streamlined interface for power users
-- **Configurable Limits** - Control search results, history size, and favorites count
-- **20+ Languages** - Fully translated interface for international teams
+- **Compact Mode** — streamlined interface for power users
+- **Configurable Limits** — control history size, favorites count, and saved searches
+- **Default Panel** — choose whether Quick Access opens on History or Favorites
+- **20 Languages** — ar, bg, cs, de, en, es, fr, hu, it, ja, ko, nl, pl, pt, ro, ru, sk, tr, uk, zh
 
 ## Requirements
 
@@ -40,31 +75,27 @@ Then install the plugin in the Craft Control Panel under Settings → Plugins.
 
 Visit Settings → Quick Search to configure:
 
-- **Compact Mode**: Use a more compact display for lists
-- **Show Section Filter**: Toggle the section filter dropdown
-- **Show Related Entries**: Display related entries button on entry pages
-- **Searchable Sections**: Limit which sections are searchable
-- **Search Results Limit**: Maximum number of search results
-- **Minimum Search Length**: Characters required before search triggers
-- **Debounce Delay**: Delay before search triggers after typing
-- **History Limit**: Maximum history entries per user
-- **Favorites Limit**: Maximum favorites per user
+| Setting | Description | Default |
+|---|---|---|
+| Compact Mode | Use a more compact display for lists | Off |
+| Show Section Filter | Toggle the section filter dropdown | On |
+| Show Entry Outline | Display entry outline button on entry pages | On |
+| Show Related Entries | Display related entries button on entry pages | On |
+| Section Filter Mode | Include or exclude selected sections | Include |
+| Enabled Sections | Limit which sections are searchable | All |
+| Search Results Limit | Maximum number of search results | 20 |
+| Minimum Search Length | Characters required before search triggers | 2 |
+| Debounce Delay | Delay (ms) before search triggers after typing | 300 |
+| History Limit | Maximum history entries per user | 50 |
+| Favorites Limit | Maximum favorites per user | 25 |
+| Saved Searches Limit | Maximum saved searches per user | 20 |
+| Quick Access Overlay | Enable/disable the overlay | On |
+| Quick Access Shortcut | Keyboard shortcut for the overlay | `Ctrl+G` |
+| Default Panel | Panel shown when overlay opens | History |
 
-## Usage
+## Dashboard Widget
 
-- Click the search input in the header to start searching
-- Click the back arrow to return to the last visited entry
-- Click the clock icon to view recent entries
-- Click the star icon to view/manage favorites
-- Use the section dropdown to filter by section
-- Use the site dropdown to filter by site (multi-site only)
-
-## Keyboard Shortcuts
-
-- `Arrow Up/Down` - Navigate results
-- `Enter` - Open selected entry
-- `Cmd/Ctrl + Enter` - Open in new tab
-- `Escape` - Close dropdowns
+A dashboard widget is included, providing search, history, and favorites directly on the Craft dashboard.
 
 ## License
 
