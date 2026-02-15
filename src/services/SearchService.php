@@ -207,7 +207,7 @@ class SearchService extends Component
         }
 
         $assetQuery = \craft\elements\Asset::find()
-            ->where(['like', 'LOWER([[title]])', mb_strtolower($query)])
+            ->title('*' . $query . '*')
             ->orderBy('title')
             ->limit($limit);
 
@@ -224,8 +224,10 @@ class SearchService extends Component
         $results = [];
 
         foreach ($assets as $asset) {
+            $volume = $asset->getVolume();
+
             // Check permission for this asset's volume
-            if (!$currentUser->admin && !$currentUser->can("viewAssets:{$asset->volume->uid}")) {
+            if ($volume && !$currentUser->admin && !$currentUser->can("viewAssets:{$volume->uid}")) {
                 continue;
             }
 
@@ -233,7 +235,7 @@ class SearchService extends Component
 
             // Get thumbnail URL if image
             $thumbUrl = null;
-            if ($asset->getIsImage()) {
+            if ($asset->kind === 'image') {
                 try {
                     $thumbUrl = $asset->getThumbUrl(50, 50);
                 } catch (\Throwable $e) {
@@ -246,11 +248,11 @@ class SearchService extends Component
                 'id' => $asset->id,
                 'title' => $asset->title,
                 'url' => $asset->getCpEditUrl(),
-                'volume' => [
-                    'id' => $asset->volume->id,
-                    'name' => $asset->volume->name,
-                    'handle' => $asset->volume->handle,
-                ],
+                'volume' => $volume ? [
+                    'id' => $volume->id,
+                    'name' => $volume->name,
+                    'handle' => $volume->handle,
+                ] : null,
                 'site' => $site ? [
                     'id' => $site->id,
                     'name' => $site->name,
