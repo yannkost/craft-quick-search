@@ -146,6 +146,9 @@ return [
     'An error occurred while deleting saved search.' => 'An error occurred while deleting saved search.',
     'An error occurred while reordering saved searches.' => 'An error occurred while reordering saved searches.',
 
+    // Favorites shortcuts
+    'Navigating to {title}...' => 'Navigating to {title}...',
+
     // Copy actions
     'Copy options' => 'Copy options',
     'Copy URL' => 'Copy URL',

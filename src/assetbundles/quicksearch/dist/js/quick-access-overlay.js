@@ -63,6 +63,8 @@ window.QuickAccessOverlay = (function() {
             try {
                 this.createOverlay();
                 this.bindGlobalShortcut();
+                this.preloadFavorites();
+                this.bindFavoritesShortcuts();
             } catch (error) {
                 console.error('Quick Access Overlay: Error during initialization', error);
             }
@@ -723,6 +725,11 @@ window.QuickAccessOverlay = (function() {
             this.overlay.classList.remove('active');
             document.body.style.overflow = '';
 
+            // Move focus out of the overlay so global shortcuts (Alt+1-9) work
+            if (this.overlay.contains(document.activeElement)) {
+                document.activeElement.blur();
+            }
+
             // Close drawer if open
             if (this.drawerOpen) {
                 this.closeDrawer();
@@ -783,7 +790,88 @@ window.QuickAccessOverlay = (function() {
             }
         }
 
+        async preloadFavorites() {
+            try {
+                const favoritesUrl = Craft.getActionUrl('quick-search/favorites/list');
+                const response = await utils.fetchWithTimeout(
+                    favoritesUrl,
+                    {
+                        headers: {
+                            'Accept': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    },
+                    this.fetchTimeout
+                );
+
+                if (!response.ok) return;
+
+                const data = await response.json();
+                if (data.success) {
+                    this.favoritesItems = data.favorites || [];
+                }
+            } catch (error) {
+                // Silent fail - shortcuts just won't work until overlay is opened
+            }
+        }
+
+        bindFavoritesShortcuts() {
+            document.addEventListener('keydown', (e) => {
+                if (!e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
+
+                const digit = parseInt(e.key, 10);
+                if (isNaN(digit) || digit < 1 || digit > 9) return;
+
+                // When overlay is open, allow shortcuts from our own inputs
+                // When overlay is closed, ignore if focused in an external input
+                if (this.isOpen) {
+                    if (!this.overlay.contains(e.target)) return;
+                } else {
+                    if (this.shouldIgnoreShortcut(e)) return;
+                }
+
+                const index = digit - 1;
+                if (!this.favoritesItems || index >= this.favoritesItems.length) return;
+
+                e.preventDefault();
+                const entry = this.favoritesItems[index];
+                if (entry && entry.url) {
+                    if (this.isOpen) this.hide();
+                    this.showNavigationToast(entry);
+                    window.location.href = entry.url;
+                }
+            });
+        }
+
+        showNavigationToast(entry) {
+            // Remove any existing toast
+            const existing = document.querySelector('.quick-access-nav-toast');
+            if (existing) existing.remove();
+
+            const toast = document.createElement('div');
+            toast.className = 'quick-access-nav-toast';
+            toast.textContent = (this.t.navigatingTo || 'Navigating to {title}...').replace('{title}', entry.title || '');
+            document.body.appendChild(toast);
+
+            // Trigger reflow for animation
+            toast.offsetHeight;
+            toast.classList.add('visible');
+
+            setTimeout(() => {
+                toast.classList.remove('visible');
+                setTimeout(() => toast.remove(), 300);
+            }, 2000);
+        }
+
         async loadFavorites() {
+            // On first open, use preloaded data to avoid double-fetch
+            if (!this.favoritesLoadedOnce && this.favoritesItems && this.favoritesItems.length > 0) {
+                this.favoritesLoadedOnce = true;
+                this.renderPanel('favorites', this.favoritesItems);
+                return;
+            }
+            this.favoritesLoadedOnce = true;
+
             try {
                 this.favoritesList.innerHTML = '<li class="quick-access-loading">' + (this.t.searching || 'Loading...') + '</li>';
 
@@ -835,6 +923,13 @@ window.QuickAccessOverlay = (function() {
                     // Add drag & drop for favorites
                     if (type === 'favorites') {
                         this.setupDragAndDrop(item, index);
+                        // Add shortcut badge for first 9 favorites
+                        if (index < 9) {
+                            const badge = document.createElement('span');
+                            badge.className = 'quick-access-shortcut-badge';
+                            badge.textContent = (this.isMac ? '⌥' : 'Alt+') + (index + 1);
+                            item.appendChild(badge);
+                        }
                     }
                     list.appendChild(item);
                 }
