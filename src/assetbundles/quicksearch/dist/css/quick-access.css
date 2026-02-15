@@ -160,6 +160,8 @@
     height: 44px;
     padding: 0 16px;
     font-size: 16px;
+    background: #fff;
+    color: #1c2e36;
     border: 2px solid #cdd8e4;
     border-radius: 6px;
     outline: none;
@@ -357,12 +359,7 @@
     border-radius: 4px;
     cursor: pointer;
     color: #8496ab;
-    opacity: 0;
     transition: all 0.15s ease;
-}
-
-.quick-access-item:hover .quick-access-newtab-btn {
-    opacity: 1;
 }
 
 .quick-access-newtab-btn:hover {
@@ -387,12 +384,7 @@
     border-radius: 4px;
     cursor: pointer;
     color: #8496ab;
-    opacity: 0;
     transition: all 0.15s ease;
-}
-
-.quick-access-item:hover .quick-access-copy-btn {
-    opacity: 1;
 }
 
 .quick-access-copy-btn:hover {
@@ -407,10 +399,9 @@
 
 /* Copy dropdown menu */
 .quick-access-copy-menu {
-    position: absolute;
-    right: 8px;
-    top: 100%;
-    z-index: 10;
+    display: none;
+    position: fixed;
+    z-index: 100001;
     background: #fff;
     border: 1px solid #e3eaf0;
     border-radius: 6px;
@@ -448,18 +439,12 @@
     border-radius: 4px;
     cursor: grab;
     color: #8496ab;
-    opacity: 0;
-    transition: opacity 0.15s ease;
     flex-shrink: 0;
     margin-right: 4px;
 }
 
 .quick-access-drag-handle:active {
     cursor: grabbing;
-}
-
-.quick-access-item:hover .quick-access-drag-handle {
-    opacity: 1;
 }
 
 .quick-access-drag-handle:hover {
@@ -622,12 +607,7 @@
     border-radius: 4px;
     cursor: pointer;
     color: #8496ab;
-    opacity: 0;
     transition: all 0.15s ease;
-}
-
-.quick-access-item:hover .quick-access-edit-btn {
-    opacity: 1;
 }
 
 .quick-access-edit-btn:hover {
