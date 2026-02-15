@@ -14,6 +14,8 @@ return [
 
     // Settings page - Search Settings
     'Search Settings' => 'Impostazioni di ricerca',
+    'Enabled Search Types' => 'Tipi di ricerca abilitati',
+    'Select which additional content types to show as tabs in the search overlay. Entries search is always enabled.' => 'Seleziona quali tipi di contenuto aggiuntivi mostrare come schede nel pannello di ricerca. La ricerca delle voci è sempre abilitata.',
     'Enabled Sections' => 'Sezioni abilitate',
     'Select which sections should be searchable. Leave empty to enable all sections.' => 'Seleziona quali sezioni devono essere ricercabili. Lascia vuoto per abilitare tutte le sezioni.',
     'Minimum Search Length' => 'Lunghezza minima di ricerca',
@@ -163,7 +165,13 @@ return [
     // Type prefix help
     'Type prefix hint' => 'Suggerimento: Usa «entries:», «categories:», «users:», ecc. per cambiare il tipo di ricerca',
 
+    'Clear Search on Tab Switch' => 'Cancella ricerca al cambio scheda',
+    'Clear the search input and results when switching between search type tabs.' => 'Cancella il campo di ricerca e i risultati quando si passa da una scheda di tipo ricerca all\'altra.',
+    'Clear search' => 'Cancella ricerca',
+
     // Saved Searches
+    'Show Saved Searches' => 'Mostra ricerche salvate',
+    'Show the saved searches section in the Quick Access Overlay.' => 'Mostra la sezione delle ricerche salvate nel pannello di accesso rapido.',
     'Saved Searches' => 'Ricerche salvate',
     'Save Search' => 'Salva ricerca',
     'Name this search...' => 'Dai un nome a questa ricerca...',

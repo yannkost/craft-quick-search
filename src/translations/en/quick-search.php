@@ -14,6 +14,8 @@ return [
 
     // Settings page - Search Settings
     'Search Settings' => 'Search Settings',
+    'Enabled Search Types' => 'Enabled Search Types',
+    'Select which additional content types to show as tabs in the search overlay. Entries search is always enabled.' => 'Select which additional content types to show as tabs in the search overlay. Entries search is always enabled.',
     'Searchable Sections' => 'Searchable Sections',
     'Select which sections to include in search. "All" searches all sections.' => 'Select which sections to include in search. "All" searches all sections.',
     'Enabled Sections' => 'Enabled Sections',
@@ -132,7 +134,14 @@ return [
     // Type prefix help
     'Type prefix hint' => 'Tip: Use "entries:", "categories:", "users:", etc. to switch search types',
 
+    // Search behavior
+    'Clear Search on Tab Switch' => 'Clear Search on Tab Switch',
+    'Clear the search input and results when switching between search type tabs.' => 'Clear the search input and results when switching between search type tabs.',
+    'Clear search' => 'Clear search',
+
     // Saved Searches
+    'Show Saved Searches' => 'Show Saved Searches',
+    'Show the saved searches section in the Quick Access Overlay.' => 'Show the saved searches section in the Quick Access Overlay.',
     'Saved Searches' => 'Saved Searches',
     'Save Search' => 'Save Search',
     'Name this search...' => 'Name this search...',

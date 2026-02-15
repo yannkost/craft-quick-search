@@ -14,6 +14,8 @@ return [
 
     // Settings page - Search Settings
     'Search Settings' => 'Zoekinstellingen',
+    'Enabled Search Types' => 'Ingeschakelde zoektypen',
+    'Select which additional content types to show as tabs in the search overlay. Entries search is always enabled.' => 'Selecteer welke extra inhoudstypen als tabbladen in het zoekpaneel worden weergegeven. Het zoeken naar items is altijd ingeschakeld.',
     'Enabled Sections' => 'Ingeschakelde secties',
     'Select which sections should be searchable. Leave empty to enable all sections.' => 'Selecteer welke secties doorzoekbaar moeten zijn. Laat leeg om alle secties in te schakelen.',
     'Minimum Search Length' => 'Minimale zoeklengte',
@@ -163,7 +165,13 @@ return [
     // Type prefix help
     'Type prefix hint' => 'Tip: Gebruik "entries:", "categories:", "users:", enz. om het zoektype te wijzigen',
 
+    'Clear Search on Tab Switch' => 'Zoekopdracht wissen bij tabwissel',
+    'Clear the search input and results when switching between search type tabs.' => 'Het zoekveld en de resultaten wissen bij het wisselen tussen zoektype-tabbladen.',
+    'Clear search' => 'Zoekopdracht wissen',
+
     // Saved Searches
+    'Show Saved Searches' => 'Opgeslagen zoekopdrachten tonen',
+    'Show the saved searches section in the Quick Access Overlay.' => 'Toon de sectie voor opgeslagen zoekopdrachten in het sneltoegang-paneel.',
     'Saved Searches' => 'Opgeslagen zoekopdrachten',
     'Save Search' => 'Zoekopdracht opslaan',
     'Name this search...' => 'Naam voor deze zoekopdracht...',

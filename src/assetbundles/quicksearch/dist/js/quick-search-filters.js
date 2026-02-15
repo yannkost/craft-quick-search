@@ -404,6 +404,9 @@ window.QuickSearchFilters = (function() {
             instance.tabs.push(tab);
         });
 
+        // Hide tabs bar if only 1 tab
+        instance.tabsContainer.style.display = instance.searchTypes.length <= 1 ? 'none' : '';
+
         updatePlaceholder(instance);
     }
 

@@ -14,6 +14,8 @@ return [
 
     // Settings page - Search Settings
     'Search Settings' => 'Arama Ayarları',
+    'Enabled Search Types' => 'Etkin arama türleri',
+    'Select which additional content types to show as tabs in the search overlay. Entries search is always enabled.' => 'Arama panelinde sekme olarak gösterilecek ek içerik türlerini seçin. Giriş araması her zaman etkindir.',
     'Enabled Sections' => 'Etkin Bölümler',
     'Select which sections should be searchable. Leave empty to enable all sections.' => 'Hangi bölümlerin aranabilir olması gerektiğini seçin. Tüm bölümleri etkinleştirmek için boş bırakın.',
     'Minimum Search Length' => 'Minimum Arama Uzunluğu',
@@ -163,7 +165,13 @@ return [
     // Type prefix help
     'Type prefix hint' => 'İpucu: Arama türünü değiştirmek için "entries:", "categories:", "users:" vb. kullanın',
 
+    'Clear Search on Tab Switch' => 'Sekme değiştirmede aramayı temizle',
+    'Clear the search input and results when switching between search type tabs.' => 'Arama türü sekmeleri arasında geçiş yaparken arama alanını ve sonuçları temizle.',
+    'Clear search' => 'Aramayı temizle',
+
     // Saved Searches
+    'Show Saved Searches' => 'Kayıtlı aramaları göster',
+    'Show the saved searches section in the Quick Access Overlay.' => 'Hızlı erişim panelinde kayıtlı aramalar bölümünü gösterin.',
     'Saved Searches' => 'Kayıtlı aramalar',
     'Save Search' => 'Aramayı kaydet',
     'Name this search...' => 'Bu aramayı adlandırın...',

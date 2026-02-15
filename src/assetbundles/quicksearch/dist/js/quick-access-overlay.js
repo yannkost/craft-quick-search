@@ -48,6 +48,10 @@ window.QuickAccessOverlay = (function() {
             // Search abort controller
             this.searchAbortController = null;
 
+            // Site selector state
+            this.selectedSiteId = null; // null = current site
+            this.sites = [];
+
             // Edit drawer state
             this.drawerOpen = false;
             this.drawerEntry = null;
@@ -103,6 +107,13 @@ window.QuickAccessOverlay = (function() {
             closeBtn.addEventListener('click', () => this.hide());
 
             header.appendChild(title);
+
+            // Site selector (only for multi-site installs)
+            if (this.settings.isMultiSite) {
+                this.siteSelector = this.createSiteSelector();
+                header.appendChild(this.siteSelector);
+            }
+
             header.appendChild(shortcutHint);
             header.appendChild(closeBtn);
 
@@ -153,7 +164,25 @@ window.QuickAccessOverlay = (function() {
                 this.promptSaveSearch();
             });
 
-            inputWrapper.appendChild(this.searchInput);
+            // Clear input button
+            this.clearInputBtn = document.createElement('button');
+            this.clearInputBtn.type = 'button';
+            this.clearInputBtn.className = 'quick-access-clear-input-btn';
+            this.clearInputBtn.setAttribute('aria-label', this.t.clearSearch || 'Clear search');
+            this.clearInputBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>';
+            this.clearInputBtn.style.display = 'none';
+            this.clearInputBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.clearSearch();
+            });
+
+            // Container for input + clear button (for absolute positioning)
+            const inputContainer = document.createElement('div');
+            inputContainer.className = 'quick-access-search-input-container';
+            inputContainer.appendChild(this.searchInput);
+            inputContainer.appendChild(this.clearInputBtn);
+
+            inputWrapper.appendChild(inputContainer);
             inputWrapper.appendChild(this.saveSearchBtn);
             inputWrapper.appendChild(searchHint);
 
@@ -484,6 +513,15 @@ window.QuickAccessOverlay = (function() {
                 }
             }, true);
 
+            // Close site dropdown on click outside
+            this.overlay.addEventListener('click', (e) => {
+                if (this.siteSelectorDropdown &&
+                    !e.target.closest('.quick-access-site-selector')) {
+                    this.siteSelectorDropdown.classList.remove('active');
+                    this.siteSelectorBtn.classList.remove('active');
+                }
+            });
+
             // Close on backdrop click (but not if user has text selected)
             this.overlay.addEventListener('click', (e) => {
                 if (e.target === this.overlay) {
@@ -497,10 +535,13 @@ window.QuickAccessOverlay = (function() {
                 }
             });
 
-            // Show/hide save button based on input content
+            // Show/hide save button and clear button based on input content
             this.searchInput.addEventListener('input', () => {
                 const hasQuery = this.searchInput.value.trim().length >= 2;
-                this.saveSearchBtn.style.display = hasQuery ? '' : 'none';
+                this.clearInputBtn.style.display = this.searchInput.value.length > 0 ? '' : 'none';
+                if (this.settings.showSavedSearches) {
+                    this.saveSearchBtn.style.display = hasQuery ? '' : 'none';
+                }
             });
 
             // Search input - Enter to search
@@ -706,11 +747,14 @@ window.QuickAccessOverlay = (function() {
             }
 
             // Load data
-            await Promise.all([
+            const promises = [
                 this.loadHistory(),
                 this.loadFavorites(),
-                this.loadSavedSearches()
-            ]);
+            ];
+            if (this.settings.showSavedSearches) {
+                promises.push(this.loadSavedSearches());
+            }
+            await Promise.all(promises);
         }
 
         hide() {
@@ -1256,6 +1300,11 @@ window.QuickAccessOverlay = (function() {
                     type: type
                 });
 
+                // Pass site filter if set
+                if (this.selectedSiteId !== null) {
+                    params.set('siteId', this.selectedSiteId);
+                }
+
                 const actionUrl = Craft.getActionUrl('quick-search/search/index');
                 const separator = actionUrl.includes('?') ? '&' : '?';
 
@@ -1549,6 +1598,132 @@ window.QuickAccessOverlay = (function() {
             }
         }
 
+        // Site selector methods
+        createSiteSelector() {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'quick-access-site-selector';
+
+            this.siteSelectorBtn = document.createElement('button');
+            this.siteSelectorBtn.type = 'button';
+            this.siteSelectorBtn.className = 'quick-access-site-selector-btn';
+            this.siteSelectorBtn.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" /></svg>
+                <span class="quick-access-site-selector-text">${this.settings.currentSiteName || this.t.currentSite || 'Current Site'}</span>
+                <svg class="quick-access-site-selector-chevron" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+            `;
+
+            this.siteSelectorDropdown = document.createElement('div');
+            this.siteSelectorDropdown.className = 'quick-access-site-selector-dropdown';
+
+            this.siteSelectorBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.siteSelectorDropdown.classList.toggle('active');
+                this.siteSelectorBtn.classList.toggle('active');
+            });
+
+            wrapper.appendChild(this.siteSelectorBtn);
+            wrapper.appendChild(this.siteSelectorDropdown);
+
+            // Load sites
+            this.loadSites();
+
+            return wrapper;
+        }
+
+        async loadSites() {
+            try {
+                const actionUrl = Craft.getActionUrl('quick-search/search/sites');
+                const response = await utils.fetchWithTimeout(
+                    actionUrl,
+                    {
+                        headers: {
+                            'Accept': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    },
+                    this.fetchTimeout
+                );
+
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+                const data = await response.json();
+
+                if (data.success && data.sites) {
+                    this.sites = data.sites;
+                    this.populateSiteDropdown();
+                }
+            } catch (error) {
+                console.error('Quick Access: Error loading sites', error);
+            }
+        }
+
+        populateSiteDropdown() {
+            if (!this.siteSelectorDropdown) return;
+
+            this.siteSelectorDropdown.innerHTML = '';
+
+            // Current Site option
+            const currentOpt = this.createSiteOption(
+                null,
+                this.settings.currentSiteName || this.t.currentSite || 'Current Site',
+                true
+            );
+            this.siteSelectorDropdown.appendChild(currentOpt);
+
+            // Individual sites
+            this.sites.forEach(site => {
+                const opt = this.createSiteOption(site.id, site.name, false);
+                this.siteSelectorDropdown.appendChild(opt);
+            });
+
+            // All Sites option
+            const allOpt = this.createSiteOption(
+                '*',
+                this.t.allSites || 'All Sites',
+                false
+            );
+            this.siteSelectorDropdown.appendChild(allOpt);
+        }
+
+        createSiteOption(siteId, name, isSelected) {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'quick-access-site-option';
+            if (isSelected) btn.classList.add('selected');
+            btn.dataset.siteId = siteId === null ? '' : siteId;
+            btn.textContent = name;
+
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.selectSite(siteId, name);
+            });
+
+            return btn;
+        }
+
+        selectSite(siteId, name) {
+            this.selectedSiteId = siteId;
+
+            // Update button text
+            const textSpan = this.siteSelectorBtn.querySelector('.quick-access-site-selector-text');
+            if (textSpan) textSpan.textContent = name;
+
+            // Update selected state
+            this.siteSelectorDropdown.querySelectorAll('.quick-access-site-option').forEach(opt => {
+                const optId = opt.dataset.siteId === '' ? null : (opt.dataset.siteId === '*' ? '*' : parseInt(opt.dataset.siteId));
+                opt.classList.toggle('selected', optId === siteId);
+            });
+
+            // Close dropdown
+            this.siteSelectorDropdown.classList.remove('active');
+            this.siteSelectorBtn.classList.remove('active');
+
+            // Re-search if there's a query
+            if (this.searchInput && this.searchInput.value.trim().length >= 2) {
+                this.performSearch(this.searchInput.value.trim());
+            }
+        }
+
         // Tab methods for universal search
         async loadSearchTypes() {
             try {
@@ -1615,6 +1790,9 @@ window.QuickAccessOverlay = (function() {
                 this.tabButtons[type.id] = tab;
             });
 
+            // Hide tabs bar if only 1 tab
+            this.tabsContainer.style.display = this.searchTypes.length <= 1 ? 'none' : '';
+
             this.updateSearchPlaceholder();
         }
 
@@ -1629,6 +1807,23 @@ window.QuickAccessOverlay = (function() {
             };
 
             return icons[icon] || icons.document;
+        }
+
+        clearSearch() {
+            this.searchInput.value = '';
+            this.clearInputBtn.style.display = 'none';
+            this.saveSearchBtn.style.display = 'none';
+            this.searchResults = [];
+            this.searchSelectedIndex = -1;
+            this.searchResultsSection.style.display = 'none';
+            this.searchResultsList.innerHTML = '';
+
+            // Close drawer if open
+            if (this.drawerOpen) {
+                this.closeDrawer();
+            }
+
+            this.searchInput.focus();
         }
 
         switchTab(type, skipSearch = false) {
@@ -1646,8 +1841,10 @@ window.QuickAccessOverlay = (function() {
             // Update placeholder
             this.updateSearchPlaceholder();
 
-            // Re-search if there's a query (unless skipSearch is true)
-            if (!skipSearch && this.searchInput && this.searchInput.value.trim().length >= 2) {
+            // Clear or re-search based on setting
+            if (this.settings.clearSearchOnTabSwitch) {
+                this.clearSearch();
+            } else if (!skipSearch && this.searchInput && this.searchInput.value.trim().length >= 2) {
                 this.performSearch(this.searchInput.value.trim());
             }
         }

@@ -14,6 +14,8 @@ return [
 
     // Settings page - Search Settings
     'Search Settings' => 'Настройки поиска',
+    'Enabled Search Types' => 'Включённые типы поиска',
+    'Select which additional content types to show as tabs in the search overlay. Entries search is always enabled.' => 'Выберите дополнительные типы контента для отображения в виде вкладок в панели поиска. Поиск записей всегда включён.',
     'Enabled Sections' => 'Включённые разделы',
     'Select which sections should be searchable. Leave empty to enable all sections.' => 'Выберите, какие разделы должны быть доступны для поиска. Оставьте пустым, чтобы включить все разделы.',
     'Minimum Search Length' => 'Минимальная длина поиска',
@@ -163,7 +165,13 @@ return [
     // Type prefix help
     'Type prefix hint' => 'Совет: Используйте «entries:», «categories:», «users:» и т.д. для переключения типа поиска',
 
+    'Clear Search on Tab Switch' => 'Очищать поиск при смене вкладки',
+    'Clear the search input and results when switching between search type tabs.' => 'Очищать поле поиска и результаты при переключении между вкладками типов поиска.',
+    'Clear search' => 'Очистить поиск',
+
     // Saved Searches
+    'Show Saved Searches' => 'Показать сохранённые поиски',
+    'Show the saved searches section in the Quick Access Overlay.' => 'Показывать раздел сохранённых поисков в панели быстрого доступа.',
     'Saved Searches' => 'Сохранённые поиски',
     'Save Search' => 'Сохранить поиск',
     'Name this search...' => 'Назовите этот поиск...',

@@ -14,6 +14,8 @@ return [
 
     // Settings page - Search Settings
     'Search Settings' => '검색 설정',
+    'Enabled Search Types' => '활성화된 검색 유형',
+    'Select which additional content types to show as tabs in the search overlay. Entries search is always enabled.' => '검색 오버레이에서 탭으로 표시할 추가 콘텐츠 유형을 선택하세요. 항목 검색은 항상 활성화되어 있습니다.',
     'Enabled Sections' => '활성화된 섹션',
     'Select which sections should be searchable. Leave empty to enable all sections.' => '검색 가능한 섹션을 선택하세요. 모든 섹션을 활성화하려면 비워 두세요.',
     'Minimum Search Length' => '최소 검색 길이',
@@ -163,7 +165,13 @@ return [
     // Type prefix help
     'Type prefix hint' => '팁: "entries:", "categories:", "users:" 등을 사용하여 검색 유형을 전환하세요',
 
+    'Clear Search on Tab Switch' => '탭 전환 시 검색 지우기',
+    'Clear the search input and results when switching between search type tabs.' => '검색 유형 탭 간 전환 시 검색 입력과 결과를 지웁니다.',
+    'Clear search' => '검색 지우기',
+
     // Saved Searches
+    'Show Saved Searches' => '저장된 검색 표시',
+    'Show the saved searches section in the Quick Access Overlay.' => '빠른 액세스 오버레이에 저장된 검색 섹션을 표시합니다.',
     'Saved Searches' => '저장된 검색',
     'Save Search' => '검색 저장',
     'Name this search...' => '이 검색 이름 지정...',

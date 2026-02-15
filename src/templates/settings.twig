@@ -58,6 +58,23 @@
     errors: settings.getErrors('enabledSections')
 }) }}
 
+{{ forms.checkboxSelectField({
+    label: 'Enabled Search Types'|t('quick-search'),
+    instructions: 'Select which additional content types to show as tabs in the search overlay. Entries search is always enabled.'|t('quick-search'),
+    id: 'enabledSearchTypes',
+    name: 'enabledSearchTypes',
+    options: [
+        { value: 'categories', label: 'Categories'|t('quick-search') },
+        { value: 'assets', label: 'Assets'|t('quick-search') },
+        { value: 'users', label: 'Users'|t('quick-search') },
+        { value: 'globals', label: 'Globals'|t('quick-search') },
+        { value: 'admin', label: 'Admin'|t('quick-search') },
+    ],
+    values: settings.enabledSearchTypes,
+    showAllOption: true,
+    errors: settings.getErrors('enabledSearchTypes')
+}) }}
+
 {{ forms.textField({
     label: 'Minimum Search Length'|t('quick-search'),
     instructions: 'Minimum number of characters required before search is triggered.'|t('quick-search'),
@@ -170,4 +187,22 @@
     name: 'quickAccessShowSearch',
     on: settings.quickAccessShowSearch,
     errors: settings.getErrors('quickAccessShowSearch')
+}) }}
+
+{{ forms.lightswitchField({
+    label: 'Clear Search on Tab Switch'|t('quick-search'),
+    instructions: 'Clear the search input and results when switching between search type tabs.'|t('quick-search'),
+    id: 'clearSearchOnTabSwitch',
+    name: 'clearSearchOnTabSwitch',
+    on: settings.clearSearchOnTabSwitch,
+    errors: settings.getErrors('clearSearchOnTabSwitch')
+}) }}
+
+{{ forms.lightswitchField({
+    label: 'Show Saved Searches'|t('quick-search'),
+    instructions: 'Show the saved searches section in the Quick Access Overlay.'|t('quick-search'),
+    id: 'showSavedSearches',
+    name: 'showSavedSearches',
+    on: settings.showSavedSearches,
+    errors: settings.getErrors('showSavedSearches')
 }) }}

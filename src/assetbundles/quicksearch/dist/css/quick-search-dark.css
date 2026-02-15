@@ -479,6 +479,41 @@
         color: #8a98a6;
         background: #434648;
     }
+    /* --- Quick Access: site selector --- */
+    .quick-access-site-selector-btn {
+        background: #2a333c;
+        border-color: #525a62;
+        color: #c8cdd2;
+    }
+    .quick-access-site-selector-btn:hover {
+        background: #333c45;
+        border-color: #6e7c8a;
+    }
+    .quick-access-site-selector-btn.active {
+        border-color: #4da6ff;
+        color: #4da6ff;
+    }
+    .quick-access-site-selector-btn > svg {
+        color: #6e7c8a;
+    }
+    .quick-access-site-selector-btn.active > svg {
+        color: #4da6ff;
+    }
+    .quick-access-site-selector-dropdown {
+        background: #2a333c;
+        border-color: #525a62;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+    .quick-access-site-option {
+        color: #c8cdd2;
+    }
+    .quick-access-site-option:hover {
+        background: #333c45;
+    }
+    .quick-access-site-option.selected {
+        background: #1a3a5c;
+        color: #4da6ff;
+    }
     .quick-access-close {
         color: #6e7c8a;
     }
@@ -521,6 +556,15 @@
     .quick-access-search-hint {
         color: #5c6a78;
         background: #cdd8e4;
+    }
+
+    /* --- Quick Access: clear input button --- */
+    .quick-access-clear-input-btn {
+        background: #525a62;
+        color: #e8eaed;
+    }
+    .quick-access-clear-input-btn:hover {
+        background: #6e7c8a;
     }
 
     /* --- Quick Access: save search button --- */

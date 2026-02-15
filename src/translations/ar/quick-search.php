@@ -14,6 +14,8 @@ return [
 
     // Settings page - Search Settings
     'Search Settings' => 'إعدادات البحث',
+    'Enabled Search Types' => 'أنواع البحث المفعّلة',
+    'Select which additional content types to show as tabs in the search overlay. Entries search is always enabled.' => 'حدد أنواع المحتوى الإضافية التي ستظهر كعلامات تبويب في نافذة البحث. البحث في المقالات مفعّل دائمًا.',
     'Enabled Sections' => 'الأقسام المفعّلة',
     'Select which sections should be searchable. Leave empty to enable all sections.' => 'حدد الأقسام التي يجب أن تكون قابلة للبحث. اتركها فارغة لتفعيل جميع الأقسام.',
     'Minimum Search Length' => 'الحد الأدنى لطول البحث',
@@ -163,7 +165,13 @@ return [
     // Type prefix help
     'Type prefix hint' => 'تلميح: استخدم "entries:" أو "categories:" أو "users:" إلخ لتغيير نوع البحث',
 
+    'Clear Search on Tab Switch' => 'مسح البحث عند تبديل العلامات',
+    'Clear the search input and results when switching between search type tabs.' => 'مسح حقل البحث والنتائج عند التبديل بين علامات تبويب أنواع البحث.',
+    'Clear search' => 'مسح البحث',
+
     // Saved Searches
+    'Show Saved Searches' => 'إظهار عمليات البحث المحفوظة',
+    'Show the saved searches section in the Quick Access Overlay.' => 'إظهار قسم عمليات البحث المحفوظة في نافذة الوصول السريع.',
     'Saved Searches' => 'عمليات البحث المحفوظة',
     'Save Search' => 'حفظ البحث',
     'Name this search...' => 'تسمية هذا البحث...',

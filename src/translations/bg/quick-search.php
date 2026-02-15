@@ -14,6 +14,8 @@ return [
 
     // Settings page - Search Settings
     'Search Settings' => 'Настройки за търсене',
+    'Enabled Search Types' => 'Активирани типове търсене',
+    'Select which additional content types to show as tabs in the search overlay. Entries search is always enabled.' => 'Изберете кои допълнителни типове съдържание да се показват като раздели в панела за търсене. Търсенето на записи е винаги активно.',
     'Enabled Sections' => 'Активирани секции',
     'Select which sections should be searchable. Leave empty to enable all sections.' => 'Изберете кои секции да бъдат търсими. Оставете празно, за да активирате всички секции.',
     'Minimum Search Length' => 'Минимална дължина на търсене',
@@ -163,7 +165,13 @@ return [
     // Type prefix help
     'Type prefix hint' => 'Съвет: Използвайте „entries:", „categories:", „users:" и др. за превключване на типа търсене',
 
+    'Clear Search on Tab Switch' => 'Изчистване на търсенето при смяна на раздел',
+    'Clear the search input and results when switching between search type tabs.' => 'Изчистване на полето за търсене и резултатите при превключване между разделите за типове търсене.',
+    'Clear search' => 'Изчистване на търсенето',
+
     // Saved Searches
+    'Show Saved Searches' => 'Показване на запазените търсения',
+    'Show the saved searches section in the Quick Access Overlay.' => 'Показване на секцията за запазени търсения в панела за бърз достъп.',
     'Saved Searches' => 'Запазени търсения',
     'Save Search' => 'Запази търсенето',
     'Name this search...' => 'Именувайте това търсене...',

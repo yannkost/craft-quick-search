@@ -14,6 +14,8 @@ return [
 
     // Settings page - Search Settings
     'Search Settings' => '検索設定',
+    'Enabled Search Types' => '有効な検索タイプ',
+    'Select which additional content types to show as tabs in the search overlay. Entries search is always enabled.' => '検索オーバーレイでタブとして表示する追加のコンテンツタイプを選択してください。エントリ検索は常に有効です。',
     'Enabled Sections' => '有効なセクション',
     'Select which sections should be searchable. Leave empty to enable all sections.' => '検索可能にするセクションを選択してください。すべてのセクションを有効にするには空のままにしてください。',
     'Minimum Search Length' => '最小検索文字数',
@@ -163,7 +165,13 @@ return [
     // Type prefix help
     'Type prefix hint' => 'ヒント：「entries:」「categories:」「users:」等を使用して検索タイプを切り替えられます',
 
+    'Clear Search on Tab Switch' => 'タブ切り替え時に検索をクリア',
+    'Clear the search input and results when switching between search type tabs.' => '検索タイプのタブを切り替える際に検索入力と結果をクリアします。',
+    'Clear search' => '検索をクリア',
+
     // Saved Searches
+    'Show Saved Searches' => '保存した検索を表示',
+    'Show the saved searches section in the Quick Access Overlay.' => 'クイックアクセスオーバーレイに保存した検索セクションを表示します。',
     'Saved Searches' => '保存済み検索',
     'Save Search' => '検索を保存',
     'Name this search...' => 'この検索に名前を付ける...',

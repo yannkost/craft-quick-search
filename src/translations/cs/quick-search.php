@@ -14,6 +14,8 @@ return [
 
     // Settings page - Search Settings
     'Search Settings' => 'Nastavení vyhledávání',
+    'Enabled Search Types' => 'Povolené typy vyhledávání',
+    'Select which additional content types to show as tabs in the search overlay. Entries search is always enabled.' => 'Vyberte, které další typy obsahu se mají zobrazovat jako záložky v panelu vyhledávání. Vyhledávání položek je vždy aktivní.',
     'Enabled Sections' => 'Povolené sekce',
     'Select which sections should be searchable. Leave empty to enable all sections.' => 'Vyberte, které sekce mají být prohledávatelné. Ponechte prázdné pro povolení všech sekcí.',
     'Minimum Search Length' => 'Minimální délka vyhledávání',
@@ -163,7 +165,13 @@ return [
     // Type prefix help
     'Type prefix hint' => 'Tip: Použijte „entries:", „categories:", „users:" atd. pro přepnutí typu vyhledávání',
 
+    'Clear Search on Tab Switch' => 'Vymazat hledání při přepnutí záložky',
+    'Clear the search input and results when switching between search type tabs.' => 'Vymazat vyhledávací pole a výsledky při přepínání mezi záložkami typů vyhledávání.',
+    'Clear search' => 'Vymazat hledání',
+
     // Saved Searches
+    'Show Saved Searches' => 'Zobrazit uložená vyhledávání',
+    'Show the saved searches section in the Quick Access Overlay.' => 'Zobrazit sekci uložených vyhledávání v panelu rychlého přístupu.',
     'Saved Searches' => 'Uložená vyhledávání',
     'Save Search' => 'Uložit vyhledávání',
     'Name this search...' => 'Pojmenovat toto vyhledávání...',

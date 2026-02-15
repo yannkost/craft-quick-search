@@ -245,6 +245,15 @@ class SearchController extends Controller
                 ];
             }
 
+            // Filter by enabledSearchTypes setting
+            $settings = Plugin::getInstance()->getSettings();
+            if (!empty($settings->enabledSearchTypes)) {
+                $types = array_values(array_filter($types, function ($type) use ($settings) {
+                    // Always keep entries (it's the default, can't be disabled)
+                    return $type['id'] === 'entries' || in_array($type['id'], $settings->enabledSearchTypes, true);
+                }));
+            }
+
             return $this->asJson([
                 'success' => true,
                 'types' => $types,

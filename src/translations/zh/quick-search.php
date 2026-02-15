@@ -14,6 +14,8 @@ return [
 
     // Settings page - Search Settings
     'Search Settings' => '搜索设置',
+    'Enabled Search Types' => '启用的搜索类型',
+    'Select which additional content types to show as tabs in the search overlay. Entries search is always enabled.' => '选择在搜索面板中作为标签页显示的额外内容类型。条目搜索始终启用。',
     'Enabled Sections' => '已启用的栏目',
     'Select which sections should be searchable. Leave empty to enable all sections.' => '选择哪些栏目应该可搜索。留空以启用所有栏目。',
     'Minimum Search Length' => '最小搜索长度',
@@ -163,7 +165,13 @@ return [
     // Type prefix help
     'Type prefix hint' => '提示：使用「entries:」「categories:」「users:」等前缀切换搜索类型',
 
+    'Clear Search on Tab Switch' => '切换标签时清除搜索',
+    'Clear the search input and results when switching between search type tabs.' => '在搜索类型标签之间切换时清除搜索输入和结果。',
+    'Clear search' => '清除搜索',
+
     // Saved Searches
+    'Show Saved Searches' => '显示保存的搜索',
+    'Show the saved searches section in the Quick Access Overlay.' => '在快速访问面板中显示保存的搜索部分。',
     'Saved Searches' => '已保存的搜索',
     'Save Search' => '保存搜索',
     'Name this search...' => '为此搜索命名...',

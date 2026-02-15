@@ -8,6 +8,7 @@ Fast, keyboard-first search and navigation for the Craft CMS control panel.
 A full-screen overlay for instant access to everything in your CP:
 - **Universal Search** — search across entries, categories, assets, users, globals, and admin settings from a single input
 - **Tabbed Results** — switch between content types with tabs or type prefixes
+- **Site Selector** — search across different sites or all sites at once (multi-site)
 - **History Panel** — browse recently visited entries with client-side filtering
 - **Favorites Panel** — star important entries, reorder via drag-and-drop
 - **Saved Searches** — save frequently used searches for one-click access, reorder via drag-and-drop
@@ -52,7 +53,9 @@ Type a prefix in the Quick Access search to switch content type:
 
 ### Customization
 - **Compact Mode** — streamlined interface for power users
+- **Configurable Search Types** — choose which content types appear as tabs (entries is always available)
 - **Configurable Limits** — control history size, favorites count, and saved searches
+- **Clear on Tab Switch** — optionally clear the search input when switching between tabs
 - **Default Panel** — choose whether Quick Access opens on History or Favorites
 - **20 Languages** — ar, bg, cs, de, en, es, fr, hu, it, ja, ko, nl, pl, pt, ro, ru, sk, tr, uk, zh
 
@@ -83,6 +86,7 @@ Visit Settings → Quick Search to configure:
 | Show Related Entries | Display related entries button on entry pages | On |
 | Section Filter Mode | Include or exclude selected sections | Include |
 | Enabled Sections | Limit which sections are searchable | All |
+| Enabled Search Types | Choose which content types appear as tabs | All |
 | Search Results Limit | Maximum number of search results | 20 |
 | Minimum Search Length | Characters required before search triggers | 2 |
 | Debounce Delay | Delay (ms) before search triggers after typing | 300 |
@@ -92,6 +96,9 @@ Visit Settings → Quick Search to configure:
 | Quick Access Overlay | Enable/disable the overlay | On |
 | Quick Access Shortcut | Keyboard shortcut for the overlay | `Ctrl+G` |
 | Default Panel | Panel shown when overlay opens | History |
+| Show Entry Search | Toggle the search input in the overlay | On |
+| Clear Search on Tab Switch | Clear input when switching content type tabs | On |
+| Show Saved Searches | Toggle the saved searches section | On |
 
 ## Dashboard Widget
 

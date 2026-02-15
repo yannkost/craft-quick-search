@@ -1,14 +1,24 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-  <defs>
-    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#0d78f2;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#0052cc;stop-opacity:1" />
-    </linearGradient>
-  </defs>
-  <circle cx="38" cy="38" r="24" fill="none" stroke="url(#grad)" stroke-width="8"/>
-  <line x1="56" y1="56" x2="78" y2="78" stroke="url(#grad)" stroke-width="8" stroke-linecap="round"/>
-  <circle cx="70" cy="30" r="4" fill="#0d78f2"/>
-  <circle cx="70" cy="42" r="4" fill="#0d78f2"/>
-  <circle cx="82" cy="30" r="4" fill="#0d78f2"/>
-  <circle cx="82" cy="42" r="4" fill="#0d78f2"/>
+<svg version="1.2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1200" width="1200" height="1200">
+	<defs>
+		<linearGradient id="g1" x2="1" gradientUnits="userSpaceOnUse" gradientTransform="matrix(0,1200,-1200,0,0,0)">
+			<stop offset="0" stop-color="#1652d8"/>
+			<stop offset="1" stop-color="#38b8f7"/>
+		</linearGradient>
+	</defs>
+	<style>
+		.s0 { fill: url(#g1) } 
+		.s1 { fill: #ffffff } 
+		.s2 { fill: none;stroke: #ffffff;stroke-width: 75 } 
+		.s3 { fill: none;stroke: #ffffff;stroke-linecap: round;stroke-width: 45 } 
+		.s4 { fill: #000000;stroke: #ffffff;stroke-linecap: round;stroke-width: 55 } 
+		.s5 { fill: #000000;stroke: #ffffff;stroke-linecap: round;stroke-width: 95 } 
+	</style>
+	<path fill-rule="evenodd" class="s0" d="m270 0h660c149.12 0 270 120.88 270 270v660c0 149.12-120.88 270-270 270h-660c-149.12 0-270-120.88-270-270v-660c0-149.12 120.88-270 270-270z"/>
+	<path fill-rule="evenodd" class="s1" d="m300 286h134c7.18 0 13 5.82 13 13 0 7.18-5.82 13-13 13h-134c-7.18 0-13-5.82-13-13 0-7.18 5.82-13 13-13z"/>
+	<path fill-rule="evenodd" class="s1" d="m298 344h99c7.18 0 13 5.82 13 13 0 7.18-5.82 13-13 13h-99c-7.18 0-13-5.82-13-13 0-7.18 5.82-13 13-13z"/>
+	<path fill-rule="evenodd" class="s1" d="m302 403h49c7.18 0 13 5.82 13 13 0 7.18-5.82 13-13 13h-49c-7.18 0-13-5.82-13-13 0-7.18 5.82-13 13-13z"/>
+	<path fill-rule="evenodd" class="s2" d="m676 688c-113.37 0-205-91.63-205-205 0-113.37 91.63-205 205-205 113.37 0 205 91.63 205 205 0 113.37-91.63 205-205 205z"/>
+	<path class="s3" d="m596 403c10.91-9.76 23.51-17.44 37.18-22.66 13.67-5.22 28.18-7.9 42.82-7.9 14.64 0 29.15 2.68 42.82 7.9 13.67 5.22 26.27 12.9 37.18 22.66"/>
+	<path fill-rule="evenodd" class="s4" d="m424 808l149-149"/>
+	<path fill-rule="evenodd" class="s5" d="m374 857l105-105"/>
 </svg>

@@ -89,6 +89,21 @@ class Settings extends Model
     public bool $quickAccessShowSearch = true;
 
     /**
+     * @var bool Whether to clear the search input when switching tabs
+     */
+    public bool $clearSearchOnTabSwitch = true;
+
+    /**
+     * @var array|null Array of search type IDs to show as tabs (null = all enabled)
+     */
+    public ?array $enabledSearchTypes = null;
+
+    /**
+     * @var bool Whether to enable saved searches in the Quick Access Overlay
+     */
+    public bool $showSavedSearches = true;
+
+    /**
      * @var int Maximum number of saved searches per user
      */
     public int $maxSavedSearches = 20;
@@ -117,6 +132,9 @@ class Settings extends Model
             ['quickAccessShortcut', 'match', 'pattern' => '/^(ctrl|meta|alt|shift)(\+(ctrl|meta|alt|shift))*\+[a-z0-9]$/i', 'message' => 'Invalid shortcut format. Use format like "ctrl+g" or "meta+shift+k".'],
             ['quickAccessDefaultPanel', 'in', 'range' => ['history', 'favorites']],
             ['quickAccessShowSearch', 'boolean'],
+            ['showSavedSearches', 'boolean'],
+            ['clearSearchOnTabSwitch', 'boolean'],
+            ['enabledSearchTypes', 'each', 'rule' => ['string']],
             ['maxSavedSearches', 'integer', 'min' => 1, 'max' => 50],
         ];
     }

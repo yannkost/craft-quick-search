@@ -185,6 +185,8 @@ class Plugin extends BasePlugin
                             'quickAccessShortcut' => $settings->quickAccessShortcut ?? 'ctrl+g',
                             'quickAccessDefaultPanel' => $settings->quickAccessDefaultPanel ?? 'history',
                             'quickAccessShowSearch' => $settings->quickAccessShowSearch ?? true,
+                            'showSavedSearches' => $settings->showSavedSearches ?? true,
+                            'clearSearchOnTabSwitch' => $settings->clearSearchOnTabSwitch ?? true,
                             'currentSiteId' => $currentSite->id,
                             'currentSiteName' => $currentSite->name,
                             'isMultiSite' => Craft::$app->getIsMultiSite(),

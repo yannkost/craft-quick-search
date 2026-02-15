@@ -14,6 +14,8 @@ return [
 
     // Settings page - Search Settings
     'Search Settings' => 'Setări de căutare',
+    'Enabled Search Types' => 'Tipuri de căutare activate',
+    'Select which additional content types to show as tabs in the search overlay. Entries search is always enabled.' => 'Selectați ce tipuri de conținut suplimentare să fie afișate ca file în panoul de căutare. Căutarea articolelor este întotdeauna activată.',
     'Enabled Sections' => 'Secțiuni activate',
     'Select which sections should be searchable. Leave empty to enable all sections.' => 'Selectați ce secțiuni ar trebui să fie căutabile. Lăsați gol pentru a activa toate secțiunile.',
     'Minimum Search Length' => 'Lungime minimă de căutare',
@@ -163,7 +165,13 @@ return [
     // Type prefix help
     'Type prefix hint' => 'Sfat: Folosiți „entries:", „categories:", „users:" etc. pentru a schimba tipul de căutare',
 
+    'Clear Search on Tab Switch' => 'Șterge căutarea la schimbarea filei',
+    'Clear the search input and results when switching between search type tabs.' => 'Șterge câmpul de căutare și rezultatele la comutarea între filele de tipuri de căutare.',
+    'Clear search' => 'Șterge căutarea',
+
     // Saved Searches
+    'Show Saved Searches' => 'Afișare căutări salvate',
+    'Show the saved searches section in the Quick Access Overlay.' => 'Afișați secțiunea de căutări salvate în panoul de acces rapid.',
     'Saved Searches' => 'Căutări salvate',
     'Save Search' => 'Salvează căutarea',
     'Name this search...' => 'Denumiți această căutare...',

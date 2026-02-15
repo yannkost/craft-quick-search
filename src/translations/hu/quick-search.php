@@ -14,6 +14,8 @@ return [
 
     // Settings page - Search Settings
     'Search Settings' => 'Keresési beállítások',
+    'Enabled Search Types' => 'Engedélyezett keresési típusok',
+    'Select which additional content types to show as tabs in the search overlay. Entries search is always enabled.' => 'Válassza ki, mely további tartalomtípusok jelenjenek meg fülekként a keresési panelen. A bejegyzések keresése mindig engedélyezett.',
     'Enabled Sections' => 'Engedélyezett szekciók',
     'Select which sections should be searchable. Leave empty to enable all sections.' => 'Válassza ki, mely szekciók legyenek kereshetők. Hagyja üresen az összes szekció engedélyezéséhez.',
     'Minimum Search Length' => 'Minimális keresési hossz',
@@ -163,7 +165,13 @@ return [
     // Type prefix help
     'Type prefix hint' => 'Tipp: Használja az „entries:", „categories:", „users:" stb. előtagokat a keresési típus váltásához',
 
+    'Clear Search on Tab Switch' => 'Keresés törlése fülváltáskor',
+    'Clear the search input and results when switching between search type tabs.' => 'A keresőmező és az eredmények törlése a keresési típus fülek közötti váltáskor.',
+    'Clear search' => 'Keresés törlése',
+
     // Saved Searches
+    'Show Saved Searches' => 'Mentett keresések megjelenítése',
+    'Show the saved searches section in the Quick Access Overlay.' => 'A mentett keresések szekció megjelenítése a gyorselérési panelen.',
     'Saved Searches' => 'Mentett keresések',
     'Save Search' => 'Keresés mentése',
     'Name this search...' => 'Keresés elnevezése...',
