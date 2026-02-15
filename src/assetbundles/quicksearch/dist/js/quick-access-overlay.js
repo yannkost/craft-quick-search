@@ -30,6 +30,9 @@ window.QuickAccessOverlay = (function() {
             this.historyItems = [];
             this.favoritesItems = [];
             this.searchResults = [];
+            this.savedSearches = [];
+            this.savedSearchesSection = null;
+            this.savedSearchesList = null;
 
             this.historySelectedIndex = -1;
             this.favoritesSelectedIndex = -1;
@@ -136,7 +139,20 @@ window.QuickAccessOverlay = (function() {
             searchHint.className = 'quick-access-search-hint';
             searchHint.textContent = 'Enter ↵';
 
+            // Save search button
+            this.saveSearchBtn = document.createElement('button');
+            this.saveSearchBtn.type = 'button';
+            this.saveSearchBtn.className = 'quick-access-save-search-btn';
+            this.saveSearchBtn.title = this.t.saveSearch || 'Save Search';
+            this.saveSearchBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" /></svg>';
+            this.saveSearchBtn.style.display = 'none';
+            this.saveSearchBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.promptSaveSearch();
+            });
+
             inputWrapper.appendChild(this.searchInput);
+            inputWrapper.appendChild(this.saveSearchBtn);
             inputWrapper.appendChild(searchHint);
 
             searchSection.appendChild(inputWrapper);
@@ -180,9 +196,25 @@ window.QuickAccessOverlay = (function() {
 
             this.searchResultsSection.appendChild(this.searchResultsBody);
 
+            // Saved Searches Section
+            this.savedSearchesSection = document.createElement('div');
+            this.savedSearchesSection.className = 'quick-access-saved-searches';
+            this.savedSearchesSection.style.display = 'none';
+
+            const savedSearchesHeader = document.createElement('div');
+            savedSearchesHeader.className = 'quick-access-saved-searches-header';
+            savedSearchesHeader.innerHTML = '<span>' + (this.t.savedSearches || 'Saved Searches') + '</span>';
+
+            this.savedSearchesList = document.createElement('ul');
+            this.savedSearchesList.className = 'quick-access-saved-searches-list';
+
+            this.savedSearchesSection.appendChild(savedSearchesHeader);
+            this.savedSearchesSection.appendChild(this.savedSearchesList);
+
             // Assemble modal
             this.modal.appendChild(header);
             this.modal.appendChild(searchSection);
+            this.modal.appendChild(this.savedSearchesSection);
             this.modal.appendChild(this.searchResultsSection);
             this.modal.appendChild(panelsContainer);
 
@@ -468,6 +500,12 @@ window.QuickAccessOverlay = (function() {
                 }
             });
 
+            // Show/hide save button based on input content
+            this.searchInput.addEventListener('input', () => {
+                const hasQuery = this.searchInput.value.trim().length >= 2;
+                this.saveSearchBtn.style.display = hasQuery ? '' : 'none';
+            });
+
             // Search input - Enter to search
             this.searchInput.addEventListener('keydown', (e) => {
                 if (e.key === 'Enter') {
@@ -673,7 +711,8 @@ window.QuickAccessOverlay = (function() {
             // Load data
             await Promise.all([
                 this.loadHistory(),
-                this.loadFavorites()
+                this.loadFavorites(),
+                this.loadSavedSearches()
             ]);
         }
 
@@ -819,6 +858,7 @@ window.QuickAccessOverlay = (function() {
                 e.stopPropagation();
                 this.draggedItem = item;
                 this.draggedIndex = index;
+                this.dragContext = 'favorites';
                 item.classList.add('dragging');
                 e.dataTransfer.effectAllowed = 'move';
                 e.dataTransfer.setData('text/plain', index.toString());
@@ -828,6 +868,7 @@ window.QuickAccessOverlay = (function() {
                 item.classList.remove('dragging');
                 this.draggedItem = null;
                 this.draggedIndex = null;
+                this.dragContext = null;
                 // Remove all drag-over classes
                 this.favoritesList.querySelectorAll('.drag-over').forEach(el => {
                     el.classList.remove('drag-over');
@@ -837,7 +878,7 @@ window.QuickAccessOverlay = (function() {
             item.addEventListener('dragover', (e) => {
                 e.preventDefault();
                 e.dataTransfer.dropEffect = 'move';
-                if (this.draggedItem && this.draggedItem !== item) {
+                if (this.draggedItem && this.draggedItem !== item && this.dragContext === 'favorites') {
                     item.classList.add('drag-over');
                 }
             });
@@ -850,7 +891,7 @@ window.QuickAccessOverlay = (function() {
                 e.preventDefault();
                 item.classList.remove('drag-over');
 
-                if (!this.draggedItem || this.draggedItem === item) return;
+                if (!this.draggedItem || this.draggedItem === item || this.dragContext !== 'favorites') return;
 
                 const fromIndex = this.draggedIndex;
                 const toIndex = parseInt(item.dataset.index, 10);
@@ -1518,6 +1559,310 @@ window.QuickAccessOverlay = (function() {
             // Re-search if there's a query (unless skipSearch is true)
             if (!skipSearch && this.searchInput && this.searchInput.value.trim().length >= 2) {
                 this.performSearch(this.searchInput.value.trim());
+            }
+        }
+
+        // --- Saved Searches methods ---
+
+        async loadSavedSearches() {
+            try {
+                const actionUrl = Craft.getActionUrl('quick-search/saved-searches/list');
+                const response = await utils.fetchWithTimeout(
+                    actionUrl,
+                    {
+                        headers: {
+                            'Accept': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    },
+                    this.fetchTimeout
+                );
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                if (data.success) {
+                    this.savedSearches = data.savedSearches || [];
+                    this.renderSavedSearches();
+                }
+            } catch (error) {
+                console.error('Quick Access: Error loading saved searches', error);
+            }
+        }
+
+        renderSavedSearches() {
+            if (!this.savedSearchesList) return;
+
+            this.savedSearchesList.innerHTML = '';
+
+            if (!this.savedSearches || this.savedSearches.length === 0) {
+                this.savedSearchesSection.style.display = 'none';
+                return;
+            }
+
+            this.savedSearchesSection.style.display = '';
+
+            this.savedSearches.forEach((search, index) => {
+                const item = this.createSavedSearchItem(search, index);
+                this.savedSearchesList.appendChild(item);
+            });
+        }
+
+        createSavedSearchItem(search, index) {
+            const item = document.createElement('li');
+            item.className = 'quick-access-saved-search-item';
+            item.dataset.index = index;
+            item.dataset.id = search.id;
+
+            // Drag handle
+            const dragHandle = document.createElement('button');
+            dragHandle.type = 'button';
+            dragHandle.className = 'quick-access-drag-handle';
+            dragHandle.title = this.t.dragToReorder || 'Drag to reorder';
+            dragHandle.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16" /></svg>';
+            dragHandle.draggable = true;
+
+            // Drag events
+            dragHandle.addEventListener('dragstart', (e) => {
+                e.stopPropagation();
+                this.draggedItem = item;
+                this.draggedIndex = index;
+                this.dragContext = 'savedSearches';
+                item.classList.add('dragging');
+                e.dataTransfer.effectAllowed = 'move';
+                e.dataTransfer.setData('text/plain', index.toString());
+            });
+
+            dragHandle.addEventListener('dragend', () => {
+                item.classList.remove('dragging');
+                this.draggedItem = null;
+                this.draggedIndex = null;
+                this.dragContext = null;
+                this.savedSearchesList.querySelectorAll('.drag-over').forEach(el => {
+                    el.classList.remove('drag-over');
+                });
+            });
+
+            item.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                e.dataTransfer.dropEffect = 'move';
+                if (this.draggedItem && this.draggedItem !== item && this.dragContext === 'savedSearches') {
+                    item.classList.add('drag-over');
+                }
+            });
+
+            item.addEventListener('dragleave', () => {
+                item.classList.remove('drag-over');
+            });
+
+            item.addEventListener('drop', (e) => {
+                e.preventDefault();
+                item.classList.remove('drag-over');
+
+                if (!this.draggedItem || this.draggedItem === item || this.dragContext !== 'savedSearches') return;
+
+                const fromIndex = this.draggedIndex;
+                const toIndex = parseInt(item.dataset.index, 10);
+
+                if (fromIndex === toIndex) return;
+
+                const movedItem = this.savedSearches.splice(fromIndex, 1)[0];
+                this.savedSearches.splice(toIndex, 0, movedItem);
+
+                this.renderSavedSearches();
+                this.saveSavedSearchesOrder();
+            });
+
+            // Icon
+            const icon = document.createElement('span');
+            icon.className = 'quick-access-saved-search-icon';
+            icon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>';
+
+            // Content
+            const content = document.createElement('div');
+            content.className = 'quick-access-saved-search-content';
+
+            const name = document.createElement('span');
+            name.className = 'quick-access-saved-search-name';
+            name.textContent = search.name;
+
+            const typeBadge = document.createElement('span');
+            typeBadge.className = 'quick-access-saved-search-type';
+            typeBadge.textContent = search.type || 'entries';
+
+            content.appendChild(name);
+            content.appendChild(typeBadge);
+
+            // Run button
+            const runBtn = document.createElement('button');
+            runBtn.type = 'button';
+            runBtn.className = 'quick-access-saved-search-run';
+            runBtn.title = this.t.runSearch || 'Run';
+            runBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>';
+            runBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.runSavedSearch(search);
+            });
+
+            // Delete button
+            const deleteBtn = document.createElement('button');
+            deleteBtn.type = 'button';
+            deleteBtn.className = 'quick-access-saved-search-delete';
+            deleteBtn.title = this.t.deleteSavedSearch || 'Delete saved search';
+            deleteBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>';
+            deleteBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.deleteSavedSearch(search.id);
+            });
+
+            item.appendChild(dragHandle);
+            item.appendChild(icon);
+            item.appendChild(content);
+            item.appendChild(runBtn);
+            item.appendChild(deleteBtn);
+
+            // Click entire row to run
+            item.addEventListener('click', () => {
+                this.runSavedSearch(search);
+            });
+
+            return item;
+        }
+
+        runSavedSearch(search) {
+            // Switch tab if needed
+            if (search.type && search.type !== this.currentTab) {
+                this.switchTab(search.type, true); // skipSearch = true
+            }
+
+            // Fill query
+            this.searchInput.value = search.query;
+            this.saveSearchBtn.style.display = '';
+
+            // Trigger search
+            this.performSearch(search.query);
+        }
+
+        async promptSaveSearch() {
+            const rawValue = this.searchInput.value.trim();
+            if (rawValue.length < 2) return;
+
+            // Strip type prefix so we only save the actual query
+            const { query } = this.parseQueryWithType(rawValue);
+            if (query.length < 2) return;
+
+            const name = prompt(this.t.savedSearchName || 'Name this search...');
+            if (!name || !name.trim()) return;
+
+            try {
+                const actionUrl = Craft.getActionUrl('quick-search/saved-searches/save');
+
+                const response = await utils.fetchWithTimeout(
+                    actionUrl,
+                    {
+                        method: 'POST',
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'X-CSRF-Token': Craft.csrfTokenValue
+                        },
+                        body: JSON.stringify({
+                            name: name.trim(),
+                            query: query,
+                            type: this.currentTab || 'entries',
+                            siteId: null
+                        })
+                    },
+                    this.fetchTimeout
+                );
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                if (data.success) {
+                    await this.loadSavedSearches();
+                } else {
+                    console.error('Quick Access: Failed to save search', data.error);
+                }
+            } catch (error) {
+                console.error('Quick Access: Error saving search', error);
+            }
+        }
+
+        async deleteSavedSearch(id) {
+            const confirmMsg = this.t.deleteSavedSearchConfirm || 'Delete this saved search?';
+            if (!confirm(confirmMsg)) return;
+
+            try {
+                const actionUrl = Craft.getActionUrl('quick-search/saved-searches/delete');
+
+                const response = await utils.fetchWithTimeout(
+                    actionUrl,
+                    {
+                        method: 'POST',
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'X-CSRF-Token': Craft.csrfTokenValue
+                        },
+                        body: JSON.stringify({ id: id })
+                    },
+                    this.fetchTimeout
+                );
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                if (data.success) {
+                    this.savedSearches = this.savedSearches.filter(s => s.id !== id);
+                    this.renderSavedSearches();
+                }
+            } catch (error) {
+                console.error('Quick Access: Error deleting saved search', error);
+            }
+        }
+
+        async saveSavedSearchesOrder() {
+            try {
+                const ids = this.savedSearches.map(s => s.id);
+                const actionUrl = Craft.getActionUrl('quick-search/saved-searches/reorder');
+
+                const response = await utils.fetchWithTimeout(
+                    actionUrl,
+                    {
+                        method: 'POST',
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'X-CSRF-Token': Craft.csrfTokenValue
+                        },
+                        body: JSON.stringify({ ids: ids })
+                    },
+                    this.fetchTimeout
+                );
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+
+                const data = await response.json();
+                if (!data.success) {
+                    console.error('Quick Access: Failed to save searches order');
+                }
+            } catch (error) {
+                console.error('Quick Access: Error saving searches order', error);
             }
         }
 

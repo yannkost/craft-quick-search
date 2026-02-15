@@ -84,6 +84,11 @@ class Settings extends Model
     public bool $quickAccessShowSearch = true;
 
     /**
+     * @var int Maximum number of saved searches per user
+     */
+    public int $maxSavedSearches = 20;
+
+    /**
      * @inheritdoc
      */
     public function defineRules(): array
@@ -106,6 +111,7 @@ class Settings extends Model
             ['quickAccessShortcut', 'match', 'pattern' => '/^(ctrl|meta|alt|shift)(\+(ctrl|meta|alt|shift))*\+[a-z0-9]$/i', 'message' => 'Invalid shortcut format. Use format like "ctrl+g" or "meta+shift+k".'],
             ['quickAccessDefaultPanel', 'in', 'range' => ['history', 'favorites']],
             ['quickAccessShowSearch', 'boolean'],
+            ['maxSavedSearches', 'integer', 'min' => 1, 'max' => 50],
         ];
     }
 }
