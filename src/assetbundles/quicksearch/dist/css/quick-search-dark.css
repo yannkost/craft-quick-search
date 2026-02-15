@@ -1,0 +1,732 @@
+/* ============================================
+   DARK MODE OVERRIDES
+   Activated by browser/OS dark mode preference.
+   Light mode CSS remains 100% untouched.
+   Palette matched to Craft CMS dark mode slate grays.
+   ============================================ */
+
+@media (prefers-color-scheme: dark) {
+
+    /* --- Header Search: inputs, filters, buttons --- */
+    .quick-search-input-wrapper:focus-within {
+        box-shadow: 0 0 0 2px rgba(77, 166, 255, 0.2);
+    }
+    .quick-search-input-wrapper:focus-within .quick-search-section-filter-btn,
+    .quick-search-input-wrapper:focus-within .quick-search-input {
+        border-color: #4da6ff;
+    }
+    .quick-search-site-filter-btn {
+        background: #2a333c;
+        border-color: #525a62;
+        color: #b8c4ce;
+    }
+    .quick-search-site-filter-btn:hover {
+        background: #323d47;
+    }
+    .quick-search-site-filter-btn.active {
+        border-color: #6cb3ff;
+        color: #6cb3ff;
+    }
+    .quick-search-site-filter-btn.active svg {
+        color: #6cb3ff;
+    }
+    .quick-search-site-filter-btn svg {
+        color: #6e7c8a;
+    }
+    .quick-search-site-dropdown {
+        background: #2e3840;
+        border-color: #525a62;
+    }
+    .quick-search-site-option {
+        color: #b8c4ce;
+    }
+    .quick-search-site-option:hover {
+        background: #38434e;
+    }
+    .quick-search-site-option.selected {
+        background: #2a4a6a;
+        color: #4da6ff;
+    }
+    .quick-search-site-badge {
+        background: rgba(255, 255, 255, 0.1);
+        color: #9aa6b2;
+    }
+    .quick-search-section-filter-btn {
+        background: #2a333c;
+        border-color: #525a62;
+        color: #b8c4ce;
+    }
+    .quick-search-section-filter-btn:hover {
+        background: #323d47;
+    }
+    .quick-search-section-filter-btn.active {
+        border-color: #6cb3ff;
+        color: #6cb3ff;
+    }
+    .quick-search-section-filter-btn.active svg {
+        color: #6cb3ff;
+    }
+    .quick-search-section-filter-btn svg {
+        color: #6e7c8a;
+    }
+    .quick-search-section-dropdown {
+        background: #2e3840;
+        border-color: #525a62;
+    }
+    .quick-search-section-header {
+        background: #2a333c;
+        border-bottom-color: #434648;
+    }
+    .quick-search-section-list::-webkit-scrollbar-track {
+        background: #2a333c;
+    }
+    .quick-search-section-list::-webkit-scrollbar-thumb {
+        background: #525a62;
+    }
+    .quick-search-section-list::-webkit-scrollbar-thumb:hover {
+        background: #606870;
+    }
+    .quick-search-section-item:hover {
+        background: #38434e;
+    }
+    .quick-search-section-checkbox {
+        accent-color: #4da6ff;
+    }
+    .quick-search-section-name {
+        color: #b8c4ce;
+    }
+    .quick-search-input {
+        background: #2e3840;
+        border-color: #525a62;
+        color: #e8eaed;
+    }
+    .quick-search-input::placeholder {
+        color: #6e7c8a;
+    }
+    .quick-search-input:hover {
+        border-color: #4da6ff;
+    }
+    .quick-search-input:hover + .quick-search-section-filter .quick-search-section-filter-btn,
+    .quick-search-section-filter:hover + .quick-search-input {
+        border-color: #4da6ff;
+    }
+
+    /* --- Header Search: button group --- */
+    .quick-search-btn-group .quick-search-back-btn,
+    .quick-search-btn-group .quick-search-history-btn,
+    .quick-search-btn-group .quick-search-favorites-btn {
+        background: #2e3840;
+        border-color: #525a62;
+        color: #b8c4ce;
+    }
+    .quick-search-btn-group .quick-search-back-btn:hover,
+    .quick-search-btn-group .quick-search-history-btn:hover,
+    .quick-search-btn-group .quick-search-favorites-btn:hover {
+        border-color: #6cb3ff;
+        color: #6cb3ff;
+    }
+    .quick-search-btn-group .quick-search-back-btn:hover + .quick-search-history-btn,
+    .quick-search-btn-group .quick-search-history-btn:hover + .quick-search-favorites-btn {
+        border-left-color: #6cb3ff;
+    }
+    .quick-search-btn-group .quick-search-back-btn.active,
+    .quick-search-btn-group .quick-search-history-btn.active,
+    .quick-search-btn-group .quick-search-favorites-btn.active {
+        border-color: #6cb3ff;
+        color: #6cb3ff;
+    }
+    .quick-search-btn-group .quick-search-back-btn.active + .quick-search-history-btn,
+    .quick-search-btn-group .quick-search-history-btn.active + .quick-search-favorites-btn {
+        border-left-color: #6cb3ff;
+    }
+    .quick-search-btn-group .quick-search-back-btn:disabled:hover {
+        border-color: #525a62;
+        color: #b8c4ce;
+    }
+
+    /* --- Header Search: back popup --- */
+    .quick-search-back-popup {
+        background: #2e3840;
+        border-color: #525a62;
+    }
+
+    /* --- Header Search: results & history dropdowns --- */
+    .quick-search-results,
+    .quick-search-history-popup {
+        background: #2e3840;
+        border-color: #525a62;
+    }
+    .quick-search-result-item,
+    .quick-search-history-item {
+        border-bottom-color: #434e59;
+    }
+    .quick-search-result-icon {
+        color: #6e7c8a;
+    }
+    .quick-search-newtab-btn,
+    .quick-search-copy-btn {
+        color: #6e7c8a;
+    }
+    .quick-search-newtab-btn:hover,
+    .quick-search-copy-btn:hover {
+        background: #38434e;
+        border-color: #525a62;
+        color: #4da6ff;
+    }
+    .quick-search-copy-menu {
+        background: #2e3840;
+        border-color: #525a62;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+    .quick-search-copy-menu-item {
+        color: #b8c4ce;
+    }
+    .quick-search-copy-menu-item:hover {
+        background: #38434e;
+    }
+    .quick-search-result-item:hover,
+    .quick-search-history-item:hover {
+        background: #38434e;
+    }
+    .quick-search-result-item.selected,
+    .quick-search-history-item.selected {
+        background: #2a4a6a;
+    }
+    .quick-search-result-item.keyboard-focus,
+    .quick-search-history-item.keyboard-focus {
+        background: #2a4a6a;
+        outline-color: #4da6ff;
+    }
+    .quick-search-result-title,
+    .quick-search-history-title {
+        color: #e8eaed;
+    }
+    .quick-search-result-subtitle,
+    .quick-search-history-meta {
+        color: #6e7c8a;
+    }
+
+    /* --- Header Search: status badges --- */
+    .quick-search-result-status.live,
+    .quick-search-history-status.live {
+        background: #1a3a2a;
+        color: #4ade80;
+    }
+    .quick-search-result-status.pending,
+    .quick-search-history-status.pending {
+        background: #2a2410;
+        color: #fbbf24;
+    }
+    .quick-search-result-status.disabled,
+    .quick-search-history-status.disabled {
+        background: #38434e;
+        color: #6e7c8a;
+    }
+    .quick-search-result-status.draft,
+    .quick-search-history-status.draft {
+        background: #2a2a4a;
+        color: #818cf8;
+    }
+    .quick-search-result-status.expired,
+    .quick-search-history-status.expired {
+        background: #3a1a1a;
+        color: #f87171;
+    }
+
+    /* --- Header Search: no results / loading --- */
+    .quick-search-no-results,
+    .quick-search-no-history {
+        color: #6e7c8a;
+    }
+    .quick-search-loading {
+        color: #6e7c8a;
+    }
+
+    /* --- Header Search: history header --- */
+    .quick-search-history-header {
+        border-bottom-color: #434648;
+        background: #2a333c;
+    }
+    .quick-search-history-title-text {
+        color: #e8eaed;
+    }
+    .quick-search-history-clear-btn {
+        color: #6e7c8a;
+    }
+    .quick-search-history-clear-btn:hover {
+        background: #2e3840;
+        border-color: #f87171;
+        color: #f87171;
+    }
+
+    /* --- Header Search: star button --- */
+    .quick-search-star-btn {
+        color: #525a62;
+    }
+    .quick-search-star-btn:hover {
+        color: #fbbf24;
+        border-color: #fbbf24;
+        background: #332a1a;
+    }
+    .quick-search-star-btn.active {
+        color: #fbbf24;
+    }
+    .quick-search-star-btn.active:hover {
+        color: #f59e0b;
+        border-color: #f59e0b;
+    }
+
+    /* --- Header Search: history search input --- */
+    .quick-search-history-search {
+        border-color: #525a62;
+        color: #e8eaed;
+        background: #2e3840;
+    }
+    .quick-search-history-search::placeholder {
+        color: #6e7c8a;
+    }
+    .quick-search-history-search:focus {
+        border-color: #4da6ff;
+    }
+
+    /* --- Header Search: show more button --- */
+    .quick-search-show-more-btn {
+        background: #2a333c;
+        border-top-color: #434648;
+        color: #4da6ff;
+    }
+    .quick-search-show-more-btn:hover {
+        background: #2a4a6a;
+    }
+
+    /* --- Header Search: scrollbars --- */
+    .quick-search-results::-webkit-scrollbar-track,
+    .quick-search-history-list::-webkit-scrollbar-track {
+        background: #2a333c;
+    }
+    .quick-search-results::-webkit-scrollbar-thumb,
+    .quick-search-history-list::-webkit-scrollbar-thumb {
+        background: #525a62;
+    }
+    .quick-search-results::-webkit-scrollbar-thumb:hover,
+    .quick-search-history-list::-webkit-scrollbar-thumb:hover {
+        background: #606870;
+    }
+
+    /* --- Header Search: current entry in favorites --- */
+    .quick-search-current-entry {
+        border-bottom-color: #434648;
+        background: #2a333c;
+    }
+    .quick-search-current-entry:hover {
+        background: #38434e;
+    }
+    .quick-search-current-label {
+        background: #2a4a6a;
+        color: #4da6ff;
+    }
+
+    /* --- Related Entries Overlay --- */
+    .quick-search-related-overlay {
+        background: rgba(0, 0, 0, 0.7);
+    }
+    .quick-search-related-modal {
+        background: #2e3840;
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
+    }
+    .quick-search-related-header {
+        border-bottom-color: #434648;
+        background: #2a333c;
+    }
+    .quick-search-related-title {
+        color: #e8eaed;
+    }
+    .quick-search-related-close {
+        color: #6e7c8a;
+    }
+    .quick-search-related-close:hover {
+        background: #38434e;
+        border-color: #525a62;
+        color: #b8c4ce;
+    }
+    .quick-search-related-empty,
+    .quick-search-related-loading {
+        color: #6e7c8a;
+    }
+    .quick-search-related-error {
+        color: #f87171;
+    }
+    .quick-search-related-section-title {
+        color: #8a98a6;
+        border-bottom-color: #434648;
+    }
+    .quick-search-related-item:hover {
+        background: #38434e;
+    }
+    .quick-search-related-item-title {
+        color: #e8eaed;
+    }
+    .quick-search-related-item-meta {
+        color: #6e7c8a;
+    }
+    .quick-search-related-item-status.live {
+        background: #1a3a2a;
+        color: #4ade80;
+    }
+    .quick-search-related-item-status.pending {
+        background: #2a2410;
+        color: #fbbf24;
+    }
+    .quick-search-related-item-status.disabled {
+        background: #38434e;
+        color: #6e7c8a;
+    }
+    .quick-search-related-item-status.draft {
+        background: #2a2a4a;
+        color: #818cf8;
+    }
+    .quick-search-related-item-status.expired {
+        background: #3a1a1a;
+        color: #f87171;
+    }
+    .quick-search-related-content::-webkit-scrollbar-track {
+        background: #2a333c;
+    }
+    .quick-search-related-content::-webkit-scrollbar-thumb {
+        background: #525a62;
+    }
+    .quick-search-related-content::-webkit-scrollbar-thumb:hover {
+        background: #606870;
+    }
+
+    /* --- Entry Outline Popup --- */
+    .quick-search-outline-popup {
+        background: #2e3840;
+        border-color: #525a62;
+    }
+    .quick-search-outline-header {
+        border-bottom-color: #434648;
+        background: #2a333c;
+    }
+    .quick-search-outline-title {
+        color: #e8eaed;
+    }
+    .quick-search-outline-expand-btn,
+    .quick-search-outline-collapse-btn {
+        background: #2e3840;
+        border-color: #525a62;
+        color: #6e7c8a;
+    }
+    .quick-search-outline-expand-btn:hover,
+    .quick-search-outline-collapse-btn:hover {
+        background: #38434e;
+        border-color: #4da6ff;
+        color: #4da6ff;
+    }
+    .quick-search-outline-close {
+        color: #6e7c8a;
+    }
+    .quick-search-outline-close:hover {
+        background: #434648;
+        color: #b8c4ce;
+    }
+    .quick-search-outline-empty {
+        color: #6e7c8a;
+    }
+    .quick-search-outline-chevron {
+        color: #6e7c8a;
+    }
+    .quick-search-outline-chevron:hover {
+        background: #434648;
+        color: #b8c4ce;
+    }
+    .quick-search-outline-item-btn:hover {
+        background: #38434e;
+    }
+    .quick-search-outline-item-index {
+        color: #6e7c8a;
+        background: #38434e;
+    }
+    .quick-search-outline-item-name {
+        color: #e8eaed;
+    }
+    .quick-search-outline-content::-webkit-scrollbar-track {
+        background: #2a333c;
+    }
+    .quick-search-outline-content::-webkit-scrollbar-thumb {
+        background: #525a62;
+    }
+    .quick-search-outline-content::-webkit-scrollbar-thumb:hover {
+        background: #606870;
+    }
+
+    /* --- Quick Access Overlay --- */
+    .quick-access-overlay {
+        background: rgba(0, 0, 0, 0.7);
+    }
+    .quick-access-modal {
+        background: #38434e;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    }
+    .quick-access-header {
+        border-bottom: 1px solid #434648a8;
+        background: #2a333c;
+    }
+    .quick-access-title {
+        color: #e8eaed;
+    }
+    .quick-access-shortcut-hint {
+        color: #8a98a6;
+        background: #434648;
+    }
+    .quick-access-close {
+        color: #6e7c8a;
+    }
+    .quick-access-close:hover {
+        background: #434648;
+        color: #b8c4ce;
+    }
+
+    /* --- Quick Access: search section (light toolbar) --- */
+    .quick-access-search-section {
+        background: #d8e2ee;
+        border-bottom: 1px solid #434648;
+    }
+    .quick-access-tabs {
+        background: #e4edf6;
+        border-bottom-color: #c0cdd8;
+    }
+    .quick-access-tab {
+        color: #5c6a78;
+    }
+    .quick-access-tab:hover {
+        color: #0d78f2;
+    }
+    .quick-access-tab.active {
+        color: #0d78f2;
+        border-bottom-color: #0d78f2;
+    }
+    .quick-access-search-input {
+        background: #fff;
+        border-color: #b8c6d6;
+        color: #1c2e36;
+    }
+    .quick-access-search-input:focus {
+        border-color: #0d78f2;
+        box-shadow: 0 0 0 3px rgba(13, 120, 242, 0.15);
+    }
+    .quick-access-search-input::placeholder {
+        color: #8496ab;
+    }
+    .quick-access-search-hint {
+        color: #5c6a78;
+        background: #cdd8e4;
+    }
+
+    /* --- Quick Access: panels --- */
+    .quick-access-panels {
+        background: #434648;
+    }
+    .quick-access-panel {
+        background: #38434e;
+    }
+    .quick-access-panel-header {
+        border-bottom-color: #434648;
+        background: #2a333c;
+    }
+    .quick-access-panel-title {
+        color: #b8c4ce;
+    }
+    .quick-access-panel-title svg {
+        color: #6e7c8a;
+    }
+    .quick-access-panel-filter {
+        border-color: #525a62;
+        background: #2e3840;
+        color: #e8eaed;
+    }
+    .quick-access-panel-filter:focus {
+        border-color: #4da6ff;
+    }
+    .quick-access-panel-filter::placeholder {
+        color: #6e7c8a;
+    }
+
+    /* --- Quick Access: list items --- */
+    .quick-access-item {
+        border-bottom-color: #434e59;
+    }
+    .quick-access-item:hover {
+        background: #434e59;
+    }
+    .quick-access-item.selected {
+        background: #2a4a6a;
+    }
+    .quick-access-item-title {
+        color: #e8eaed;
+    }
+    .quick-access-item-meta {
+        color: #6e7c8a;
+    }
+    .quick-access-item-section {
+        color: #8a98a6;
+    }
+    .quick-access-item-site {
+        background: #434648;
+    }
+    .quick-access-item-status.live {
+        background: #1a3a2a;
+        color: #4ade80;
+    }
+    .quick-access-item-status.pending {
+        background: #2a2410;
+        color: #fbbf24;
+    }
+    .quick-access-item-status.draft {
+        background: #2a2a4a;
+        color: #818cf8;
+    }
+    .quick-access-item-status.disabled {
+        background: #3a1a1a;
+        color: #f87171;
+    }
+    .quick-access-item-status.expired {
+        background: #3a1a1a;
+        color: #f87171;
+    }
+
+    /* --- Quick Access: action buttons --- */
+    .quick-access-newtab-btn {
+        color: #6e7c8a;
+    }
+    .quick-access-newtab-btn:hover {
+        background: #434648;
+        color: #b8c4ce;
+    }
+    .quick-access-copy-btn {
+        color: #6e7c8a;
+    }
+    .quick-access-copy-btn:hover {
+        background: #434648;
+        color: #b8c4ce;
+    }
+    .quick-access-copy-menu {
+        background: #2e3840;
+        border-color: #434648;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+    .quick-access-copy-menu-item {
+        color: #b8c4ce;
+    }
+    .quick-access-copy-menu-item:hover {
+        background: #38434e;
+    }
+    .quick-access-edit-btn {
+        color: #6e7c8a;
+    }
+    .quick-access-edit-btn:hover {
+        background: #434648;
+        color: #b8c4ce;
+    }
+
+    /* --- Quick Access: drag handle --- */
+    .quick-access-drag-handle {
+        color: #6e7c8a;
+    }
+    .quick-access-drag-handle:hover {
+        background: #434648;
+        color: #b8c4ce;
+    }
+    .quick-access-item.dragging {
+        background: #38434e;
+    }
+    .quick-access-item.drag-over {
+        border-top-color: #4da6ff;
+    }
+
+    /* --- Quick Access: empty, loading, error --- */
+    .quick-access-empty,
+    .quick-access-loading {
+        color: #6e7c8a;
+    }
+    .quick-access-error {
+        color: #f87171;
+    }
+
+    /* --- Quick Access: search results section --- */
+    .quick-access-search-results {
+        border-bottom-color: #434648;
+        background: #38434e;
+    }
+    .quick-access-search-results-header {
+        background: #2a333c;
+        border-bottom-color: #434648;
+        color: #8a98a6;
+    }
+
+    /* --- Quick Access: edit drawer --- */
+    .quick-access-edit-drawer {
+        background: #2e3840;
+        border-left-color: #434648;
+    }
+    .quick-access-drawer-header {
+        border-bottom-color: #434648;
+        background: #2e3840;
+    }
+    .quick-access-drawer-title {
+        color: #8a98a6;
+    }
+    .quick-access-drawer-close {
+        color: #6e7c8a;
+    }
+    .quick-access-drawer-close:hover {
+        background: #434648;
+        color: #b8c4ce;
+    }
+    .quick-access-drawer-label {
+        color: #8a98a6;
+    }
+    .quick-access-drawer-input {
+        background: #2a333c;
+        border-color: #525a62;
+        color: #e8eaed;
+    }
+    .quick-access-drawer-input:focus {
+        border-color: #4da6ff;
+        box-shadow: 0 0 0 3px rgba(77, 166, 255, 0.2);
+    }
+    .quick-access-drawer-footer {
+        border-top-color: #434648;
+    }
+    .quick-access-drawer-save {
+        background: #4da6ff;
+        color: #fff;
+    }
+    .quick-access-drawer-save:hover {
+        background: #3d8fdd;
+    }
+
+    /* --- Quick Access: scrollbars --- */
+    .quick-access-list::-webkit-scrollbar-track,
+    .quick-access-search-results::-webkit-scrollbar-track {
+        background: #2a333c;
+    }
+    .quick-access-list::-webkit-scrollbar-thumb,
+    .quick-access-search-results::-webkit-scrollbar-thumb {
+        background: #525a62;
+    }
+    .quick-access-list::-webkit-scrollbar-thumb:hover,
+    .quick-access-search-results::-webkit-scrollbar-thumb:hover {
+        background: #606870;
+    }
+
+    /* --- Dark mode: highlight animation --- */
+    @keyframes quick-search-highlight-dark {
+        0% { box-shadow: 0 0 0 3px rgba(77, 166, 255, 0.5); }
+        100% { box-shadow: 0 0 0 3px rgba(77, 166, 255, 0); }
+    }
+    .quick-search-outline-highlight {
+        animation-name: quick-search-highlight-dark;
+    }
+
+}
