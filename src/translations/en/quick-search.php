@@ -130,6 +130,22 @@ return [
     // Type prefix help
     'Type prefix hint' => 'Tip: Use "entries:", "categories:", "users:", etc. to switch search types',
 
+    // Saved Searches
+    'Saved Searches' => 'Saved Searches',
+    'Save Search' => 'Save Search',
+    'Name this search...' => 'Name this search...',
+    'Run' => 'Run',
+    'Delete saved search' => 'Delete saved search',
+    'Delete this saved search?' => 'Delete this saved search?',
+    'No saved searches yet' => 'No saved searches yet',
+    'Maximum saved searches reached' => 'Maximum saved searches reached',
+    'Saved Searches Limit' => 'Saved Searches Limit',
+    'Maximum number of saved searches per user.' => 'Maximum number of saved searches per user.',
+    'An error occurred while saving search.' => 'An error occurred while saving search.',
+    'An error occurred while fetching saved searches.' => 'An error occurred while fetching saved searches.',
+    'An error occurred while deleting saved search.' => 'An error occurred while deleting saved search.',
+    'An error occurred while reordering saved searches.' => 'An error occurred while reordering saved searches.',
+
     // Copy actions
     'Copy options' => 'Copy options',
     'Copy URL' => 'Copy URL',

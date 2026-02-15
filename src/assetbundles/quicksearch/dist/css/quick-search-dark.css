@@ -523,6 +523,73 @@
         background: #cdd8e4;
     }
 
+    /* --- Quick Access: save search button --- */
+    .quick-access-save-search-btn {
+        border-color: #525a62;
+        color: #6e7c8a;
+    }
+    .quick-access-save-search-btn:hover {
+        background: #2a4a6a;
+        border-color: #4da6ff;
+        color: #4da6ff;
+    }
+
+    /* --- Quick Access: saved searches section --- */
+    .quick-access-saved-searches {
+        border-bottom-color: #434648;
+        background: #38434e;
+    }
+    .quick-access-saved-searches-header {
+        background: #2a333c;
+        border-bottom-color: #434648;
+        color: #8a98a6;
+    }
+    .quick-access-saved-search-item {
+        border-bottom-color: #434e59;
+    }
+    .quick-access-saved-search-item:hover {
+        background: #434e59;
+    }
+    .quick-access-saved-search-icon {
+        color: #6e7c8a;
+    }
+    .quick-access-saved-search-name {
+        color: #e8eaed;
+    }
+    .quick-access-saved-search-type {
+        background: #434648;
+        color: #8a98a6;
+    }
+    .quick-access-saved-search-run {
+        color: #6e7c8a;
+    }
+    .quick-access-saved-search-run:hover {
+        background: #1a3a2a;
+        color: #4ade80;
+    }
+    .quick-access-saved-search-delete {
+        color: #6e7c8a;
+    }
+    .quick-access-saved-search-delete:hover {
+        background: #3a1a1a;
+        color: #f87171;
+    }
+    .quick-access-saved-search-item.dragging {
+        background: #38434e;
+    }
+    .quick-access-saved-search-item.drag-over {
+        border-top-color: #4da6ff;
+    }
+    .quick-access-saved-searches-list::-webkit-scrollbar-track {
+        background: #2a333c;
+    }
+    .quick-access-saved-searches-list::-webkit-scrollbar-thumb {
+        background: #525a62;
+    }
+    .quick-access-saved-searches-list::-webkit-scrollbar-thumb:hover {
+        background: #606870;
+    }
+
     /* --- Quick Access: panels --- */
     .quick-access-panels {
         background: #434648;

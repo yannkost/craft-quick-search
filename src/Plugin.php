@@ -19,6 +19,7 @@ use craftcms\quicksearch\models\Settings;
 use craftcms\quicksearch\services\FavoritesService;
 use craftcms\quicksearch\services\HistoryService;
 use craftcms\quicksearch\services\RelatedEntriesService;
+use craftcms\quicksearch\services\SavedSearchesService;
 use craftcms\quicksearch\services\SearchService;
 use craftcms\quicksearch\widgets\QuickSearchWidget;
 use craft\events\RegisterComponentTypesEvent;
@@ -34,6 +35,7 @@ use yii\base\Event;
  * @property-read HistoryService $history
  * @property-read RelatedEntriesService $relatedEntries
  * @property-read FavoritesService $favorites
+ * @property-read SavedSearchesService $savedSearches
  * @property-read Settings $settings
  *
  * @method Settings getSettings()
@@ -45,7 +47,7 @@ class Plugin extends BasePlugin
     /**
      * @var string
      */
-    public string $schemaVersion = '1.2.0';
+    public string $schemaVersion = '1.3.0';
 
     /**
      * @var bool
@@ -68,6 +70,7 @@ class Plugin extends BasePlugin
                 'history' => HistoryService::class,
                 'relatedEntries' => RelatedEntriesService::class,
                 'favorites' => FavoritesService::class,
+                'savedSearches' => SavedSearchesService::class,
             ],
         ];
     }
@@ -130,6 +133,10 @@ class Plugin extends BasePlugin
             'quick-search/favorites/remove' => 'quick-search/favorites/remove',
             'quick-search/favorites/reorder' => 'quick-search/favorites/reorder',
             'quick-search/related-entries' => 'quick-search/related-entries/index',
+            'quick-search/saved-searches' => 'quick-search/saved-searches/list',
+            'quick-search/saved-searches/save' => 'quick-search/saved-searches/save',
+            'quick-search/saved-searches/delete' => 'quick-search/saved-searches/delete',
+            'quick-search/saved-searches/reorder' => 'quick-search/saved-searches/reorder',
         ]);
     }
 
@@ -249,6 +256,16 @@ class Plugin extends BasePlugin
                                 'copied' => Craft::t('quick-search', 'Copied!'),
                                 // Site dropdown
                                 'allSitesLabel' => Craft::t('quick-search', 'All Sites'),
+                                // Saved searches
+                                'savedSearches' => Craft::t('quick-search', 'Saved Searches'),
+                                'saveSearch' => Craft::t('quick-search', 'Save Search'),
+                                'savedSearchName' => Craft::t('quick-search', 'Name this search...'),
+                                'runSearch' => Craft::t('quick-search', 'Run'),
+                                'deleteSavedSearch' => Craft::t('quick-search', 'Delete saved search'),
+                                'deleteSavedSearchConfirm' => Craft::t('quick-search', 'Delete this saved search?'),
+                                'noSavedSearches' => Craft::t('quick-search', 'No saved searches yet'),
+                                'maxSavedSearchesReached' => Craft::t('quick-search', 'Maximum saved searches reached'),
+                                'savedSearchError' => Craft::t('quick-search', 'An error occurred while saving search.'),
                             ],
                         ]) . ';',
                         View::POS_HEAD
