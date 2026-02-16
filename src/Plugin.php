@@ -137,6 +137,7 @@ class Plugin extends BasePlugin
             'quick-search/saved-searches/save' => 'quick-search/saved-searches/save',
             'quick-search/saved-searches/delete' => 'quick-search/saved-searches/delete',
             'quick-search/saved-searches/reorder' => 'quick-search/saved-searches/reorder',
+            'quick-search/search/run-command' => 'quick-search/search/run-command',
         ]);
     }
 
@@ -260,6 +261,15 @@ class Plugin extends BasePlugin
                                 'favoritesError' => Craft::t('quick-search', 'Error loading favorites'),
                                 'searchError' => Craft::t('quick-search', 'Search failed'),
                                 'noAdminFound' => Craft::t('quick-search', 'No settings found'),
+                                // Commands tab
+                                'tabCommands' => Craft::t('quick-search', 'Commands'),
+                                'searchCommandsPlaceholder' => Craft::t('quick-search', 'Search commands...'),
+                                'noCommandsFound' => Craft::t('quick-search', 'No commands found'),
+                                'commandRunning' => Craft::t('quick-search', 'Running...'),
+                                'commandSuccess' => Craft::t('quick-search', 'Done'),
+                                'commandError' => Craft::t('quick-search', 'Failed'),
+                                'commandQueued' => Craft::t('quick-search', 'Queued'),
+                                'runCommand' => Craft::t('quick-search', 'Run'),
                                 // Edit drawer
                                 'editEntry' => Craft::t('quick-search', 'Edit Entry'),
                                 'title' => Craft::t('quick-search', 'Title'),

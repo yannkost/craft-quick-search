@@ -130,6 +130,7 @@ window.QuickAccessOverlay = (function() {
 
             this.tabButtons = {};
             this.currentTab = 'entries';
+            this.currentAdminFilter = null;
 
             // Load search types and create tabs
             this.loadSearchTypes().then(() => {
@@ -548,7 +549,7 @@ window.QuickAccessOverlay = (function() {
             this.searchInput.addEventListener('keydown', (e) => {
                 if (e.key === 'Enter') {
                     const rawValue = this.searchInput.value;
-                    const { type: parsedType, query } = this.parseQueryWithType(rawValue);
+                    const { type: parsedType, adminFilter, query } = this.parseQueryWithType(rawValue);
 
                     // If type prefix found, switch tab (keep original input value)
                     if (parsedType && this.searchTypes.some(t => t.id === parsedType)) {
@@ -556,7 +557,12 @@ window.QuickAccessOverlay = (function() {
                         // Don't modify the input value - keep user input as-is
                     }
 
-                    if (query.length >= 2) {
+                    // Store adminFilter for use in performSearch
+                    this.currentAdminFilter = adminFilter;
+
+                    // Commands allow empty query (show all commands)
+                    const minLen = (this.currentTab === 'commands') ? 0 : 2;
+                    if (query.length >= minLen) {
                         e.preventDefault();
                         this.performSearch(query);
                     }
@@ -1084,12 +1090,17 @@ window.QuickAccessOverlay = (function() {
         createEntryItem(entry, index, type) {
             if (!entry) return null;
 
+            const isCommand = entry.type === 'command';
+
             const item = document.createElement('li');
-            item.className = 'quick-access-item';
+            item.className = 'quick-access-item' + (isCommand ? ' quick-access-command-item' : '');
             item.dataset.index = index;
             item.dataset.type = type;
             item.dataset.entryId = entry.id;
             item.dataset.url = entry.url || '';
+            if (isCommand) {
+                item.dataset.commandHandle = entry.handle || '';
+            }
             item.setAttribute('role', 'option');
             item.setAttribute('aria-selected', 'false');
 
@@ -1129,6 +1140,28 @@ window.QuickAccessOverlay = (function() {
 
             content.appendChild(title);
             content.appendChild(meta);
+
+            // Command items get a run button instead of navigation buttons
+            if (isCommand) {
+                const runBtn = document.createElement('button');
+                runBtn.type = 'button';
+                runBtn.className = 'quick-access-run-btn';
+                runBtn.title = this.t.runCommand || 'Run';
+                runBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>';
+                runBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    this.executeCommand(entry.handle, item);
+                });
+
+                item.appendChild(content);
+                item.appendChild(runBtn);
+
+                item.addEventListener('click', () => {
+                    this.executeCommand(entry.handle, item);
+                });
+
+                return item;
+            }
 
             const newTabBtn = document.createElement('button');
             newTabBtn.type = 'button';
@@ -1259,6 +1292,84 @@ window.QuickAccessOverlay = (function() {
             });
         }
 
+        /**
+         * Execute a system command by handle
+         */
+        async executeCommand(handle, itemElement) {
+            if (!handle || !itemElement) return;
+            if (itemElement.classList.contains('command-executing')) return;
+
+            itemElement.classList.add('command-executing');
+            itemElement.classList.remove('command-success', 'command-error');
+
+            // Show running state
+            const meta = itemElement.querySelector('.quick-access-item-meta');
+            const originalMetaHtml = meta ? meta.innerHTML : '';
+            if (meta) {
+                meta.innerHTML = '<span class="quick-access-command-status running">' + (this.t.commandRunning || 'Running...') + '</span>';
+            }
+
+            const abortController = new AbortController();
+            const timeoutId = setTimeout(() => abortController.abort(), this.fetchTimeout);
+
+            try {
+                const actionUrl = Craft.getActionUrl('quick-search/search/run-command');
+
+                const response = await fetch(actionUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRF-Token': Craft.csrfTokenValue
+                    },
+                    body: JSON.stringify({ handle: handle }),
+                    signal: abortController.signal
+                });
+
+                clearTimeout(timeoutId);
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                if (data.success) {
+                    itemElement.classList.remove('command-executing');
+                    itemElement.classList.add('command-success');
+                    if (meta) {
+                        const isQueued = (data.message || '').toLowerCase().includes('queue');
+                        const label = isQueued ? (this.t.commandQueued || 'Queued') : (this.t.commandSuccess || 'Done');
+                        meta.innerHTML = '<span class="quick-access-command-status success">' + (data.message || label) + '</span>';
+                    }
+                    // Fade back to original after 3s
+                    setTimeout(() => {
+                        itemElement.classList.remove('command-success');
+                        if (meta) meta.innerHTML = originalMetaHtml;
+                    }, 3000);
+                } else {
+                    throw new Error(data.error || 'Command failed');
+                }
+            } catch (error) {
+                clearTimeout(timeoutId);
+                console.error('Quick Access: Command execution error', error);
+                itemElement.classList.remove('command-executing');
+                itemElement.classList.add('command-error');
+                const errorMsg = error.name === 'AbortError'
+                    ? 'Timed out'
+                    : (this.t.commandError || 'Failed');
+                if (meta) {
+                    meta.innerHTML = '<span class="quick-access-command-status error">' + errorMsg + '</span>';
+                }
+                // Fade back to original after 4s
+                setTimeout(() => {
+                    itemElement.classList.remove('command-error');
+                    if (meta) meta.innerHTML = originalMetaHtml;
+                }, 4000);
+            }
+        }
+
         filterPanel(type, query) {
             const items = type === 'history' ? this.historyItems : this.favoritesItems;
             const q = query.toLowerCase().trim();
@@ -1279,7 +1390,9 @@ window.QuickAccessOverlay = (function() {
         }
 
         async performSearch(query) {
-            if (!query || query.length < 2) return;
+            // Commands allow empty query to show all commands
+            const isCommands = this.currentTab === 'commands';
+            if (!isCommands && (!query || query.length < 2)) return;
 
             // Abort any in-flight search
             if (this.searchAbortController) {
@@ -1292,13 +1405,18 @@ window.QuickAccessOverlay = (function() {
 
             try {
                 // Ensure type is valid before sending
-                const validTypes = ['entries', 'categories', 'assets', 'users', 'globals', 'admin'];
+                const validTypes = ['entries', 'categories', 'assets', 'users', 'globals', 'admin', 'commands'];
                 const type = (this.currentTab && validTypes.includes(this.currentTab)) ? this.currentTab : 'entries';
 
                 const params = new URLSearchParams({
                     query: query,
                     type: type
                 });
+
+                // Pass admin sub-type filter if set (e.g. plugins:, sections:, fields:)
+                if (type === 'admin' && this.currentAdminFilter) {
+                    params.set('adminFilter', this.currentAdminFilter);
+                }
 
                 // Pass site filter if set
                 if (this.selectedSiteId !== null) {
@@ -1372,7 +1490,8 @@ window.QuickAccessOverlay = (function() {
                 'assets': this.t.noAssetsFound || 'No assets found',
                 'users': this.t.noUsersFound || 'No users found',
                 'globals': this.t.noGlobalsFound || 'No global sets found',
-                'admin': this.t.noAdminFound || 'No results found'
+                'admin': this.t.noAdminFound || 'No results found',
+                'commands': this.t.noCommandsFound || 'No commands found'
             };
             return messages[this.currentTab] || this.t.noEntriesFound || 'No results found';
         }
@@ -1382,33 +1501,38 @@ window.QuickAccessOverlay = (function() {
             const lowerInput = trimmed.toLowerCase();
 
             // Type prefixes for quick switching (long prefixes first to avoid short prefix conflicts)
+            // adminFilter restricts admin search to a specific sub-category
             const prefixes = {
-                'entries:': 'entries',
-                'categories:': 'categories',
-                'cats:': 'categories',
-                'assets:': 'assets',
-                'users:': 'users',
-                'globals:': 'globals',
-                // Admin prefixes
-                'admin:': 'admin',
-                'sections:': 'admin',
-                'fields:': 'admin',
-                'entrytypes:': 'admin',
-                'volumes:': 'admin',
-                'plugins:': 'admin',
+                'entries:':     { type: 'entries' },
+                'categories:':  { type: 'categories' },
+                'cats:':        { type: 'categories' },
+                'assets:':      { type: 'assets' },
+                'users:':       { type: 'users' },
+                'globals:':     { type: 'globals' },
+                // Admin prefixes — specific sub-types
+                'admin:':       { type: 'admin' },
+                'sections:':    { type: 'admin', adminFilter: 'sections' },
+                'fields:':      { type: 'admin', adminFilter: 'fields' },
+                'entrytypes:':  { type: 'admin', adminFilter: 'entrytypes' },
+                'volumes:':     { type: 'admin', adminFilter: 'volumes' },
+                'plugins:':     { type: 'admin', adminFilter: 'plugins' },
+                // Commands prefixes
+                'commands:':    { type: 'commands' },
+                'cmd:':         { type: 'commands' },
                 // Short prefixes
-                'e:': 'entries',
-                'c:': 'categories',
-                'a:': 'assets',
-                'u:': 'users',
-                'g:': 'globals',
-                '@:': 'admin',
+                'e:': { type: 'entries' },
+                'c:': { type: 'categories' },
+                'a:': { type: 'assets' },
+                'u:': { type: 'users' },
+                'g:': { type: 'globals' },
+                '@:': { type: 'admin' },
             };
 
-            for (const [prefix, type] of Object.entries(prefixes)) {
+            for (const [prefix, config] of Object.entries(prefixes)) {
                 if (lowerInput.startsWith(prefix)) {
                     return {
-                        type: type,
+                        type: config.type,
+                        adminFilter: config.adminFilter || null,
                         query: trimmed.substring(prefix.length).trim()
                     };
                 }
@@ -1416,6 +1540,7 @@ window.QuickAccessOverlay = (function() {
 
             return {
                 type: null,
+                adminFilter: null,
                 query: trimmed
             };
         }
@@ -1464,6 +1589,13 @@ window.QuickAccessOverlay = (function() {
                     handle.className = 'quick-access-item-section';
                     handle.textContent = entry.handle || '';
                     container.appendChild(handle);
+                    break;
+
+                case 'command':
+                    const cmdDesc = document.createElement('span');
+                    cmdDesc.className = 'quick-access-item-section quick-access-command-desc';
+                    cmdDesc.textContent = entry.subtitle || '';
+                    container.appendChild(cmdDesc);
                     break;
 
                 case 'admin':
@@ -1587,7 +1719,15 @@ window.QuickAccessOverlay = (function() {
             const items = list.querySelectorAll('.quick-access-item');
 
             if (index >= 0 && index < items.length) {
-                const url = items[index].dataset.url;
+                const selectedItem = items[index];
+
+                // Handle command items - execute instead of navigate
+                if (selectedItem.dataset.commandHandle) {
+                    this.executeCommand(selectedItem.dataset.commandHandle, selectedItem);
+                    return;
+                }
+
+                const url = selectedItem.dataset.url;
                 if (url) {
                     if (newTab) {
                         window.open(url, '_blank');
@@ -1803,7 +1943,8 @@ window.QuickAccessOverlay = (function() {
                 'photo': '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>',
                 'user': '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>',
                 'world': '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" /></svg>',
-                'settings': '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>'
+                'settings': '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>',
+                'terminal': '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>'
             };
 
             return icons[icon] || icons.document;
@@ -1815,6 +1956,7 @@ window.QuickAccessOverlay = (function() {
             this.saveSearchBtn.style.display = 'none';
             this.searchResults = [];
             this.searchSelectedIndex = -1;
+            this.currentAdminFilter = null;
             this.searchResultsSection.style.display = 'none';
             this.searchResultsList.innerHTML = '';
 
@@ -1830,6 +1972,8 @@ window.QuickAccessOverlay = (function() {
             if (this.currentTab === type) return;
 
             this.currentTab = type;
+            // Clear admin sub-type filter when switching tabs via click
+            this.currentAdminFilter = null;
 
             // Update tab visual state
             if (this.tabsContainer) {
@@ -1846,6 +1990,11 @@ window.QuickAccessOverlay = (function() {
                 this.clearSearch();
             } else if (!skipSearch && this.searchInput && this.searchInput.value.trim().length >= 2) {
                 this.performSearch(this.searchInput.value.trim());
+            }
+
+            // Commands tab: auto-load all commands when switching to it
+            if (type === 'commands' && !skipSearch) {
+                this.performSearch('');
             }
         }
 
@@ -2162,7 +2311,8 @@ window.QuickAccessOverlay = (function() {
                 'assets': this.t.searchAssetsPlaceholder || 'Search assets...',
                 'users': this.t.searchUsersPlaceholder || 'Search users...',
                 'globals': this.t.searchGlobalsPlaceholder || 'Search globals...',
-                'admin': this.t.searchAdminPlaceholder || 'Search settings...'
+                'admin': this.t.searchAdminPlaceholder || 'Search settings...',
+                'commands': this.t.searchCommandsPlaceholder || 'Search commands...'
             };
 
             this.searchInput.placeholder = placeholders[this.currentTab] || placeholders.entries;
