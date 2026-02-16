@@ -677,24 +677,6 @@ window.QuickAccessOverlay = (function() {
                     this.switchPanel();
                     break;
 
-                case 'ArrowLeft':
-                    if (document.activeElement !== this.searchInput &&
-                        document.activeElement !== this.historyFilterInput &&
-                        document.activeElement !== this.favoritesFilterInput) {
-                        e.preventDefault();
-                        this.setActivePanel('history');
-                    }
-                    break;
-
-                case 'ArrowRight':
-                    if (document.activeElement !== this.searchInput &&
-                        document.activeElement !== this.historyFilterInput &&
-                        document.activeElement !== this.favoritesFilterInput) {
-                        e.preventDefault();
-                        this.setActivePanel('favorites');
-                    }
-                    break;
-
                 case 'ArrowDown':
                     e.preventDefault();
                     this.selectNext();
