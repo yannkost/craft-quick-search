@@ -7,6 +7,7 @@ Fast, keyboard-first search and navigation for the Craft CMS control panel.
 ### Quick Access Overlay (`Ctrl+G`)
 A full-screen overlay for instant access to everything in your CP:
 - **Universal Search** — search across entries, categories, assets, users, globals, and admin settings from a single input
+- **System Commands** — execute admin utilities (clear caches, rebuild indexes, flush transforms) directly from the overlay (admin-only)
 - **Tabbed Results** — switch between content types with tabs or type prefixes
 - **Site Selector** — search across different sites or all sites at once (multi-site)
 - **History Panel** — browse recently visited entries with client-side filtering
@@ -50,6 +51,7 @@ Type a prefix in the Quick Access search to switch content type:
 | `g:` or `globals:` | Globals |
 | `@:` or `admin:` | Admin settings |
 | `sections:`, `fields:`, `entrytypes:`, `volumes:`, `plugins:` | Admin (specific) |
+| `cmd:` or `commands:` | System commands |
 
 ### Customization
 - **Compact Mode** — streamlined interface for power users
