@@ -408,14 +408,15 @@ class SearchService extends Component
      * @param int|string|null $siteId Site ID filter
      * @return array Search results grouped by type
      */
-    public function search(string $query, string $type = 'entries', int $limit = 20, int|string|null $siteId = null, ?array $sections = null): array
+    public function search(string $query, string $type = 'entries', int $limit = 20, int|string|null $siteId = null, ?array $sections = null, ?string $adminFilter = null): array
     {
         return match ($type) {
             'categories' => $this->searchCategories($query, $limit, $siteId),
             'assets' => $this->searchAssets($query, $limit, $siteId),
             'users' => $this->searchUsers($query, $limit),
             'globals' => $this->searchGlobals($query, $limit),
-            'admin' => $this->searchAdmin($query, $limit),
+            'admin' => $this->searchAdmin($query, $limit, $adminFilter),
+            'commands' => $this->searchCommands($query, $limit),
             default => $this->searchEntries($query, $sections, $limit, $siteId),
         };
     }
@@ -427,7 +428,7 @@ class SearchService extends Component
      * @param int $limit Maximum number of results per category
      * @return array Array of admin results grouped by type
      */
-    public function searchAdmin(string $query, int $limit = 10): array
+    public function searchAdmin(string $query, int $limit = 10, ?string $filter = null): array
     {
         $currentUser = Craft::$app->getUser()->getIdentity();
 
@@ -435,27 +436,34 @@ class SearchService extends Component
             return [];
         }
 
+        // If filter is set, only search that specific admin category
+        $searchAll = $filter === null;
+
         $results = [];
+        $sections = null;
 
         // Search sections
-        $sections = Craft::$app->getEntries()->getAllSections();
-        foreach ($sections as $section) {
-            if (stripos($section->name, $query) !== false || stripos($section->handle, $query) !== false) {
-                $results[] = [
-                    'type' => 'section',
-                    'id' => $section->id,
-                    'title' => $section->name,
-                    'subtitle' => $section->handle,
-                    'url' => \craft\helpers\UrlHelper::cpUrl("settings/sections/{$section->id}"),
-                ];
-                if (count($results) >= $limit) {
-                    break;
+        if ($searchAll || $filter === 'sections') {
+            $sections = Craft::$app->getEntries()->getAllSections();
+            foreach ($sections as $section) {
+                if (stripos($section->name, $query) !== false || stripos($section->handle, $query) !== false) {
+                    $results[] = [
+                        'type' => 'section',
+                        'id' => $section->id,
+                        'title' => $section->name,
+                        'subtitle' => $section->handle,
+                        'url' => \craft\helpers\UrlHelper::cpUrl("settings/sections/{$section->id}"),
+                    ];
+                    if (count($results) >= $limit) {
+                        return $results;
+                    }
                 }
             }
         }
 
         // Search entry types
-        if (count($results) < $limit) {
+        if (($searchAll || $filter === 'entrytypes') && count($results) < $limit) {
+            $sections = $sections ?? Craft::$app->getEntries()->getAllSections();
             foreach ($sections as $section) {
                 if (count($results) >= $limit) {
                     break;
@@ -478,7 +486,7 @@ class SearchService extends Component
         }
 
         // Search fields
-        if (count($results) < $limit) {
+        if (($searchAll || $filter === 'fields') && count($results) < $limit) {
             $fields = Craft::$app->getFields()->getAllFields();
             foreach ($fields as $field) {
                 if (count($results) >= $limit) {
@@ -497,7 +505,7 @@ class SearchService extends Component
         }
 
         // Search category groups
-        if (count($results) < $limit) {
+        if ($searchAll && count($results) < $limit) {
             $categoryGroups = Craft::$app->getCategories()->getAllGroups();
             foreach ($categoryGroups as $group) {
                 if (count($results) >= $limit) {
@@ -516,7 +524,7 @@ class SearchService extends Component
         }
 
         // Search asset volumes
-        if (count($results) < $limit) {
+        if (($searchAll || $filter === 'volumes') && count($results) < $limit) {
             $volumes = Craft::$app->getVolumes()->getAllVolumes();
             foreach ($volumes as $volume) {
                 if (count($results) >= $limit) {
@@ -535,7 +543,7 @@ class SearchService extends Component
         }
 
         // Search global sets
-        if (count($results) < $limit) {
+        if ($searchAll && count($results) < $limit) {
             $globalSets = Craft::$app->getGlobals()->getAllSets();
             foreach ($globalSets as $globalSet) {
                 if (count($results) >= $limit) {
@@ -554,31 +562,107 @@ class SearchService extends Component
         }
 
         // Search plugins
-        if (count($results) < $limit) {
+        if (($searchAll || $filter === 'plugins') && count($results) < $limit) {
             $plugins = Craft::$app->getPlugins()->getAllPlugins();
             foreach ($plugins as $plugin) {
                 if (count($results) >= $limit) {
                     break;
                 }
-                try {
-                    $name = $plugin->getName();
-                } catch (\Throwable $e) {
-                    // Skip plugins without getName method
-                    continue;
-                }
-                if (stripos($name, $query) !== false) {
+                $name = $plugin->name ?? $plugin->id;
+                $handle = $plugin->id;
+                if (stripos($name, $query) !== false || stripos($handle, $query) !== false) {
                     $results[] = [
                         'type' => 'plugin',
-                        'id' => $plugin->getId(),
+                        'id' => $handle,
                         'title' => $name,
                         'subtitle' => $plugin->getVersion(),
-                        'url' => UrlHelper::cpUrl("settings/plugins/{$plugin->getId()}"),
+                        'url' => UrlHelper::cpUrl("settings/plugins/{$handle}"),
                     ];
                 }
             }
         }
 
         return $results;
+    }
+
+    /**
+     * Search system commands (admin-only)
+     *
+     * @param string $query Search query
+     * @param int $limit Maximum number of results to return
+     * @return array Array of command data with type, id, title, subtitle, handle
+     */
+    public function searchCommands(string $query, int $limit = 20): array
+    {
+        $currentUser = Craft::$app->getUser()->getIdentity();
+
+        if (!$currentUser || !$currentUser->admin) {
+            return [];
+        }
+
+        $commands = [
+            [
+                'type' => 'command',
+                'id' => 'clear-caches',
+                'title' => Craft::t('quick-search', 'Clear All Caches'),
+                'subtitle' => Craft::t('quick-search', 'Flush data cache, invalidate templates and element caches'),
+                'handle' => 'clear-caches',
+            ],
+            [
+                'type' => 'command',
+                'id' => 'clear-template-caches',
+                'title' => Craft::t('quick-search', 'Invalidate Template Caches'),
+                'subtitle' => Craft::t('quick-search', 'Invalidate template cache tags'),
+                'handle' => 'clear-template-caches',
+            ],
+            [
+                'type' => 'command',
+                'id' => 'rebuild-search-indexes',
+                'title' => Craft::t('quick-search', 'Rebuild Search Indexes'),
+                'subtitle' => Craft::t('quick-search', 'Queue job to rebuild element search indexes'),
+                'handle' => 'rebuild-search-indexes',
+            ],
+            [
+                'type' => 'command',
+                'id' => 'clear-image-transforms',
+                'title' => Craft::t('quick-search', 'Clear Image Transform Index'),
+                'subtitle' => Craft::t('quick-search', 'Truncate the image transform index'),
+                'handle' => 'clear-image-transforms',
+            ],
+            [
+                'type' => 'command',
+                'id' => 'update-asset-indexes',
+                'title' => Craft::t('quick-search', 'Clear Asset Indexing Data'),
+                'subtitle' => Craft::t('quick-search', 'Truncate asset indexing data'),
+                'handle' => 'update-asset-indexes',
+            ],
+            [
+                'type' => 'command',
+                'id' => 'invalidate-caches',
+                'title' => Craft::t('quick-search', 'Flush Data Cache'),
+                'subtitle' => Craft::t('quick-search', 'Flush the Yii data cache only'),
+                'handle' => 'invalidate-caches',
+            ],
+            [
+                'type' => 'command',
+                'id' => 'run-pending-jobs',
+                'title' => Craft::t('quick-search', 'Run Pending Queue Jobs'),
+                'subtitle' => Craft::t('quick-search', 'Release held jobs for queue processing'),
+                'handle' => 'run-pending-jobs',
+            ],
+        ];
+
+        // Filter by query
+        if (!empty($query)) {
+            $queryLower = mb_strtolower($query);
+            $commands = array_values(array_filter($commands, function ($cmd) use ($queryLower) {
+                return stripos($cmd['title'], $queryLower) !== false
+                    || stripos($cmd['subtitle'], $queryLower) !== false
+                    || stripos($cmd['handle'], $queryLower) !== false;
+            }));
+        }
+
+        return array_slice($commands, 0, $limit);
     }
 
     /**

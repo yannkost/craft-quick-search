@@ -9,6 +9,7 @@ use craft\web\Controller;
 use craftcms\quicksearch\helpers\Logger;
 use craftcms\quicksearch\Plugin;
 use yii\web\BadRequestHttpException;
+use yii\web\ForbiddenHttpException;
 use yii\web\Response;
 
 /**
@@ -47,9 +48,10 @@ class SearchController extends Controller
         $type = $request->getParam('type');
         $sections = $request->getParam('sections');
         $siteId = $request->getParam('siteId');
+        $adminFilter = $request->getParam('adminFilter');
 
         // Validate type - only allow known types, default to entries
-        $allowedTypes = ['entries', 'categories', 'assets', 'users', 'globals', 'admin'];
+        $allowedTypes = ['entries', 'categories', 'assets', 'users', 'globals', 'admin', 'commands'];
         if (!in_array($type, $allowedTypes, true)) {
             $type = 'entries';
         }
@@ -66,8 +68,8 @@ class SearchController extends Controller
             $query = substr($query, 0, 255);
         }
 
-        // Validate query
-        if (strlen($query) < $settings->minSearchLength) {
+        // Validate query (commands allow empty query to list all)
+        if ($type !== 'commands' && strlen($query) < $settings->minSearchLength) {
             return $this->asJson([
                 'success' => true,
                 'results' => [],
@@ -101,8 +103,17 @@ class SearchController extends Controller
             }
         }
 
+        // Validate adminFilter for admin search
+        $parsedAdminFilter = null;
+        if ($type === 'admin' && $adminFilter !== null) {
+            $allowedFilters = ['sections', 'fields', 'entrytypes', 'volumes', 'plugins'];
+            if (in_array($adminFilter, $allowedFilters, true)) {
+                $parsedAdminFilter = $adminFilter;
+            }
+        }
+
         try {
-            $results = Plugin::getInstance()->search->search($query, $type, $limit, $parsedSiteId, $sections);
+            $results = Plugin::getInstance()->search->search($query, $type, $limit, $parsedSiteId, $sections, $parsedAdminFilter);
 
             return $this->asJson([
                 'success' => true,
@@ -245,6 +256,15 @@ class SearchController extends Controller
                 ];
             }
 
+            // Commands tab - only for admins
+            if ($currentUser->admin) {
+                $types[] = [
+                    'id' => 'commands',
+                    'label' => Craft::t('quick-search', 'Commands'),
+                    'icon' => 'terminal',
+                ];
+            }
+
             // Filter by enabledSearchTypes setting
             $settings = Plugin::getInstance()->getSettings();
             if (!empty($settings->enabledSearchTypes)) {
@@ -266,6 +286,110 @@ class SearchController extends Controller
                 'error' => Craft::t('quick-search', 'An error occurred while fetching search types.'),
             ]);
         }
+    }
+
+    /**
+     * Execute a system command by handle (admin-only)
+     *
+     * @return Response
+     * @throws BadRequestHttpException
+     * @throws ForbiddenHttpException
+     */
+    public function actionRunCommand(): Response
+    {
+        $this->requireAcceptsJson();
+        $this->requirePostRequest();
+
+        $currentUser = Craft::$app->getUser()->getIdentity();
+        if (!$currentUser || !$currentUser->admin) {
+            throw new ForbiddenHttpException('Admin access required.');
+        }
+
+        $handle = Craft::$app->getRequest()->getRequiredBodyParam('handle');
+
+        try {
+            $message = match ($handle) {
+                'clear-caches' => $this->runClearAllCaches(),
+                'clear-template-caches' => $this->runClearTemplateCaches(),
+                'rebuild-search-indexes' => $this->runRebuildSearchIndexes(),
+                'clear-image-transforms' => $this->runClearImageTransforms(),
+                'update-asset-indexes' => $this->runUpdateAssetIndexes(),
+                'invalidate-caches' => $this->runInvalidateDataCaches(),
+                'run-pending-jobs' => $this->runPendingJobs(),
+                default => throw new BadRequestHttpException("Unknown command: {$handle}"),
+            };
+
+            return $this->asJson([
+                'success' => true,
+                'message' => $message,
+            ]);
+        } catch (BadRequestHttpException $e) {
+            throw $e;
+        } catch (\Throwable $e) {
+            Logger::exception('Error running command', $e, ['handle' => $handle]);
+
+            return $this->asJson([
+                'success' => false,
+                'error' => Craft::t('quick-search', 'Command failed: {error}', ['error' => $e->getMessage()]),
+            ]);
+        }
+    }
+
+    private function runClearAllCaches(): string
+    {
+        // Flush data cache
+        Craft::$app->getCache()->flush();
+        // Invalidate template cache tags
+        \yii\caching\TagDependency::invalidate(Craft::$app->getCache(), 'template');
+        // Invalidate element caches
+        Craft::$app->getElements()->invalidateAllCaches();
+        return Craft::t('quick-search', 'All caches cleared.');
+    }
+
+    private function runClearTemplateCaches(): string
+    {
+        // Template caches use tag-based invalidation in Craft 5
+        \yii\caching\TagDependency::invalidate(Craft::$app->getCache(), 'template');
+        return Craft::t('quick-search', 'Template caches invalidated.');
+    }
+
+    private function runRebuildSearchIndexes(): string
+    {
+        $queue = Craft::$app->getQueue();
+        $queue->push(new \craft\queue\jobs\UpdateSearchIndex());
+        return Craft::t('quick-search', 'Search index rebuild queued.');
+    }
+
+    private function runClearImageTransforms(): string
+    {
+        // Truncate the image transform index table (same as ClearCaches utility)
+        \craft\helpers\Db::truncateTable(\craft\db\Table::IMAGETRANSFORMINDEX);
+        return Craft::t('quick-search', 'Image transform index cleared.');
+    }
+
+    private function runUpdateAssetIndexes(): string
+    {
+        // Truncate asset indexing data (same as ClearCaches utility)
+        \craft\helpers\Db::truncateTable(\craft\db\Table::ASSETINDEXDATA);
+        return Craft::t('quick-search', 'Asset indexing data cleared.');
+    }
+
+    private function runInvalidateDataCaches(): string
+    {
+        Craft::$app->getCache()->flush();
+        return Craft::t('quick-search', 'Data caches invalidated.');
+    }
+
+    private function runPendingJobs(): string
+    {
+        // Release any held/reserved jobs so they become available again
+        $queue = Craft::$app->getQueue();
+        if (method_exists($queue, 'releaseAll')) {
+            $queue->releaseAll();
+        }
+        // Don't call $queue->run() — it blocks synchronously.
+        // The Craft CP queue runner will pick up pending jobs automatically.
+        return Craft::t('quick-search', 'Pending jobs released. Queue will process automatically.');
     }
 
     /**

@@ -1200,3 +1200,90 @@ select.quick-access-drawer-input {
         width: 280px;
     }
 }
+
+/* ── Command items ── */
+
+.quick-access-command-item {
+    cursor: pointer;
+}
+
+.quick-access-run-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    color: #0d78f2;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: all 0.15s ease;
+}
+
+.quick-access-run-btn:hover {
+    background: #e3f0ff;
+    border-color: #0d78f2;
+}
+
+.quick-access-run-btn svg {
+    width: 16px;
+    height: 16px;
+}
+
+/* Running state — spinner */
+.quick-access-command-item.command-executing {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+.quick-access-command-item.command-executing .quick-access-run-btn {
+    animation: command-spin 1s linear infinite;
+}
+
+@keyframes command-spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Success flash */
+.quick-access-command-item.command-success {
+    background: #d4f1e8;
+    transition: background 0.3s ease;
+}
+
+/* Error flash */
+.quick-access-command-item.command-error {
+    background: #fef2f2;
+    transition: background 0.3s ease;
+}
+
+/* Command status messages */
+.quick-access-command-status {
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.quick-access-command-status.running {
+    color: #0d78f2;
+}
+
+.quick-access-command-status.success {
+    color: #0e844d;
+}
+
+.quick-access-command-status.error {
+    color: #b91c1c;
+}
+
+.quick-access-command-desc {
+    color: #8496ab;
+}
+
+/* Admin type badge for commands */
+.quick-access-item-admin-type.command {
+    background: #e0e7ff;
+    color: #4338ca;
+}
