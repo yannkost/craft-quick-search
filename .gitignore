@@ -16,3 +16,9 @@ Thumbs.db
 
 # Logs
 *.log
+
+# Internal docs (not for distribution)
+documentation.md
+ideas.md
+feature.md
+extension.md
