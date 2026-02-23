@@ -1,11 +1,12 @@
 /* ============================================
    DARK MODE OVERRIDES
-   Activated by browser/OS dark mode preference.
+   Activated by the .qs-dark class on <html>, which is managed by JS
+   based on the plugin's themeMode setting (auto/light/dark).
    Light mode CSS remains 100% untouched.
    Palette matched to Craft CMS dark mode slate grays.
    ============================================ */
 
-@media (prefers-color-scheme: dark) {
+html.qs-dark {
 
     /* --- Header Search: inputs, filters, buttons --- */
     .quick-search-input-wrapper:focus-within {
@@ -522,24 +523,24 @@
         color: #b8c4ce;
     }
 
-    /* --- Quick Access: search section (light toolbar) --- */
+    /* --- Quick Access: search section --- */
     .quick-access-search-section {
-        background: #d8e2ee;
+        background: #2e3840;
         border-bottom: 1px solid #434648;
     }
     .quick-access-tabs {
-        background: #e4edf6;
-        border-bottom-color: #c0cdd8;
+        background: #2a333c;
+        border-bottom-color: #434648;
     }
     .quick-access-tab {
-        color: #5c6a78;
+        color: #8a98a6;
     }
     .quick-access-tab:hover {
-        color: #0d78f2;
+        color: #b8c4ce;
     }
     .quick-access-tab.active {
-        color: #0d78f2;
-        border-bottom-color: #0d78f2;
+        color: #4da6ff;
+        border-bottom-color: #4da6ff;
     }
     .quick-access-search-input {
         background: #272b2f;
@@ -554,8 +555,8 @@
         color: #6e7c8a;
     }
     .quick-access-search-hint {
-        color: #5c6a78;
-        background: #cdd8e4;
+        color: #8a98a6;
+        background: #38434e;
     }
 
     /* --- Quick Access: clear input button --- */
@@ -845,12 +846,14 @@
     }
 
     /* --- Dark mode: highlight animation --- */
-    @keyframes quick-search-highlight-dark {
-        0% { box-shadow: 0 0 0 3px rgba(77, 166, 255, 0.5); }
-        100% { box-shadow: 0 0 0 3px rgba(77, 166, 255, 0); }
-    }
     .quick-search-outline-highlight {
         animation-name: quick-search-highlight-dark;
     }
 
+}
+
+/* @keyframes must live at the top level (not inside a selector rule) */
+@keyframes quick-search-highlight-dark {
+    0% { box-shadow: 0 0 0 3px rgba(77, 166, 255, 0.5); }
+    100% { box-shadow: 0 0 0 3px rgba(77, 166, 255, 0); }
 }

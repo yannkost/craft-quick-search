@@ -4,6 +4,20 @@
 
 <h2>{{ 'Display Settings'|t('quick-search') }}</h2>
 
+{{ forms.selectField({
+    label: 'Theme'|t('quick-search'),
+    instructions: 'Choose the color theme for Quick Search. "Auto" follows your OS preference.'|t('quick-search'),
+    id: 'themeMode',
+    name: 'themeMode',
+    value: settings.themeMode,
+    options: [
+        { value: 'auto',  label: 'Auto (follow OS)'|t('quick-search') },
+        { value: 'light', label: 'Light'|t('quick-search') },
+        { value: 'dark',  label: 'Dark'|t('quick-search') }
+    ],
+    errors: settings.getErrors('themeMode')
+}) }}
+
 {{ forms.lightswitchField({
     label: 'Compact Mode'|t('quick-search'),
     instructions: 'Use a more compact display for search results and history lists.'|t('quick-search'),

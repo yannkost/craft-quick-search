@@ -54,6 +54,7 @@ Type a prefix in the Quick Access search to switch content type:
 | `cmd:` or `commands:` | System commands |
 
 ### Customization
+- **Theme Mode** — choose Light, Dark, or Auto (follows OS preference); each user can override the site default in My Account → Preferences
 - **Compact Mode** — streamlined interface for power users
 - **Configurable Search Types** — choose which content types appear as tabs (entries is always available)
 - **Configurable Limits** — control history size, favorites count, and saved searches
@@ -82,6 +83,7 @@ Visit Settings → Quick Search to configure:
 
 | Setting | Description | Default |
 |---|---|---|
+| Theme | Color theme: Auto (follows OS), Light, or Dark | Auto |
 | Compact Mode | Use a more compact display for lists | Off |
 | Show Section Filter | Toggle the section filter dropdown | On |
 | Show Entry Outline | Display entry outline button on entry pages | On |

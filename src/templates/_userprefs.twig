@@ -1,0 +1,66 @@
+{# Quick Search user preferences — rendered via cp.users.edit.prefs hook #}
+
+{% import "_includes/forms" as forms %}
+
+{% set userTheme = currentUser.getPreference('quickSearch_themeMode') ?? '' %}
+{% set pluginDefault = quickSearchPluginSettings.themeMode ?? 'auto' %}
+{% set defaultLabel = pluginDefault == 'light' ? 'Light' : (pluginDefault == 'dark' ? 'Dark' : 'Auto (follow OS)') %}
+
+{% set savedMsg = 'Theme preference saved.'|t('quick-search') %}
+{% set errorMsg = 'Could not save theme preference.'|t('quick-search') %}
+
+<hr>
+
+<h2>{{ 'Quick Search'|t('quick-search') }}</h2>
+
+{{ forms.selectField({
+    label: 'Theme'|t('quick-search'),
+    instructions: 'Override the Quick Search color theme for your account only.'|t('quick-search'),
+    id: 'quickSearch-themeMode',
+    name: 'quickSearch_themeMode',
+    value: userTheme,
+    options: [
+        { value: '',      label: ('Use site default (' ~ defaultLabel ~ ')')|t('quick-search') },
+        { value: 'auto',  label: 'Auto (follow OS)'|t('quick-search') },
+        { value: 'light', label: 'Light'|t('quick-search') },
+        { value: 'dark',  label: 'Dark'|t('quick-search') }
+    ]
+}) }}
+
+<script>
+(function () {
+    var select = document.getElementById('quickSearch-themeMode');
+    if (!select) return;
+
+    var pluginDefault = {{ pluginDefault|json_encode|raw }};
+    var savedMsg = {{ savedMsg|json_encode|raw }};
+    var errorMsg = {{ errorMsg|json_encode|raw }};
+
+    select.addEventListener('change', function () {
+        var chosen = select.value;
+
+        Craft.sendActionRequest('POST', 'quick-search/user-prefs/save-theme', {
+            data: { themeMode: chosen }
+        }).then(function () {
+            Craft.cp.displayNotice(savedMsg);
+
+            // Apply immediately without page reload
+            var resolved = chosen || pluginDefault || 'auto';
+            var html = document.documentElement;
+            if (resolved === 'dark') {
+                html.classList.add('qs-dark');
+            } else if (resolved === 'light') {
+                html.classList.remove('qs-dark');
+            } else {
+                if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                    html.classList.add('qs-dark');
+                } else {
+                    html.classList.remove('qs-dark');
+                }
+            }
+        }).catch(function () {
+            Craft.cp.displayError(errorMsg);
+        });
+    });
+}());
+</script>

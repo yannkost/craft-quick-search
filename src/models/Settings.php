@@ -109,6 +109,11 @@ class Settings extends Model
     public int $maxSavedSearches = 20;
 
     /**
+     * @var string Theme mode: 'auto' (follows OS), 'light', or 'dark'
+     */
+    public string $themeMode = 'auto';
+
+    /**
      * @inheritdoc
      */
     public function defineRules(): array
@@ -136,6 +141,7 @@ class Settings extends Model
             ['clearSearchOnTabSwitch', 'boolean'],
             ['enabledSearchTypes', 'each', 'rule' => ['string']],
             ['maxSavedSearches', 'integer', 'min' => 1, 'max' => 50],
+            ['themeMode', 'in', 'range' => ['auto', 'light', 'dark']],
         ];
     }
 }
