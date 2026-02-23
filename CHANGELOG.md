@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.9.0] - 2026-02-23
+
+### Added
+- Theme mode setting (Auto / Light / Dark) in plugin settings — sets the color theme for all users
+- Per-user theme override in My Account → Preferences — each user can override the site default for their own account, auto-saves without a page reload and applies instantly
+
 ## [1.5.0] - 2026-02-03
 
 ### Changed

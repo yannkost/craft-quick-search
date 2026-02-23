@@ -98,6 +98,7 @@ class Plugin extends BasePlugin
             $this->registerEntryVisitTracking();
             $this->registerEntryOutlineButton();
             $this->registerRelatedEntriesButton();
+            $this->registerUserPrefsHook();
         }
     }
 
@@ -138,6 +139,7 @@ class Plugin extends BasePlugin
             'quick-search/saved-searches/delete' => 'quick-search/saved-searches/delete',
             'quick-search/saved-searches/reorder' => 'quick-search/saved-searches/reorder',
             'quick-search/search/run-command' => 'quick-search/search/run-command',
+            'quick-search/user-prefs/save-theme' => 'quick-search/user-prefs/save-theme',
         ]);
     }
 
@@ -175,6 +177,13 @@ class Plugin extends BasePlugin
                         $currentSite = Craft::$app->getSites()->getCurrentSite();
                     }
 
+                    // Resolve theme: user preference overrides plugin default
+                    $userThemePref = Craft::$app->getUsers()->getUserPreference($currentUser->id, 'quickSearch_themeMode', '');
+                    $resolvedTheme = $userThemePref ?: ($settings->themeMode ?? 'auto');
+                    if (!in_array($resolvedTheme, ['auto', 'light', 'dark'], true)) {
+                        $resolvedTheme = 'auto';
+                    }
+
                     $view->registerJs(
                         'window.QuickSearchSettings = ' . json_encode([
                             'minSearchLength' => $settings->minSearchLength ?? 2,
@@ -188,6 +197,7 @@ class Plugin extends BasePlugin
                             'quickAccessShowSearch' => $settings->quickAccessShowSearch ?? true,
                             'showSavedSearches' => $settings->showSavedSearches ?? true,
                             'clearSearchOnTabSwitch' => $settings->clearSearchOnTabSwitch ?? true,
+                            'themeMode' => $resolvedTheme,
                             'currentSiteId' => $currentSite->id,
                             'currentSiteName' => $currentSite->name,
                             'isMultiSite' => Craft::$app->getIsMultiSite(),
@@ -384,6 +394,20 @@ class Plugin extends BasePlugin
     protected function createSettingsModel(): ?Model
     {
         return new Settings();
+    }
+
+    /**
+     * Register a hook on the user preferences page to add the theme selector.
+     */
+    private function registerUserPrefsHook(): void
+    {
+        $view = Craft::$app->getView();
+        $settings = $this->getSettings();
+
+        $view->hook('cp.users.edit.prefs', function(array &$context) use ($view, $settings) {
+            $context['quickSearchPluginSettings'] = $settings;
+            return $view->renderTemplate('quick-search/_userprefs', $context);
+        });
     }
 
     /**
