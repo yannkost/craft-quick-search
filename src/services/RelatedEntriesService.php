@@ -68,8 +68,8 @@ class RelatedEntriesService extends Component
         // Also find entries that link to this entry in their content fields
         $contentLinkedIncoming = $this->findEntriesLinkingToEntryInContent($entry);
 
-        // Merge incoming entries
-        $allIncoming = array_merge($incomingEntries, $contentLinkedIncoming);
+        // Merge and deduplicate incoming entries
+        $allIncoming = $this->mergeEntries($incomingEntries, $contentLinkedIncoming);
 
         // Resolve nested entries to their top-level parent entries
         $resolvedIncoming = $this->resolveToTopLevelEntries($allIncoming);
@@ -543,7 +543,7 @@ class RelatedEntriesService extends Component
 
                 $results[] = [
                     'id' => $entry->id,
-                    'title' => $entry->title ?? '',
+                    'title' => $entry->title ?: $entry->section->name,
                     'url' => $entry->getCpEditUrl(),
                     'section' => [
                         'id' => $entry->section->id,

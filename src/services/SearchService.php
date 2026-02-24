@@ -77,10 +77,54 @@ class SearchService extends Component
 
         // Only show entries the user can view
         $entries = $entryQuery->all();
+
+        // Secondary queries: find entries with null title, matching by section name OR slug.
+        // Covers entry types with no Title field and no Default Title Format (title stored as NULL).
+        $noTitleEntries = [];
+        $sectionConstraint = ($sections !== null && !empty($sections)) ? $sections : '*';
+
+        // Part A: null-title entries in sections whose name matches the query
+        $allSections = Craft::$app->getEntries()->getAllSections();
+        $nameSections = array_filter($allSections, fn($s) => stripos($s->name, $query) !== false);
+        if ($sections !== null && !empty($sections)) {
+            $nameSections = array_filter($nameSections, fn($s) => in_array($s->handle, $sections));
+        }
+
+        if (!empty($nameSections)) {
+            $nameHandles = array_map(fn($s) => $s->handle, array_values($nameSections));
+            $q = Entry::find()->where(['[[title]]' => null])->section($nameHandles)->status(null)->limit($limit);
+            if ($siteId === null) { $q->siteId(Craft::$app->getSites()->getCurrentSite()->id); }
+            elseif ($siteId === '*') { $q->siteId('*'); }
+            else { $q->siteId($siteId); }
+            $noTitleEntries = $q->all();
+        }
+
+        // Part B: null-title entries whose slug matches the query
+        $q = Entry::find()
+            ->where(['[[title]]' => null])
+            ->slug('*' . mb_strtolower($query) . '*')
+            ->section($sectionConstraint)
+            ->status(null)
+            ->limit($limit);
+        if ($siteId === null) { $q->siteId(Craft::$app->getSites()->getCurrentSite()->id); }
+        elseif ($siteId === '*') { $q->siteId('*'); }
+        else { $q->siteId($siteId); }
+        $noTitleEntries = array_merge($noTitleEntries, $q->all());
+
+        // Merge both sets, deduplicate by entry ID (title-matched entries take precedence)
+        $seenIds = [];
+        $allEntries = [];
+        foreach (array_merge($entries, $noTitleEntries) as $e) {
+            if (!isset($seenIds[$e->id])) {
+                $allEntries[] = $e;
+                $seenIds[$e->id] = true;
+            }
+        }
+
         $results = [];
 
-        foreach ($entries as $entry) {
-            // Skip entries with missing sections (orphaned entries) - should not happen with sectionId filter
+        foreach ($allEntries as $entry) {
+            // Skip entries with missing sections (orphaned entries)
             if (!$entry->section) {
                 continue;
             }
@@ -96,7 +140,7 @@ class SearchService extends Component
             $results[] = [
                 'type' => 'entry',
                 'id' => $entry->id,
-                'title' => $entry->title,
+                'title' => $entry->title ?: $entry->section->name,
                 'url' => $entry->getCpEditUrl(),
                 'section' => [
                     'id' => $entry->section->id,
