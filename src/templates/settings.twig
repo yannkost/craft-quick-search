@@ -67,7 +67,7 @@
         value: section.handle,
         label: section.name
     }),
-    values: settings.enabledSections,
+    values: settings.enabledSections is null ? '*' : settings.enabledSections,
     showAllOption: true,
     errors: settings.getErrors('enabledSections')
 }) }}
@@ -85,7 +85,7 @@
         { value: 'admin', label: 'Admin'|t('quick-search') },
         { value: 'commands', label: 'Commands'|t('quick-search') },
     ],
-    values: settings.enabledSearchTypes,
+    values: settings.enabledSearchTypes is null ? '*' : settings.enabledSearchTypes,
     showAllOption: true,
     errors: settings.getErrors('enabledSearchTypes')
 }) }}

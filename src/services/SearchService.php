@@ -778,6 +778,12 @@ class SearchService extends Component
             ];
         }
 
+        // Filter by enabledSections setting
+        $settings = Plugin::getInstance()->getSettings();
+        if (!empty($settings->enabledSections)) {
+            $sections = array_values(array_filter($sections, fn($s) => in_array($s['handle'], $settings->enabledSections, true)));
+        }
+
         // Sort by name
         usort($sections, fn($a, $b) => strcasecmp($a['name'], $b['name']));
 
