@@ -852,7 +852,8 @@ html.qs-dark {
 
     /* --- Sidebar Panel --- */
     .qs-sidebar-panel {
-        border-top-color: rgba(255, 255, 255, 0.08);
+        background: #2e3840;
+        border-color: rgba(255, 255, 255, 0.08);
     }
 
     .qs-sidebar-header:hover {

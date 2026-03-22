@@ -4,7 +4,9 @@
  */
 
 .qs-sidebar-panel {
-    border-top: 1px solid rgba(51, 64, 77, 0.1);
+    background: #f3f7fc;
+    border: 1px solid rgba(51, 64, 77, 0.1);
+    margin: 14px 0 0;
 }
 
 .qs-sidebar-header {
