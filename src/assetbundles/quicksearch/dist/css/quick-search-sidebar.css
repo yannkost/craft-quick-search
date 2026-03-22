@@ -14,6 +14,10 @@
     margin-top: 0;
 }
 
+.qs-sidebar-panel.qs-sidebar-position-after_status {
+    margin-inline: var(--neg-padding);
+}
+
 .qs-sidebar-header {
     display: flex;
     align-items: center;
