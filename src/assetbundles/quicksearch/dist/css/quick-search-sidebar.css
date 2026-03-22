@@ -10,6 +10,10 @@
     margin: 14px 0;
 }
 
+.qs-sidebar-panel.qs-sidebar-position-start {
+    margin-top: 0;
+}
+
 .qs-sidebar-header {
     display: flex;
     align-items: center;

@@ -79,17 +79,17 @@ window.RelatedEntriesSidebar = (function() {
             }
 
             const position = this.settings.sidebarRelatedEntriesPosition || 'end';
+            const metas = [...details.querySelectorAll(':scope > .meta')];
+
+            // Add position class so CSS can adjust margins accordingly
+            this.panel.classList.add(`qs-sidebar-position-${position}`);
 
             if (position === 'end') {
                 details.appendChild(this.panel);
 
             } else if (position === 'after_status') {
-                // Find the .meta block that contains the status widget.
-                // Falls back to the first .meta if no status element is found.
-                const metas = [...details.querySelectorAll(':scope > .meta')];
-                const statusMeta = metas.find(el =>
-                    el.querySelector('.statuswidget, [data-js="status-menu"], .status-badge, input[name="enabled"]')
-                ) || metas[0];
+                // Status lives in the second .meta block; fall back to first if only one exists
+                const statusMeta = metas[1] || metas[0];
 
                 if (statusMeta) {
                     statusMeta.insertAdjacentElement('afterend', this.panel);
@@ -98,8 +98,7 @@ window.RelatedEntriesSidebar = (function() {
                 }
 
             } else {
-                // 'start': insert after the last direct .meta child (after all native Craft metadata)
-                const metas = [...details.querySelectorAll(':scope > .meta')];
+                // 'start': insert after the last .meta block (after all native Craft metadata)
                 const lastMeta = metas[metas.length - 1];
 
                 if (lastMeta) {
