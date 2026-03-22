@@ -22,7 +22,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 10px 24px;
+    padding: 10px 14px;
     cursor: pointer;
     user-select: none;
 }
@@ -60,7 +60,7 @@
 }
 
 .qs-sidebar-body {
-    padding: 0 24px 16px;
+    padding: 10px 24px 16px;
 }
 
 .qs-sidebar-body-hidden {
@@ -81,6 +81,11 @@
 
 .qs-sidebar-direction {
     margin-bottom: 12px;
+}
+
+.qs-sidebar-direction + .qs-sidebar-direction {
+    border-top: 1px solid rgb(205 216 228);
+    padding-top: 12px;
 }
 
 .qs-sidebar-direction:last-child {
@@ -136,6 +141,7 @@
 
 .qs-sidebar-item-title {
     font-size: 12px;
+    font-weight: 700;
     color: #3f4d5a;
     white-space: nowrap;
     overflow: hidden;
