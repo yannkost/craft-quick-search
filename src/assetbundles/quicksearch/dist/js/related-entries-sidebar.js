@@ -22,12 +22,11 @@ window.RelatedEntriesSidebar = (function() {
                 return;
             }
 
-            this.entryId = utils.getCurrentEntryId();
-            if (!this.entryId) {
-                return;
-            }
-
             try {
+                this.entryId = utils.getCurrentEntryId();
+                if (!this.entryId) {
+                    return;
+                }
                 this.createPanel();
                 this.injectPanel();
                 this.fetchAndRender();

@@ -283,7 +283,7 @@ class RelatedEntriesService extends Component
                 }
             }
         } catch (\Throwable $e) {
-            // Silently fail - raw content search is best-effort
+            Logger::exception('Quick Search: Error in raw content search for entry ' . $entry->id, $e);
         }
 
         return array_keys($foundEntryIds);

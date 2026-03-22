@@ -10,13 +10,14 @@
     margin: 14px 0;
 }
 
-.qs-sidebar-panel.qs-sidebar-position-start {
-    margin-top: 0;
-}
-
+.qs-sidebar-panel.qs-sidebar-position-start,
 .qs-sidebar-panel.qs-sidebar-position-after_status,
 .qs-sidebar-panel.qs-sidebar-position-end {
     margin-inline: var(--neg-padding);
+}
+
+.qs-sidebar-panel.qs-sidebar-position-start {
+    margin-top: 0;
 }
 
 .qs-sidebar-header {
