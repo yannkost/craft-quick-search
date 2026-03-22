@@ -98,22 +98,8 @@ window.RelatedEntriesSidebar = (function() {
                 }
 
             } else {
-                // 'start': insert after the metadata block.
-                // Craft renders: div.meta (fields) + h2.visually-hidden "Metadata" as siblings.
-                // The h2 is the most reliable anchor — it always follows the metadata .meta.
-                const metaHeading = detailsInner.querySelector(':scope > h2.visually-hidden');
-                if (metaHeading) {
-                    metaHeading.insertAdjacentElement('afterend', this.panel);
-                } else {
-                    // Fallback: after the last direct .meta
-                    const metas = [...detailsInner.querySelectorAll(':scope > .meta')];
-                    const lastMeta = metas[metas.length - 1];
-                    if (lastMeta) {
-                        lastMeta.insertAdjacentElement('afterend', this.panel);
-                    } else {
-                        detailsInner.prepend(this.panel);
-                    }
-                }
+                // 'start': before any metadata — absolute top of the sidebar
+                detailsInner.prepend(this.panel);
             }
         }
 

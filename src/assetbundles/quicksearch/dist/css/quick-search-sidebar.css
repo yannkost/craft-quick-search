@@ -14,7 +14,8 @@
     margin-top: 0;
 }
 
-.qs-sidebar-panel.qs-sidebar-position-after_status {
+.qs-sidebar-panel.qs-sidebar-position-after_status,
+.qs-sidebar-panel.qs-sidebar-position-end {
     margin-inline: var(--neg-padding);
 }
 
