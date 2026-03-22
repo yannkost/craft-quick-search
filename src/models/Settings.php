@@ -69,6 +69,11 @@ class Settings extends Model
     public bool $showSidebarRelatedEntries = true;
 
     /**
+     * @var string Position of the sidebar panel: 'start', 'after_status', or 'end'
+     */
+    public string $sidebarRelatedEntriesPosition = 'end';
+
+    /**
      * @var int Maximum number of favorites per user
      */
     public int $maxFavorites = 25;
@@ -135,6 +140,7 @@ class Settings extends Model
             ['showEntryOutline', 'boolean'],
             ['showRelatedEntries', 'boolean'],
             ['showSidebarRelatedEntries', 'boolean'],
+            ['sidebarRelatedEntriesPosition', 'in', 'range' => ['start', 'after_status', 'end']],
             ['enabledSections', 'filter', 'filter' => fn($v) => (empty($v) || $v === ['*']) ? null : $v],
             ['enabledSections', 'each', 'rule' => ['string']],
             ['sectionFilterMode', 'in', 'range' => ['include', 'exclude']],

@@ -192,6 +192,7 @@ class Plugin extends BasePlugin
                             'compactMode' => $settings->compactMode ?? false,
                             'showRelatedEntries' => $settings->showRelatedEntries ?? false,
                             'showSidebarRelatedEntries' => $settings->showSidebarRelatedEntries ?? true,
+                            'sidebarRelatedEntriesPosition' => $settings->sidebarRelatedEntriesPosition ?? 'end',
                             'quickAccessEnabled' => $settings->quickAccessEnabled ?? true,
                             'quickAccessShortcut' => $settings->quickAccessShortcut ?? 'ctrl+g',
                             'quickAccessDefaultPanel' => $settings->quickAccessDefaultPanel ?? 'history',

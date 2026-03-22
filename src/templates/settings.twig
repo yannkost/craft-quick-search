@@ -54,6 +54,20 @@
     errors: settings.getErrors('showSidebarRelatedEntries')
 }) }}
 
+{{ forms.selectField({
+    label: 'Sidebar Panel Position'|t('quick-search'),
+    instructions: 'Where to place the related entries panel within the entry sidebar.'|t('quick-search'),
+    id: 'sidebarRelatedEntriesPosition',
+    name: 'sidebarRelatedEntriesPosition',
+    value: settings.sidebarRelatedEntriesPosition,
+    options: [
+        { value: 'start',        label: 'Top — after native Craft metadata'|t('quick-search') },
+        { value: 'after_status', label: 'After Status'|t('quick-search') },
+        { value: 'end',          label: 'Bottom'|t('quick-search') },
+    ],
+    errors: settings.getErrors('sidebarRelatedEntriesPosition')
+}) }}
+
 {{ forms.lightswitchField({
     label: 'Show Related Entries Button'|t('quick-search'),
     instructions: 'Display a related entries button in the entry toolbar that opens a modal. Can be used alongside or instead of the sidebar panel.'|t('quick-search'),

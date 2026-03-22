@@ -78,16 +78,35 @@ window.RelatedEntriesSidebar = (function() {
                 return;
             }
 
-            // Insert after the last direct .meta child (Craft's native metadata blocks).
-            // Other plugins injected via template hooks don't use .meta, so this reliably
-            // places our panel right after Craft's native content.
-            const metas = [...details.querySelectorAll(':scope > .meta')];
-            const lastMeta = metas[metas.length - 1];
+            const position = this.settings.sidebarRelatedEntriesPosition || 'end';
 
-            if (lastMeta) {
-                lastMeta.insertAdjacentElement('afterend', this.panel);
+            if (position === 'end') {
+                details.appendChild(this.panel);
+
+            } else if (position === 'after_status') {
+                // Find the .meta block that contains the status widget.
+                // Falls back to the first .meta if no status element is found.
+                const metas = [...details.querySelectorAll(':scope > .meta')];
+                const statusMeta = metas.find(el =>
+                    el.querySelector('.statuswidget, [data-js="status-menu"], .status-badge, input[name="enabled"]')
+                ) || metas[0];
+
+                if (statusMeta) {
+                    statusMeta.insertAdjacentElement('afterend', this.panel);
+                } else {
+                    details.prepend(this.panel);
+                }
+
             } else {
-                details.prepend(this.panel);
+                // 'start': insert after the last direct .meta child (after all native Craft metadata)
+                const metas = [...details.querySelectorAll(':scope > .meta')];
+                const lastMeta = metas[metas.length - 1];
+
+                if (lastMeta) {
+                    lastMeta.insertAdjacentElement('afterend', this.panel);
+                } else {
+                    details.prepend(this.panel);
+                }
             }
         }
 
