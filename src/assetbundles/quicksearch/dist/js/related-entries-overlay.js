@@ -17,7 +17,7 @@ window.RelatedEntriesOverlay = (function() {
                 translations: {}
             };
             this.t = this.settings.translations || {};
-            this.fetchTimeout = 10000;
+            this.fetchTimeout = 60000;
         }
 
         init() {
@@ -167,21 +167,41 @@ window.RelatedEntriesOverlay = (function() {
             sectionHeader.textContent = `${title} (${entries.length})`;
             section.appendChild(sectionHeader);
 
-            const list = document.createElement('ul');
-            list.className = 'quick-search-related-list';
-
+            // Group entries by section name
+            const groups = {};
             entries.forEach(entry => {
-                try {
-                    const item = this.createEntryItem(entry);
-                    if (item) {
-                        list.appendChild(item);
-                    }
-                } catch (e) {
-                    console.error('Quick Search: Error rendering related entry item', e);
-                }
+                const key = entry.section?.name || 'Other';
+                if (!groups[key]) groups[key] = [];
+                groups[key].push(entry);
             });
 
-            section.appendChild(list);
+            Object.entries(groups).forEach(([sectionName, groupEntries]) => {
+                const group = document.createElement('div');
+                group.className = 'quick-search-related-group';
+
+                const groupTitle = document.createElement('h4');
+                groupTitle.className = 'quick-search-related-group-title';
+                groupTitle.textContent = `${sectionName} (${groupEntries.length})`;
+                group.appendChild(groupTitle);
+
+                const list = document.createElement('ul');
+                list.className = 'quick-search-related-list';
+
+                groupEntries.forEach(entry => {
+                    try {
+                        const item = this.createEntryItem(entry);
+                        if (item) {
+                            list.appendChild(item);
+                        }
+                    } catch (e) {
+                        console.error('Quick Search: Error rendering related entry item', e);
+                    }
+                });
+
+                group.appendChild(list);
+                section.appendChild(group);
+            });
+
             return section;
         }
 
