@@ -59,9 +59,19 @@ class Settings extends Model
     public bool $showEntryOutline = true;
 
     /**
-     * @var bool Whether to show related entries
+     * @var bool Whether to show the related entries button on entry pages
      */
-    public bool $showRelatedEntries = true;
+    public bool $showRelatedEntries = false;
+
+    /**
+     * @var bool Whether to show the related entries panel in the entry sidebar
+     */
+    public bool $showSidebarRelatedEntries = true;
+
+    /**
+     * @var string Position of the sidebar panel: 'start', 'after_status', or 'end'
+     */
+    public string $sidebarRelatedEntriesPosition = 'end';
 
     /**
      * @var int Maximum number of favorites per user
@@ -129,6 +139,8 @@ class Settings extends Model
             ['compactMode', 'boolean'],
             ['showEntryOutline', 'boolean'],
             ['showRelatedEntries', 'boolean'],
+            ['showSidebarRelatedEntries', 'boolean'],
+            ['sidebarRelatedEntriesPosition', 'in', 'range' => ['start', 'after_status', 'end']],
             ['enabledSections', 'filter', 'filter' => fn($v) => (empty($v) || $v === ['*']) ? null : $v],
             ['enabledSections', 'each', 'rule' => ['string']],
             ['sectionFilterMode', 'in', 'range' => ['include', 'exclude']],

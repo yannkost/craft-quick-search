@@ -9,6 +9,16 @@ return [
     'Show the section filter dropdown in the search UI.' => 'Show the section filter dropdown in the search UI.',
     'Show Entry Outline' => 'Show Entry Outline',
     'Display the entry outline button on entry pages.' => 'Display the entry outline button on entry pages.',
+    'Show Related Entries Sidebar Panel' => 'Show Related Entries Sidebar Panel',
+    'Display a related entries panel directly in the entry sidebar, loaded automatically when the page opens.' => 'Display a related entries panel directly in the entry sidebar, loaded automatically when the page opens.',
+    'Sidebar Panel Position' => 'Sidebar Panel Position',
+    'Where to place the related entries panel within the entry sidebar.' => 'Where to place the related entries panel within the entry sidebar.',
+    'Top — before all metadata' => 'Top — before all metadata',
+    'After Status' => 'After Status',
+    'Bottom' => 'Bottom',
+    'Show Related Entries Button' => 'Show Related Entries Button',
+    'Display a related entries button in the entry toolbar that opens a modal. Can be used alongside or instead of the sidebar panel.' => 'Display a related entries button in the entry toolbar that opens a modal. Can be used alongside or instead of the sidebar panel.',
+    // Kept for backwards compatibility
     'Show Related Entries' => 'Show Related Entries',
     'Display related entries button on entry pages.' => 'Display related entries button on entry pages.',
 

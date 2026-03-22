@@ -207,27 +207,17 @@ class RelatedEntriesService extends Component
     private function findEntriesLinkingToEntryInContent(Entry $entry): array
     {
         $foundEntryIds = [];
-        
-        // APPROACH 1: Search RAW database content for reference tags (most reliable)
-        $rawPatterns = $this->searchRawContentForEntry($entry);
-        foreach ($rawPatterns as $entryId) {
+
+        foreach ($this->searchRawContentForEntry($entry) as $entryId) {
             $foundEntryIds[$entryId] = true;
         }
-        
-        // APPROACH 2: Search rendered content for URLs (fallback)
-        $renderedPatterns = $this->searchRenderedContentForEntry($entry);
-        foreach ($renderedPatterns as $entryId) {
-            $foundEntryIds[$entryId] = true;
-        }
-        
-        // Remove the current entry from results
+
         unset($foundEntryIds[$entry->id]);
-        
+
         if (empty($foundEntryIds)) {
             return [];
         }
-        
-        // Fetch the actual entries
+
         return Entry::find()
             ->id(array_keys($foundEntryIds))
             ->status(null)
@@ -235,8 +225,9 @@ class RelatedEntriesService extends Component
     }
 
     /**
-     * Search raw database content for entry reference tags
-     * This is the most reliable approach as it finds the original reference tags
+     * Search raw database content for all patterns that reference the given entry.
+     * Covers CKEditor/Redactor reference tags, data attributes, and manually typed URLs.
+     * Searches elements_sites.content directly, which includes nested/Matrix entries.
      *
      * @param Entry $entry
      * @return array Entry IDs that link to this entry
@@ -244,184 +235,55 @@ class RelatedEntriesService extends Component
     private function searchRawContentForEntry(Entry $entry): array
     {
         $foundEntryIds = [];
-        
-        // Build patterns for raw content search
-        // These are the patterns stored in the database before Craft parses them
+
         $rawPatterns = [
-            // CKEditor hash format in href: #entry:708@1:url
+            // CKEditor hash format: #entry:708@1:url or #entry:708:url
             '#entry:' . $entry->id . '@',
             '#entry:' . $entry->id . ':',
-            // Craft reference tags: {entry:708:url} or {entry:708@1:url}
+            // Craft reference tags: {entry:708:url}, {entry:708@1:url}, {entry:708}
             '{entry:' . $entry->id . ':',
             '{entry:' . $entry->id . '@',
             '{entry:' . $entry->id . '}',
+            // Data attributes
+            'data-entry-id="' . $entry->id . '"',
+            'data-link-entry-id="' . $entry->id . '"',
+            'entry-id="' . $entry->id . '"',
         ];
-        
-        // Query the content table directly for raw content
-        $db = Craft::$app->getDb();
-        
-        // Search in elements_sites for content stored in JSON
-        // and in the content table for traditional content
+
+        // Manually typed/pasted frontend URL (not stored as a reference tag)
+        $frontendUrl = $entry->getUrl();
+        if ($frontendUrl) {
+            $rawPatterns[] = $frontendUrl;
+        }
+
+        // CP URL path (e.g. /entries/news/123)
+        if ($entry->section) {
+            $rawPatterns[] = '/entries/' . $entry->section->handle . '/' . $entry->id;
+        }
+
         try {
-            // Get all CKEditor and text field column names
-            $fields = Craft::$app->getFields()->getAllFields();
-            $fieldHandles = [];
-            foreach ($fields as $field) {
-                $fieldClass = get_class($field);
-                if (in_array($fieldClass, ['craft\\ckeditor\\Field', 'craft\\redactor\\Field', 'craft\\fields\\PlainText'], true)) {
-                    $fieldHandles[] = $field->handle;
-                }
-            }
-            
-            if (empty($fieldHandles)) {
-                return $foundEntryIds;
-            }
-            
-            // Search in elements_sites.content JSON column (Craft 5 stores content here)
+            // Single OR query instead of N sequential LIKE scans
+            $orConditions = ['or'];
             foreach ($rawPatterns as $pattern) {
-                $escapedPattern = '%' . str_replace(['%', '_'], ['\\%', '\\_'], $pattern) . '%';
-                
-                $results = (new Query())
-                    ->select(['es.elementId', 'e.canonicalId'])
-                    ->from(['es' => '{{%elements_sites}}'])
-                    ->innerJoin(['e' => '{{%elements}}'], '[[es.elementId]] = [[e.id]]')
-                    ->where(['like', 'es.content', $pattern, false])
-                    ->andWhere(['e.type' => 'craft\\elements\\Entry'])
-                    ->all();
-                
-                foreach ($results as $row) {
-                    $elementId = (int)($row['canonicalId'] ?? $row['elementId']);
-                    if ($elementId !== $entry->id) {
-                        $foundEntryIds[$elementId] = true;
-                    }
+                $orConditions[] = ['like', 'es.content', $pattern, false];
+            }
+
+            $results = (new Query())
+                ->select(['es.elementId', 'e.canonicalId'])
+                ->from(['es' => '{{%elements_sites}}'])
+                ->innerJoin(['e' => '{{%elements}}'], '[[es.elementId]] = [[e.id]]')
+                ->where($orConditions)
+                ->andWhere(['e.type' => 'craft\\elements\\Entry'])
+                ->all();
+
+            foreach ($results as $row) {
+                $elementId = (int)($row['canonicalId'] ?? $row['elementId']);
+                if ($elementId !== $entry->id) {
+                    $foundEntryIds[$elementId] = true;
                 }
             }
         } catch (\Throwable $e) {
-            // Silently fail - raw content search is best-effort
-        }
-        
-        return array_keys($foundEntryIds);
-    }
-
-    /**
-     * Search rendered content for entry URLs (fallback approach)
-     *
-     * @param Entry $entry
-     * @return array Entry IDs that link to this entry
-     */
-    private function searchRenderedContentForEntry(Entry $entry): array
-    {
-        $foundEntryIds = [];
-        
-        // Build search patterns for rendered content
-        $searchPatterns = [];
-        
-        // Entry's frontend URL (what CKEditor renders to)
-        $frontendUrl = $entry->getUrl();
-        if ($frontendUrl) {
-            $searchPatterns[] = $frontendUrl;
-            // Also check without protocol
-            $parsedUrl = parse_url($frontendUrl);
-            if (isset($parsedUrl['path'])) {
-                $searchPatterns[] = $parsedUrl['path'];
-            }
-        }
-        
-        // Pattern: data-entry-id="123" or data-link-entry-id="123"
-        $searchPatterns[] = 'data-entry-id="' . $entry->id . '"';
-        $searchPatterns[] = 'data-link-entry-id="' . $entry->id . '"';
-        $searchPatterns[] = 'entry-id="' . $entry->id . '"';
-        
-        // Pattern: /entries/section-handle/123 (CP URL)
-        $cpEditUrl = $entry->getCpEditUrl();
-        if ($cpEditUrl) {
-            $searchPatterns[] = '/entries/' . ($entry->section->handle ?? '') . '/' . $entry->id;
-        }
-        
-        // Get all text/HTML fields
-        $fields = Craft::$app->getFields()->getAllFields();
-        $htmlFieldTypes = [
-            'craft\\redactor\\Field',
-            'craft\\ckeditor\\Field',
-            'craft\\fields\\PlainText',
-        ];
-        
-        $htmlFields = [];
-        foreach ($fields as $field) {
-            if (in_array(get_class($field), $htmlFieldTypes, true)) {
-                $htmlFields[] = $field;
-            }
-        }
-        
-        if (empty($htmlFields)) {
-            return $foundEntryIds;
-        }
-
-        // Query all entries and check their content
-        // Note: This could be slow for large sites - consider caching or limiting
-        $entries = Entry::find()
-            ->status(null)
-            ->limit(500) // Safety limit
-            ->all();
-
-        $foundEntryIds = [];
-
-        foreach ($entries as $checkEntry) {
-            if ($checkEntry->id === $entry->id) {
-                continue;
-            }
-
-            // Check main entry and ALL nested entries (recursively)
-            $entriesToCheck = [$checkEntry];
-            
-            try {
-                // Get ALL nested entries recursively (not just direct children)
-                $nestedEntries = Entry::find()
-                    ->descendantOf($checkEntry)
-                    ->status(null)
-                    ->all();
-                
-                // Also try ownerId approach for Matrix blocks
-                if (empty($nestedEntries)) {
-                    $nestedEntries = Entry::find()
-                        ->ownerId($checkEntry->id)
-                        ->status(null)
-                        ->all();
-                }
-                
-                $entriesToCheck = array_merge($entriesToCheck, $nestedEntries);
-            } catch (\Throwable $e) {
-                // Ignore errors getting nested entries
-            }
-
-            foreach ($entriesToCheck as $entryToCheck) {
-                foreach ($htmlFields as $field) {
-                    try {
-                        $fieldValue = $entryToCheck->getFieldValue($field->handle);
-                    } catch (\Throwable $e) {
-                        continue;
-                    }
-                    
-                    // Handle different field value types
-                    if ($fieldValue instanceof \craft\redactor\FieldData) {
-                        $fieldValue = $fieldValue->getRawContent();
-                    } elseif (is_object($fieldValue) && method_exists($fieldValue, '__toString')) {
-                        $fieldValue = (string)$fieldValue;
-                    }
-                    
-                    if (!$fieldValue || !is_string($fieldValue)) {
-                        continue;
-                    }
-
-                    // Check for any of the search patterns
-                    foreach ($searchPatterns as $pattern) {
-                        if ($pattern && str_contains($fieldValue, $pattern)) {
-                            $foundEntryIds[$checkEntry->id] = true;
-                            break 3; // Found, move to next entry
-                        }
-                    }
-                }
-            }
+            Logger::exception('Quick Search: Error in raw content search for entry ' . $entry->id, $e);
         }
 
         return array_keys($foundEntryIds);

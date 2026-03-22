@@ -25,7 +25,8 @@ A full-screen overlay for instant access to everything in your CP:
 
 ### Entry Tools
 - **Entry Outline** — navigate complex entries with a hierarchical view of all fields and Matrix blocks
-- **Related Entries** — discover connections between entries (links to / linked from)
+- **Related Entries Sidebar Panel** — automatically loads when you open an entry, showing all related entries in both directions (links to / linked from), grouped by section. Configurable position: Top, After Status, or Bottom. Enabled by default.
+- **Related Entries Button** — optional toolbar button that opens a modal with the same information on demand. Disabled by default.
 
 ### Keyboard Shortcuts
 
@@ -60,6 +61,9 @@ Type a prefix in the Quick Access search to switch content type:
 - **Configurable Limits** — control history size, favorites count, and saved searches
 - **Clear on Tab Switch** — optionally clear the search input when switching between tabs
 - **Default Panel** — choose whether Quick Access opens on History or Favorites
+- **Show Related Entries Sidebar Panel** — enable/disable the automatic related entries panel in the entry sidebar (default: on)
+- **Sidebar Panel Position** — where the sidebar panel appears: Top, After Status, or Bottom (default: Bottom)
+- **Show Related Entries Button** — enable/disable the toolbar button that opens the related entries modal (default: off)
 - **20 Languages** — ar, bg, cs, de, en, es, fr, hu, it, ja, ko, nl, pl, pt, ro, ru, sk, tr, uk, zh
 
 ## Requirements
@@ -87,7 +91,9 @@ Visit Settings → Quick Search to configure:
 | Compact Mode | Use a more compact display for lists | Off |
 | Show Section Filter | Toggle the section filter dropdown | On |
 | Show Entry Outline | Display entry outline button on entry pages | On |
-| Show Related Entries | Display related entries button on entry pages | On |
+| Show Related Entries Sidebar Panel | Display related entries panel in the entry sidebar | On |
+| Sidebar Panel Position | Position of the sidebar panel: Top, After Status, or Bottom | Bottom |
+| Show Related Entries Button | Display related entries button in the entry toolbar | Off |
 | Section Filter Mode | Include or exclude selected sections | Include |
 | Enabled Sections | Limit which sections are searchable | All |
 | Enabled Search Types | Choose which content types appear as tabs | All |

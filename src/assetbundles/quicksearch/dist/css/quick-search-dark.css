@@ -850,6 +850,40 @@ html.qs-dark {
         animation-name: quick-search-highlight-dark;
     }
 
+    /* --- Sidebar Panel --- */
+    .qs-sidebar-panel {
+        background: #2e3840;
+        border-color: rgb(60 75 90);
+    }
+
+    .qs-sidebar-header:not(.qs-sidebar-collapsed) {
+        border-bottom-color: rgb(60 75 90);
+    }
+
+    .qs-sidebar-header:hover {
+        background: rgba(255, 255, 255, 0.03);
+    }
+
+    .qs-sidebar-title {
+        color: #8496ab;
+    }
+
+    .qs-sidebar-item-title {
+        color: #b8c4ce;
+    }
+
+    .qs-sidebar-item:hover {
+        background: rgba(255, 255, 255, 0.05);
+    }
+
+    .qs-sidebar-item:hover .qs-sidebar-item-title {
+        color: #4da6ff;
+    }
+
+    .qs-sidebar-item-status.disabled {
+        background: #4a5568;
+    }
+
 }
 
 /* @keyframes must live at the top level (not inside a selector rule) */

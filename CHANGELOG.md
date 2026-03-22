@@ -5,6 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.10.0] - 2026-03-22
+
+### Added
+- **Related Entries Sidebar Panel**: A new panel in the entry edit sidebar that automatically loads all related entries when the page opens — no button click required. Shows both outgoing links (entries this entry links to) and incoming backlinks (entries that link to this entry), grouped by section. Collapsible, with collapse state remembered per entry per session.
+- **Sidebar Panel Position setting**: Choose where the panel appears in the entry sidebar — *Top* (before all metadata), *After Status*, or *Bottom* (default).
+- **Section grouping in Related Entries modal**: Results in the toolbar button modal are now grouped by section, matching the sidebar panel layout.
+
+### Changed
+- **Related Entries toolbar button defaults to off**: The sidebar panel is now the primary way to view related entries, so the toolbar button (`showRelatedEntries`) is disabled by default. ⚠️ Existing installations that had this enabled will need to re-enable it under Settings → Quick Search → "Show Related Entries Button".
+- **Related entries fetch timeout raised to 60 seconds**: The modal overlay now uses a 60-second timeout instead of the generic 10-second default, preventing false timeouts on large sites with complex content structures.
+
+### Fixed
+- **Related Entries modal was empty in Craft 5**: The toolbar button was passing the provisional draft's element ID instead of the canonical entry ID. Since Craft 5 always creates a provisional draft when opening an entry for editing, the modal was querying relations for the draft element (which has none) instead of the canonical entry. Now uses `getCanonicalId()`.
+- **Severe performance issue in incoming relation search**: The previous implementation iterated over every entry on the site and made additional queries per entry to search its content fields — an N+1 query pattern that could issue hundreds of DB queries on larger sites. Rewritten to use a single query with OR conditions against `elements_sites.content`, the JSON blob where Craft 5 stores all field content.
+- **Exceptions in raw content search are now logged** to `storage/logs/quick-search.log` instead of being silently swallowed.
+
+### Translations
+- New settings strings added to all 20 supported language files (`en` + 19 others with English placeholders, ready for localization).
+
 ## [1.9.1] - 2026-03-04
 
 ### Fixed
@@ -92,6 +111,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - AJAX API endpoints for search and history
 - Responsive design matching Craft CP styles
 
+[1.10.0]: https://github.com/yannkost/craft-quick-search/compare/v1.9.1...v1.10.0
+[1.9.1]: https://github.com/yannkost/craft-quick-search/compare/v1.9.0...v1.9.1
+[1.9.0]: https://github.com/yannkost/craft-quick-search/compare/v1.5.0...v1.9.0
 [1.5.0]: https://github.com/yannkost/craft-quick-search/compare/v1.4.0...v1.5.0
 [1.4.0]: https://github.com/yannkost/craft-quick-search/compare/v1.3.0...v1.4.0
 [1.3.0]: https://github.com/yannkost/craft-quick-search/compare/v1.2.0...v1.3.0
