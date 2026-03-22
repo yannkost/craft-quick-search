@@ -28,6 +28,7 @@ class QuickSearchAsset extends AssetBundle
         $this->css = [
             'css/quick-search.css',
             'css/quick-search-related.css',
+            'css/quick-search-sidebar.css',
             'css/quick-search-outline.css',
             'css/quick-access.css',
             'css/quick-search-dark.css',
@@ -42,6 +43,7 @@ class QuickSearchAsset extends AssetBundle
             'js/quick-search-favorites.js',
             'js/quick-search-core.js',
             'js/related-entries-overlay.js',
+            'js/related-entries-sidebar.js',
             'js/entry-outline-popup.js',
             'js/quick-access-overlay.js',
             'js/quick-search-init.js',

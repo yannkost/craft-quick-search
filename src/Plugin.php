@@ -191,6 +191,7 @@ class Plugin extends BasePlugin
                             'showSectionFilter' => $settings->showSectionFilter ?? true,
                             'compactMode' => $settings->compactMode ?? false,
                             'showRelatedEntries' => $settings->showRelatedEntries ?? false,
+                            'showSidebarRelatedEntries' => $settings->showSidebarRelatedEntries ?? true,
                             'quickAccessEnabled' => $settings->quickAccessEnabled ?? true,
                             'quickAccessShortcut' => $settings->quickAccessShortcut ?? 'ctrl+g',
                             'quickAccessDefaultPanel' => $settings->quickAccessDefaultPanel ?? 'history',

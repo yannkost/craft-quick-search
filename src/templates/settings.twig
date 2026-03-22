@@ -46,8 +46,17 @@
 }) }}
 
 {{ forms.lightswitchField({
-    label: 'Show Related Entries'|t('quick-search'),
-    instructions: 'Display related entries button on entry pages.'|t('quick-search'),
+    label: 'Show Related Entries Sidebar Panel'|t('quick-search'),
+    instructions: 'Display a related entries panel directly in the entry sidebar, loaded automatically when the page opens.'|t('quick-search'),
+    id: 'showSidebarRelatedEntries',
+    name: 'showSidebarRelatedEntries',
+    on: settings.showSidebarRelatedEntries,
+    errors: settings.getErrors('showSidebarRelatedEntries')
+}) }}
+
+{{ forms.lightswitchField({
+    label: 'Show Related Entries Button'|t('quick-search'),
+    instructions: 'Display a related entries button in the entry toolbar that opens a modal. Can be used alongside or instead of the sidebar panel.'|t('quick-search'),
     id: 'showRelatedEntries',
     name: 'showRelatedEntries',
     on: settings.showRelatedEntries,

@@ -40,11 +40,18 @@
                 window.quickSearchInstance = quickSearch;
             }
 
-            // Initialize Related Entries Overlay
+            // Initialize Related Entries Overlay (modal, for non-entry pages)
             if (window.RelatedEntriesOverlay) {
                 const relatedEntriesOverlay = new window.RelatedEntriesOverlay();
                 relatedEntriesOverlay.init();
                 window.relatedEntriesOverlayInstance = relatedEntriesOverlay;
+            }
+
+            // Initialize Related Entries Sidebar Panel (entry edit pages)
+            if (window.RelatedEntriesSidebar) {
+                const relatedEntriesSidebar = new window.RelatedEntriesSidebar();
+                relatedEntriesSidebar.init();
+                window.relatedEntriesSidebarInstance = relatedEntriesSidebar;
             }
 
             // Initialize Entry Outline Popup
