@@ -78,33 +78,41 @@ window.RelatedEntriesSidebar = (function() {
                 return;
             }
 
-            const position = this.settings.sidebarRelatedEntriesPosition || 'end';
-            const metas = [...details.querySelectorAll(':scope > .meta')];
+            // Craft renders sidebar content inside #details > .details, not as direct children of #details
+            const detailsInner = details.querySelector(':scope > .details') || details;
 
-            // Add position class so CSS can adjust margins accordingly
+            const position = this.settings.sidebarRelatedEntriesPosition || 'end';
             this.panel.classList.add(`qs-sidebar-position-${position}`);
 
             if (position === 'end') {
-                details.appendChild(this.panel);
+                detailsInner.appendChild(this.panel);
 
             } else if (position === 'after_status') {
-                // Status lives in the second .meta block; fall back to first if only one exists
-                const statusMeta = metas[1] || metas[0];
-
-                if (statusMeta) {
-                    statusMeta.insertAdjacentElement('afterend', this.panel);
+                // Status is wrapped in a <fieldset> direct child of .details
+                // (structure: fieldset > legend.h6 + div.meta > lightswitch)
+                const statusFieldset = detailsInner.querySelector(':scope > fieldset');
+                if (statusFieldset) {
+                    statusFieldset.insertAdjacentElement('afterend', this.panel);
                 } else {
-                    details.prepend(this.panel);
+                    detailsInner.appendChild(this.panel);
                 }
 
             } else {
-                // 'start': insert after the last .meta block (after all native Craft metadata)
-                const lastMeta = metas[metas.length - 1];
-
-                if (lastMeta) {
-                    lastMeta.insertAdjacentElement('afterend', this.panel);
+                // 'start': insert after the metadata block.
+                // Craft renders: div.meta (fields) + h2.visually-hidden "Metadata" as siblings.
+                // The h2 is the most reliable anchor — it always follows the metadata .meta.
+                const metaHeading = detailsInner.querySelector(':scope > h2.visually-hidden');
+                if (metaHeading) {
+                    metaHeading.insertAdjacentElement('afterend', this.panel);
                 } else {
-                    details.prepend(this.panel);
+                    // Fallback: after the last direct .meta
+                    const metas = [...detailsInner.querySelectorAll(':scope > .meta')];
+                    const lastMeta = metas[metas.length - 1];
+                    if (lastMeta) {
+                        lastMeta.insertAdjacentElement('afterend', this.panel);
+                    } else {
+                        detailsInner.prepend(this.panel);
+                    }
                 }
             }
         }
