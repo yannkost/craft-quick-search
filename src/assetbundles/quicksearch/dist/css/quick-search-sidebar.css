@@ -5,8 +5,9 @@
 
 .qs-sidebar-panel {
     background: #f3f7fc;
-    border: 1px solid rgba(51, 64, 77, 0.1);
-    margin: 14px 0 0;
+    border: 1px solid rgb(205 216 228);
+    border-radius: 5px;
+    margin: 14px 0;
 }
 
 .qs-sidebar-header {
@@ -18,8 +19,13 @@
     user-select: none;
 }
 
+.qs-sidebar-header:not(.qs-sidebar-collapsed) {
+    border-bottom: 1px solid rgb(205 216 228);
+}
+
 .qs-sidebar-header:hover {
     background: rgba(0, 0, 0, 0.02);
+    border-radius: 5px 5px 0 0;
 }
 
 .qs-sidebar-title {
