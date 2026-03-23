@@ -74,6 +74,11 @@ class Settings extends Model
     public string $sidebarRelatedEntriesPosition = 'end';
 
     /**
+     * @var int Maximum depth to traverse nested entries (Matrix blocks) when building "Links to"
+     */
+    public int $relatedEntriesMaxDepth = 3;
+
+    /**
      * @var int Maximum number of favorites per user
      */
     public int $maxFavorites = 25;
@@ -141,6 +146,7 @@ class Settings extends Model
             ['showRelatedEntries', 'boolean'],
             ['showSidebarRelatedEntries', 'boolean'],
             ['sidebarRelatedEntriesPosition', 'in', 'range' => ['start', 'after_status', 'end']],
+            ['relatedEntriesMaxDepth', 'integer', 'min' => 1, 'max' => 10],
             ['enabledSections', 'filter', 'filter' => fn($v) => (empty($v) || $v === ['*']) ? null : $v],
             ['enabledSections', 'each', 'rule' => ['string']],
             ['sectionFilterMode', 'in', 'range' => ['include', 'exclude']],
