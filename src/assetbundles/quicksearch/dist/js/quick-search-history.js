@@ -74,7 +74,7 @@ window.QuickSearchHistory = (function() {
         instance.hideBackPopup();
         instance.clearHistoryButtonHighlights();
 
-        // First open: fetch from server and build the full popup structure
+        // First open: fetch from server
         if (!instance._cachedHistory) {
             instance.showHistoryLoading();
 
@@ -98,10 +98,8 @@ window.QuickSearchHistory = (function() {
                 const data = await response.json();
 
                 if (data.success) {
-                    const history = data.history || [];
-                    instance._cachedHistory = history;
+                    instance._cachedHistory = data.history || [];
                     instance.historyExpanded = showAll;
-                    renderHistory(instance, history, showAll);
                 } else {
                     console.error('Quick Search: Error loading history', data.error);
                     instance.showHistoryError(instance.t.historyError || 'Error loading history');
@@ -113,6 +111,9 @@ window.QuickSearchHistory = (function() {
                 return;
             }
         }
+
+        // Always re-render — handles switching from favorites view (which replaces the popup DOM)
+        renderHistory(instance, instance._cachedHistory, instance.historyExpanded);
 
         if (instance.historyPopup) {
             instance.historyPopup.classList.add('active');
