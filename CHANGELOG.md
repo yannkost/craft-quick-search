@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.11.0] - 2026-03-23
+
+### Added
+- **Nested entry traversal for "Links to"**: Entries fields inside Matrix blocks at any depth now appear in "Links to" relations.
+- **Related Entries Nesting Depth setting**: Configures how many levels deep to traverse nested entries (default: 3, max: 10).
+
+### Changed
+- **Default fetch timeout raised to 20 seconds**: Prevents false timeouts on slower servers (related entries requests remain at 60 s).
+- **History always shows fresh data**: The history list is now fetched on every open instead of being cached for the browser session.
+
+### Fixed
+- **History popup blank when switching from favorites**: Clicking the history button while favorites was open left the popup showing stale favorites content.
+- **Related entries sidebar scrollable**: The sidebar panel now has a max-height of 400 px with a scrollbar for entries with many relations.
+
+### Improved
+- Previously silent exceptions in the Related Entries service and Quick Access overlay are now properly logged.
+
 ## [1.10.0] - 2026-03-22
 
 ### Added

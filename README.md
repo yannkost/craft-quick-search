@@ -94,6 +94,7 @@ Visit Settings → Quick Search to configure:
 | Show Related Entries Sidebar Panel | Display related entries panel in the entry sidebar | On |
 | Sidebar Panel Position | Position of the sidebar panel: Top, After Status, or Bottom | Bottom |
 | Show Related Entries Button | Display related entries button in the entry toolbar | Off |
+| Related Entries Nesting Depth | Levels deep to traverse nested entries (Matrix) for "Links to" | 3 |
 | Section Filter Mode | Include or exclude selected sections | Include |
 | Enabled Sections | Limit which sections are searchable | All |
 | Enabled Search Types | Choose which content types appear as tabs | All |
