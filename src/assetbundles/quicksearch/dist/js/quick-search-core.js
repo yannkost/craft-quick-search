@@ -58,7 +58,7 @@ window.QuickSearchCore = (function() {
             this.isMultiSite = this.settings.isMultiSite;
             this.selectedSiteId = null;
             this.searchAbortController = null;
-            this.fetchTimeout = 10000;
+            this.fetchTimeout = 20000;
             // Tab-related properties
             this.searchTypes = [];
             this.currentSearchType = 'entries';

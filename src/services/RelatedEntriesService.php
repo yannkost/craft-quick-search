@@ -389,6 +389,7 @@ class RelatedEntriesService extends Component
                         break;
                     }
                 } catch (\Throwable $e) {
+                    Logger::exception('Quick Search: Error traversing owner chain for entry ' . $entry->id, $e);
                     break;
                 }
                 $depth++;
@@ -453,6 +454,7 @@ class RelatedEntriesService extends Component
                     'status' => $entry->status ?? '',
                 ];
             } catch (\Throwable $e) {
+                Logger::exception('Quick Search: Error formatting entry ' . ($entry->id ?? '?'), $e);
                 continue;
             }
         }

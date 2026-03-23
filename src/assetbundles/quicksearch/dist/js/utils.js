@@ -5,7 +5,7 @@
 window.QuickSearchUtils = (function() {
     'use strict';
 
-    const DEFAULT_TIMEOUT = 10000;
+    const DEFAULT_TIMEOUT = 20000;
 
     /**
      * Fetch with timeout - prevents UI from appearing frozen if server hangs

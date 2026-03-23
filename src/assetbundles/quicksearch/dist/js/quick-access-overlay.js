@@ -39,7 +39,7 @@ window.QuickAccessOverlay = (function() {
             this.searchSelectedIndex = -1;
 
             this.isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
-            this.fetchTimeout = 10000;
+            this.fetchTimeout = 20000;
 
             // Drag and drop state
             this.draggedItem = null;
@@ -838,7 +838,7 @@ window.QuickAccessOverlay = (function() {
                     this.favoritesItems = data.favorites || [];
                 }
             } catch (error) {
-                // Silent fail - shortcuts just won't work until overlay is opened
+                console.warn('Quick Access: Could not preload favorites for shortcuts', error);
             }
         }
 
