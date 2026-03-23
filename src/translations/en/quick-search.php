@@ -18,6 +18,8 @@ return [
     'Bottom' => 'Bottom',
     'Show Related Entries Button' => 'Show Related Entries Button',
     'Display a related entries button in the entry toolbar that opens a modal. Can be used alongside or instead of the sidebar panel.' => 'Display a related entries button in the entry toolbar that opens a modal. Can be used alongside or instead of the sidebar panel.',
+    'Related Entries Nesting Depth' => 'Related Entries Nesting Depth',
+    'How many levels deep to traverse nested entries (Matrix blocks) when finding "Links to" relations.' => 'How many levels deep to traverse nested entries (Matrix blocks) when finding "Links to" relations.',
     // Kept for backwards compatibility
     'Show Related Entries' => 'Show Related Entries',
     'Display related entries button on entry pages.' => 'Display related entries button on entry pages.',
