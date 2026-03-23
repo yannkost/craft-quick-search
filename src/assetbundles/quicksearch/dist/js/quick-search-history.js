@@ -74,45 +74,42 @@ window.QuickSearchHistory = (function() {
         instance.hideBackPopup();
         instance.clearHistoryButtonHighlights();
 
-        // First open: fetch from server
-        if (!instance._cachedHistory) {
-            instance.showHistoryLoading();
+        // Always fetch fresh data
+        instance.showHistoryLoading();
+        instance.historyExpanded = showAll;
 
-            const limit = showAll ? instance.historyFullLimit : instance.historyInitialLimit;
-            const params = new URLSearchParams();
-            params.append('limit', limit.toString());
+        const limit = showAll ? instance.historyFullLimit : instance.historyInitialLimit;
+        const params = new URLSearchParams();
+        params.append('limit', limit.toString());
 
-            try {
-                const historyUrl = Craft.getActionUrl('quick-search/history/index');
-                const response = await utils.fetchWithTimeout(historyUrl + (historyUrl.includes('?') ? '&' : '?') + params.toString(), {
-                    headers: {
-                        'Accept': 'application/json',
-                        'X-Requested-With': 'XMLHttpRequest'
-                    }
-                });
-
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        try {
+            const historyUrl = Craft.getActionUrl('quick-search/history/index');
+            const response = await utils.fetchWithTimeout(historyUrl + (historyUrl.includes('?') ? '&' : '?') + params.toString(), {
+                headers: {
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
                 }
+            });
 
-                const data = await response.json();
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
 
-                if (data.success) {
-                    instance._cachedHistory = data.history || [];
-                    instance.historyExpanded = showAll;
-                } else {
-                    console.error('Quick Search: Error loading history', data.error);
-                    instance.showHistoryError(instance.t.historyError || 'Error loading history');
-                    return;
-                }
-            } catch (error) {
-                console.error('Quick Search: Error loading history', error);
+            const data = await response.json();
+
+            if (data.success) {
+                instance._cachedHistory = data.history || [];
+            } else {
+                console.error('Quick Search: Error loading history', data.error);
                 instance.showHistoryError(instance.t.historyError || 'Error loading history');
                 return;
             }
+        } catch (error) {
+            console.error('Quick Search: Error loading history', error);
+            instance.showHistoryError(instance.t.historyError || 'Error loading history');
+            return;
         }
 
-        // Always re-render — handles switching from favorites view (which replaces the popup DOM)
         renderHistory(instance, instance._cachedHistory, instance.historyExpanded);
 
         if (instance.historyPopup) {
