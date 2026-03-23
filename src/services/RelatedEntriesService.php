@@ -9,6 +9,7 @@ use craft\base\Component;
 use craft\elements\Entry;
 use craft\db\Query;
 use craftcms\quicksearch\helpers\Logger;
+use craftcms\quicksearch\Plugin;
 
 /**
  * Related Entries Service
@@ -44,18 +45,26 @@ class RelatedEntriesService extends Component
             return ['outgoing' => [], 'incoming' => []];
         }
 
-        // Get outgoing relations (entries this entry links to) - use same site context
+        // Collect all nested entries at all depths for outgoing relation traversal
+        $maxDepth = Plugin::getInstance()->getSettings()->relatedEntriesMaxDepth ?? 3;
+        $allNestedEntries = $this->collectAllNestedEntries($entry->id, $maxDepth);
+        $allSourceElements = array_merge([$entry], $allNestedEntries);
+
+        // Get outgoing relations (entries this entry and its nested entries link to)
         $outgoingEntries = Entry::find()
-            ->relatedTo(['sourceElement' => $entry])
+            ->relatedTo(['sourceElement' => $allSourceElements])
             ->siteId($activeSiteId)
             ->status(null)
             ->all();
 
         // Also find entries linked in content fields (CKEditor, Redactor, etc.)
-        $contentLinkedOutgoing = $this->findEntriesLinkedInContent($entry);
+        $contentLinkedOutgoing = $this->findEntriesLinkedInContent($entry, $allNestedEntries);
         
-        // Merge and deduplicate outgoing entries
-        $allOutgoing = $this->mergeEntries($outgoingEntries, $contentLinkedOutgoing);
+        // Merge and deduplicate outgoing entries, excluding the entry itself
+        $allOutgoing = array_filter(
+            $this->mergeEntries($outgoingEntries, $contentLinkedOutgoing),
+            fn($e) => $e->id !== $entry->id
+        );
 
         // Get incoming relations (entries that link to this entry)
         // This includes nested entries (e.g., in Matrix blocks), so we need to resolve them to their top-level parents
@@ -85,12 +94,13 @@ class RelatedEntriesService extends Component
      * (e.g., links in CKEditor, Redactor, or PlainText fields)
      *
      * @param Entry $entry The entry to search content fields in
+     * @param array $nestedEntries Pre-collected nested entries at all depths (from collectAllNestedEntries)
      * @return array Array of Entry elements
      */
-    private function findEntriesLinkedInContent(Entry $entry): array
+    private function findEntriesLinkedInContent(Entry $entry, array $nestedEntries = []): array
     {
         $results = [];
-        
+
         // Get all text/HTML fields that might contain entry links
         $fields = Craft::$app->getFields()->getAllFields();
         $htmlFieldTypes = [
@@ -98,28 +108,20 @@ class RelatedEntriesService extends Component
             'craft\\ckeditor\\Field',
             'craft\\fields\\PlainText',
         ];
-        
+
         $htmlFields = [];
         foreach ($fields as $field) {
             if (in_array(get_class($field), $htmlFieldTypes, true)) {
                 $htmlFields[] = $field;
             }
         }
-        
+
         if (empty($htmlFields)) {
             return $results;
         }
 
-        // Get all entries from this entry's content (including nested entries in Matrix)
-        $entriesToSearch = [$entry];
-        
-        // Also search nested entries (Matrix blocks, etc.)
-        $nestedEntries = Entry::find()
-            ->ownerId($entry->id)
-            ->status(null)
-            ->all();
-        
-        $entriesToSearch = array_merge($entriesToSearch, $nestedEntries);
+        // Search the entry itself and all nested entries at all depths
+        $entriesToSearch = array_merge([$entry], $nestedEntries);
 
         // Patterns to find entry links
         // CKEditor URL hash format: #entry:123@1:url (MOST IMPORTANT!)
@@ -290,6 +292,36 @@ class RelatedEntriesService extends Component
     }
 
     /**
+     * Recursively collect all nested entries under an owner, up to a maximum depth.
+     * Queries direct children at each level (ownerId = parent), then recurses into each child.
+     *
+     * @param int $ownerId The owner entry ID to start from
+     * @param int $maxDepth Maximum nesting depth to traverse
+     * @param int $currentDepth Current recursion depth (internal)
+     * @return array Flat array of all nested Entry elements
+     */
+    private function collectAllNestedEntries(int $ownerId, int $maxDepth, int $currentDepth = 0): array
+    {
+        if ($currentDepth >= $maxDepth) {
+            return [];
+        }
+
+        $children = Entry::find()
+            ->ownerId($ownerId)
+            ->status(null)
+            ->all();
+
+        $all = $children;
+
+        foreach ($children as $child) {
+            $grandchildren = $this->collectAllNestedEntries($child->id, $maxDepth, $currentDepth + 1);
+            $all = array_merge($all, $grandchildren);
+        }
+
+        return $all;
+    }
+
+    /**
      * Merge two arrays of entries, removing duplicates by ID
      *
      * @param array $entries1 First array of entries
@@ -357,6 +389,7 @@ class RelatedEntriesService extends Component
                         break;
                     }
                 } catch (\Throwable $e) {
+                    Logger::exception('Quick Search: Error traversing owner chain for entry ' . $entry->id, $e);
                     break;
                 }
                 $depth++;
@@ -421,6 +454,7 @@ class RelatedEntriesService extends Component
                     'status' => $entry->status ?? '',
                 ];
             } catch (\Throwable $e) {
+                Logger::exception('Quick Search: Error formatting entry ' . ($entry->id ?? '?'), $e);
                 continue;
             }
         }

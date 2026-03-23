@@ -77,6 +77,19 @@
     errors: settings.getErrors('showRelatedEntries')
 }) }}
 
+{{ forms.textField({
+    label: 'Related Entries Nesting Depth'|t('quick-search'),
+    instructions: 'How many levels deep to traverse nested entries (Matrix blocks) when finding "Links to" relations.'|t('quick-search'),
+    id: 'relatedEntriesMaxDepth',
+    name: 'relatedEntriesMaxDepth',
+    value: settings.relatedEntriesMaxDepth,
+    type: 'number',
+    min: 1,
+    max: 10,
+    required: true,
+    errors: settings.getErrors('relatedEntriesMaxDepth')
+}) }}
+
 <hr>
 
 <h2>{{ 'Search Settings'|t('quick-search') }}</h2>
