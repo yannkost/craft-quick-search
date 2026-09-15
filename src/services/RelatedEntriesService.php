@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace craftcms\quicksearch\services;
 
 use Craft;
+use benf\neo\elements\Block as NeoBlock;
 use craft\base\Component;
+use craft\base\NestedElementInterface;
 use craft\elements\Entry;
 use craft\db\Query;
 use craftcms\quicksearch\helpers\Logger;
@@ -45,12 +47,12 @@ class RelatedEntriesService extends Component
             return ['outgoing' => [], 'incoming' => []];
         }
 
-        // Collect all nested entries at all depths for outgoing relation traversal
+        // Relations can live on either Matrix entries or Neo blocks, in any combination.
         $maxDepth = Plugin::getInstance()->getSettings()->relatedEntriesMaxDepth ?? 3;
-        $allNestedEntries = $this->collectAllNestedEntries($entry->id, $maxDepth);
-        $allSourceElements = array_merge([$entry], $allNestedEntries);
+        $allNestedElements = $this->collectAllNestedElements($entry->id, $activeSiteId, $maxDepth);
+        $allSourceElements = array_merge([$entry], $allNestedElements);
 
-        // Get outgoing relations (entries this entry and its nested entries link to)
+        // Get outgoing relations (entries this entry and its nested elements link to).
         $outgoingEntries = Entry::find()
             ->relatedTo(['sourceElement' => $allSourceElements])
             ->siteId($activeSiteId)
@@ -58,7 +60,7 @@ class RelatedEntriesService extends Component
             ->all();
 
         // Also find entries linked in content fields (CKEditor, Redactor, etc.)
-        $contentLinkedOutgoing = $this->findEntriesLinkedInContent($entry, $allNestedEntries);
+        $contentLinkedOutgoing = $this->findEntriesLinkedInContent($entry, $allNestedElements);
         
         // Merge and deduplicate outgoing entries, excluding the entry itself
         $allOutgoing = array_filter(
@@ -73,6 +75,15 @@ class RelatedEntriesService extends Component
             ->siteId($activeSiteId)
             ->status(null)
             ->all();
+
+        // Neo blocks are separate element types, so an Entry query cannot find their relations.
+        if (class_exists(NeoBlock::class)) {
+            $incomingEntries = array_merge($incomingEntries, NeoBlock::find()
+                ->relatedTo(['targetElement' => $entry])
+                ->siteId($activeSiteId)
+                ->status(null)
+                ->all());
+        }
 
         // Also find entries that link to this entry in their content fields
         $contentLinkedIncoming = $this->findEntriesLinkingToEntryInContent($entry);
@@ -94,10 +105,10 @@ class RelatedEntriesService extends Component
      * (e.g., links in CKEditor, Redactor, or PlainText fields)
      *
      * @param Entry $entry The entry to search content fields in
-     * @param array $nestedEntries Pre-collected nested entries at all depths (from collectAllNestedEntries)
+     * @param array $nestedElements Pre-collected Matrix entries and Neo blocks
      * @return array Array of Entry elements
      */
-    private function findEntriesLinkedInContent(Entry $entry, array $nestedEntries = []): array
+    private function findEntriesLinkedInContent(Entry $entry, array $nestedElements = []): array
     {
         $results = [];
 
@@ -120,8 +131,8 @@ class RelatedEntriesService extends Component
             return $results;
         }
 
-        // Search the entry itself and all nested entries at all depths
-        $entriesToSearch = array_merge([$entry], $nestedEntries);
+        // Search the entry itself and all collected nested elements.
+        $entriesToSearch = array_merge([$entry], $nestedElements);
 
         // Patterns to find entry links
         // CKEditor URL hash format: #entry:123@1:url (MOST IMPORTANT!)
@@ -194,6 +205,7 @@ class RelatedEntriesService extends Component
         // Fetch the actual entries
         $results = Entry::find()
             ->id(array_keys($foundEntryIds))
+            ->siteId($entry->siteId)
             ->status(null)
             ->all();
 
@@ -204,7 +216,7 @@ class RelatedEntriesService extends Component
      * Find entries that link to the given entry in their content fields
      *
      * @param Entry $entry The entry to find links to
-     * @return array Array of Entry elements that link to this entry
+     * @return array Array of Entry elements and Neo blocks that link to this entry
      */
     private function findEntriesLinkingToEntryInContent(Entry $entry): array
     {
@@ -220,19 +232,30 @@ class RelatedEntriesService extends Component
             return [];
         }
 
-        return Entry::find()
+        $elements = Entry::find()
             ->id(array_keys($foundEntryIds))
+            ->siteId($entry->siteId)
             ->status(null)
             ->all();
+
+        if (class_exists(NeoBlock::class)) {
+            $elements = array_merge($elements, NeoBlock::find()
+                ->id(array_keys($foundEntryIds))
+                ->siteId($entry->siteId)
+                ->status(null)
+                ->all());
+        }
+
+        return $elements;
     }
 
     /**
      * Search raw database content for all patterns that reference the given entry.
      * Covers CKEditor/Redactor reference tags, data attributes, and manually typed URLs.
-     * Searches elements_sites.content directly, which includes nested/Matrix entries.
+     * Searches elements_sites.content directly, including Matrix entries and Neo blocks.
      *
      * @param Entry $entry
-     * @return array Entry IDs that link to this entry
+     * @return array Element IDs that link to this entry
      */
     private function searchRawContentForEntry(Entry $entry): array
     {
@@ -270,12 +293,17 @@ class RelatedEntriesService extends Component
                 $orConditions[] = ['like', 'es.content', $pattern, false];
             }
 
+            $elementTypes = [Entry::class];
+            if (class_exists(NeoBlock::class)) {
+                $elementTypes[] = NeoBlock::class;
+            }
+
             $results = (new Query())
                 ->select(['es.elementId', 'e.canonicalId'])
                 ->from(['es' => '{{%elements_sites}}'])
                 ->innerJoin(['e' => '{{%elements}}'], '[[es.elementId]] = [[e.id]]')
                 ->where($orConditions)
-                ->andWhere(['e.type' => 'craft\\elements\\Entry'])
+                ->andWhere(['e.type' => $elementTypes, 'es.siteId' => $entry->siteId])
                 ->all();
 
             foreach ($results as $row) {
@@ -292,15 +320,16 @@ class RelatedEntriesService extends Component
     }
 
     /**
-     * Recursively collect all nested entries under an owner, up to a maximum depth.
+     * Recursively collect Matrix entries and Neo blocks under an owner, up to a maximum depth.
      * Queries direct children at each level (ownerId = parent), then recurses into each child.
      *
-     * @param int $ownerId The owner entry ID to start from
+     * @param int $ownerId The owner element ID to start from
+     * @param int $siteId The selected site's ID
      * @param int $maxDepth Maximum nesting depth to traverse
      * @param int $currentDepth Current recursion depth (internal)
-     * @return array Flat array of all nested Entry elements
+     * @return array Flat array of nested Entry elements and Neo blocks
      */
-    private function collectAllNestedEntries(int $ownerId, int $maxDepth, int $currentDepth = 0): array
+    private function collectAllNestedElements(int $ownerId, int $siteId, int $maxDepth, int $currentDepth = 0): array
     {
         if ($currentDepth >= $maxDepth) {
             return [];
@@ -308,13 +337,23 @@ class RelatedEntriesService extends Component
 
         $children = Entry::find()
             ->ownerId($ownerId)
+            ->siteId($siteId)
             ->status(null)
             ->all();
+
+        // Neo is optional; keep Matrix-only installations working without the plugin.
+        if (class_exists(NeoBlock::class)) {
+            $children = array_merge($children, NeoBlock::find()
+                ->ownerId($ownerId)
+                ->siteId($siteId)
+                ->status(null)
+                ->all());
+        }
 
         $all = $children;
 
         foreach ($children as $child) {
-            $grandchildren = $this->collectAllNestedEntries($child->id, $maxDepth, $currentDepth + 1);
+            $grandchildren = $this->collectAllNestedElements($child->id, $siteId, $maxDepth, $currentDepth + 1);
             $all = array_merge($all, $grandchildren);
         }
 
@@ -322,11 +361,11 @@ class RelatedEntriesService extends Component
     }
 
     /**
-     * Merge two arrays of entries, removing duplicates by ID
+     * Merge two arrays of elements, removing duplicates by ID
      *
-     * @param array $entries1 First array of entries
-     * @param array $entries2 Second array of entries
-     * @return array Merged and deduplicated entries
+     * @param array $entries1 First array of elements
+     * @param array $entries2 Second array of elements
+     * @return array Merged and deduplicated elements
      */
     private function mergeEntries(array $entries1, array $entries2): array
     {
@@ -351,11 +390,10 @@ class RelatedEntriesService extends Component
     }
 
     /**
-     * Resolve nested entries to their top-level parent entries
-     * For entries that don't belong to a section (e.g., Matrix block entries),
-     * traverse up the owner chain to find the actual entry
+     * Resolve nested elements to their top-level section entries.
+     * Follow ownership across both Matrix entries and Neo blocks.
      *
-     * @param array $entries Array of Entry elements
+     * @param array $entries Array of Entry elements and Neo blocks
      * @return array Array of top-level Entry elements (deduplicated)
      */
     private function resolveToTopLevelEntries(array $entries): array
@@ -365,7 +403,7 @@ class RelatedEntriesService extends Component
 
         foreach ($entries as $entry) {
             // If entry has a section, it's already a top-level entry
-            if ($entry->section) {
+            if ($entry instanceof Entry && $entry->section) {
                 if (!isset($seenIds[$entry->id])) {
                     $resolved[] = $entry;
                     $seenIds[$entry->id] = true;
@@ -379,10 +417,14 @@ class RelatedEntriesService extends Component
             $depth = 0;
             $visitedIds = [$entry->id => true]; // Track visited IDs to prevent circular references
 
-            while ($current && !$current->section && $depth < $maxDepth) {
+            while (
+                $current instanceof NestedElementInterface &&
+                !($current instanceof Entry && $current->section) &&
+                $depth < $maxDepth
+            ) {
                 try {
                     $owner = $current->getOwner();
-                    if ($owner instanceof Entry && !isset($visitedIds[$owner->id])) {
+                    if ($owner && !isset($visitedIds[$owner->id])) {
                         $visitedIds[$owner->id] = true;
                         $current = $owner;
                     } else {
@@ -396,7 +438,7 @@ class RelatedEntriesService extends Component
             }
 
             // Add the resolved entry if it has a section and we haven't seen it
-            if ($current && $current->section && !isset($seenIds[$current->id])) {
+            if ($current instanceof Entry && $current->section && !isset($seenIds[$current->id])) {
                 $resolved[] = $current;
                 $seenIds[$current->id] = true;
             }

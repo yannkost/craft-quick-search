@@ -2,6 +2,13 @@
 
 Fast, keyboard-first search and navigation for the Craft CMS control panel.
 
+## What's new in 1.11.1
+
+- Related Entries now finds links through mixed Matrix and Neo nesting, and resolves backlinks to their top-level entries.
+- The sidebar and modal use the site selected in the Control Panel, including nested relations and content-link lookups.
+
+See the [changelog](CHANGELOG.md#1111---2026-09-15) for release details.
+
 ## Features
 
 ### Quick Access Overlay (`Ctrl+G`)
@@ -27,6 +34,7 @@ A full-screen overlay for instant access to everything in your CP:
 - **Entry Outline** — navigate complex entries with a hierarchical view of all fields and Matrix blocks
 - **Related Entries Sidebar Panel** — automatically loads when you open an entry, showing all related entries in both directions (links to / linked from), grouped by section. Configurable position: Top, After Status, or Bottom. Enabled by default.
 - **Related Entries Button** — optional toolbar button that opens a modal with the same information on demand. Disabled by default.
+- **Matrix and Neo Relations** — follows nested Matrix entries and Neo blocks in either order. Neo support is automatic when installed; Neo is optional.
 
 ### Keyboard Shortcuts
 
@@ -94,7 +102,7 @@ Visit Settings → Quick Search to configure:
 | Show Related Entries Sidebar Panel | Display related entries panel in the entry sidebar | On |
 | Sidebar Panel Position | Position of the sidebar panel: Top, After Status, or Bottom | Bottom |
 | Show Related Entries Button | Display related entries button in the entry toolbar | Off |
-| Related Entries Nesting Depth | Levels deep to traverse nested entries (Matrix) for "Links to" | 3 |
+| Related Entries Nesting Depth | Ownership levels to traverse through Matrix entries and Neo blocks for "Links to" (maximum: 10) | 3 |
 | Section Filter Mode | Include or exclude selected sections | Include |
 | Enabled Sections | Limit which sections are searchable | All |
 | Enabled Search Types | Choose which content types appear as tabs | All |
@@ -110,6 +118,18 @@ Visit Settings → Quick Search to configure:
 | Show Entry Search | Toggle the search input in the overlay | On |
 | Clear Search on Tab Switch | Clear input when switching content type tabs | On |
 | Show Saved Searches | Toggle the saved searches section | On |
+
+For deeply nested content, increase **Related Entries Nesting Depth** in the settings or set it in `config/quick-search.php`:
+
+```php
+<?php
+
+return [
+    'relatedEntriesMaxDepth' => 10,
+];
+```
+
+Each ownership step counts as one level: entry → Neo block → Matrix entry → Matrix entry uses three levels. The default remains **3**. The sidebar and modal use the editor's selected site, independently of the search site filter.
 
 ## Dashboard Widget
 

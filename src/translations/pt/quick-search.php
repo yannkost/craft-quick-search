@@ -20,7 +20,7 @@ return [
     'Bottom' => 'Bottom',
     'Show Related Entries Button' => 'Show Related Entries Button',
     'Related Entries Nesting Depth' => 'Related Entries Nesting Depth',
-    'How many levels deep to traverse nested entries (Matrix blocks) when finding "Links to" relations.' => 'How many levels deep to traverse nested entries (Matrix blocks) when finding "Links to" relations.',
+    'How many levels deep to traverse Matrix entries and Neo blocks when finding "Links to" relations.' => 'How many levels deep to traverse Matrix entries and Neo blocks when finding "Links to" relations.',
     'Display a related entries button in the entry toolbar that opens a modal. Can be used alongside or instead of the sidebar panel.' => 'Display a related entries button in the entry toolbar that opens a modal. Can be used alongside or instead of the sidebar panel.',
 
     // Settings page - Search Settings

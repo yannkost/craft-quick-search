@@ -44,6 +44,8 @@ class RelatedEntriesController extends Controller
 
         $request = Craft::$app->getRequest();
         $entryId = (int)$request->getRequiredParam('entryId');
+        $siteId = $request->getParam('siteId');
+        $siteId = $siteId !== null && $siteId !== '' ? (int)$siteId : null;
 
         if ($entryId <= 0) {
             return $this->asJson([
@@ -53,7 +55,7 @@ class RelatedEntriesController extends Controller
         }
 
         try {
-            $relatedEntries = Plugin::getInstance()->relatedEntries->getRelatedEntries($entryId);
+            $relatedEntries = Plugin::getInstance()->relatedEntries->getRelatedEntries($entryId, $siteId);
 
             return $this->asJson([
                 'success' => true,
@@ -63,6 +65,7 @@ class RelatedEntriesController extends Controller
         } catch (\Throwable $e) {
             Logger::exception('Error fetching related entries', $e, [
                 'entryId' => $entryId,
+                'siteId' => $siteId,
             ]);
 
             return $this->asJson([

@@ -1,0 +1,11 @@
+v1.11.1 - Fix related entries across Matrix/Neo nesting and selected CP sites
+
+Fix missing outgoing relations in mixed Matrix and Neo ownership trees,
+including relations stored directly on Neo blocks. Include Neo sources in
+incoming relations and resolve mixed owner chains to deduplicated section entries.
+
+Pass the selected Control Panel site from both Related Entries UIs to the
+endpoint, and retain it for nested elements and content-link lookups.
+
+Neo remains optional. The existing nesting depth setting remains at a default
+of 3 ownership levels, configurable up to 10.

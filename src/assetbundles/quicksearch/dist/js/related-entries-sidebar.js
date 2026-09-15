@@ -105,6 +105,9 @@ window.RelatedEntriesSidebar = (function() {
         async fetchAndRender() {
             try {
                 const params = new URLSearchParams({ entryId: this.entryId.toString() });
+                if (this.settings.currentSiteId) {
+                    params.set('siteId', this.settings.currentSiteId.toString());
+                }
                 const actionUrl = Craft.getActionUrl('quick-search/related-entries/index');
                 const separator = actionUrl.includes('?') ? '&' : '?';
 

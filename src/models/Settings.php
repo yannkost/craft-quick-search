@@ -74,7 +74,7 @@ class Settings extends Model
     public string $sidebarRelatedEntriesPosition = 'end';
 
     /**
-     * @var int Maximum depth to traverse nested entries (Matrix blocks) when building "Links to"
+     * @var int Maximum depth to traverse Matrix entries and Neo blocks when building "Links to"
      */
     public int $relatedEntriesMaxDepth = 3;
 

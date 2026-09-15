@@ -80,6 +80,9 @@ window.RelatedEntriesOverlay = (function() {
 
             try {
                 const params = new URLSearchParams({ entryId: entryId.toString() });
+                if (this.settings.currentSiteId) {
+                    params.set('siteId', this.settings.currentSiteId.toString());
+                }
                 const actionUrl = Craft.getActionUrl('quick-search/related-entries/index');
                 const separator = actionUrl.includes('?') ? '&' : '?';
 

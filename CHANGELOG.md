@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.11.1] - 2026-09-15
+
+### Fixed
+- **Missing "Links to" relations in mixed Matrix/Neo content**: Traversal now crosses Neo blocks and Matrix entries in either nesting order, including relations stored directly on Neo blocks. The existing nesting depth setting still applies (default: 3, maximum: 10); Neo remains optional.
+- **Missing "Linked from" entries through Neo owners**: Incoming relations now include Neo block sources and follow mixed owner chains back to the top-level section entry, with duplicate parents removed.
+- **Related Entries using the wrong site**: The sidebar and modal now pass the selected Control Panel site to the endpoint. Nested element queries and incoming/outgoing content-link lookups also stay within that site.
+
 ## [1.11.0] - 2026-03-23
 
 ### Added
@@ -128,6 +135,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - AJAX API endpoints for search and history
 - Responsive design matching Craft CP styles
 
+[1.11.1]: https://github.com/yannkost/craft-quick-search/compare/v1.11.0...v1.11.1
+[1.11.0]: https://github.com/yannkost/craft-quick-search/compare/v1.10.0...v1.11.0
 [1.10.0]: https://github.com/yannkost/craft-quick-search/compare/v1.9.1...v1.10.0
 [1.9.1]: https://github.com/yannkost/craft-quick-search/compare/v1.9.0...v1.9.1
 [1.9.0]: https://github.com/yannkost/craft-quick-search/compare/v1.5.0...v1.9.0
