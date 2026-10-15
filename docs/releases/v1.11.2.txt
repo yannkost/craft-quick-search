@@ -1,0 +1,15 @@
+v1.11.2 - Fix "table already exists" when reinstalling the plugin
+
+Craft skips a plugin's own uninstall migration when the plugin is
+force-uninstalled while disabled, or removed through project-config/apply
+after it was dropped from project.yaml. The quicksearch_* tables were left
+behind without a plugin row, and the next install failed on the first
+create-table call.
+
+The install migration now drops any orphaned quicksearch tables before
+creating them, so reinstalling always starts from a clean schema. The
+saved-searches migration skips table creation when the table already
+exists, matching the existing favorites migration.
+
+No schema change: the plugin schema version stays at 1.3.0. Existing
+installations upgrade without running any new migration.

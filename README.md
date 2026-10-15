@@ -2,12 +2,11 @@
 
 Fast, keyboard-first search and navigation for the Craft CMS control panel.
 
-## What's new in 1.11.1
+## What's new in 1.11.2
 
-- Related Entries now finds links through mixed Matrix and Neo nesting, and resolves backlinks to their top-level entries.
-- The sidebar and modal use the site selected in the Control Panel, including nested relations and content-link lookups.
+- Reinstalling after a forced uninstall (or a `project-config/apply` that removed the plugin) no longer fails with "table already exists". Orphaned tables are cleaned up by the install migration.
 
-See the [changelog](CHANGELOG.md#1111---2026-09-15) for release details.
+See the [changelog](CHANGELOG.md#1112---2026-10-15) for release details.
 
 ## Features
 

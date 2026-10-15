@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace craftcms\quicksearch\migrations;
 
+use Craft;
 use craft\db\Migration;
 
 /**
@@ -18,6 +19,11 @@ class m260215_000001_add_saved_searches_table extends Migration
      */
     public function safeUp(): bool
     {
+        // Check if table already exists (e.g., fresh install with updated Install.php)
+        if (Craft::$app->getDb()->tableExists('{{%quicksearch_saved_searches}}')) {
+            return true;
+        }
+
         $this->createTable('{{%quicksearch_saved_searches}}', [
             'id' => $this->primaryKey(),
             'userId' => $this->integer()->notNull(),

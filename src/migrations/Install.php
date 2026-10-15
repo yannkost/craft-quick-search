@@ -19,6 +19,18 @@ class Install extends Migration
      */
     public function safeUp(): bool
     {
+        // Remove any orphaned tables left behind by a previous install.
+        // Craft skips the plugin's own uninstall migration when a plugin is
+        // force-uninstalled while disabled or when its Composer package is
+        // missing (e.g. `plugin/uninstall --force` or `project-config/apply`
+        // after the plugin was removed from project.yaml). MySQL also
+        // auto-commits DDL, so a failed install can leave partial tables.
+        // In both cases the plugin row is gone, so the data is orphaned and
+        // a fresh schema is expected.
+        $this->dropTableIfExists('{{%quicksearch_saved_searches}}');
+        $this->dropTableIfExists('{{%quicksearch_favorites}}');
+        $this->dropTableIfExists('{{%quicksearch_entry_visits}}');
+
         // Get primary site ID for default value
         $primarySiteId = Craft::$app->getSites()->getPrimarySite()->id;
 
